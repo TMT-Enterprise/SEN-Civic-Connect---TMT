@@ -1,5 +1,5 @@
 # SEN-Civic-Connect---TMT
-#Scope 
+# Scope 1
 CivicConnect must deliver a single, cohesive baseline (Section 1.1) rather than an expanding feature set. Any proposed addition beyond the baseline must be justified against stakeholder value and its impact on schedule, cost, quality and security before it is accepted. Uncontrolled scope growth is not acceptable under the Master Project Brief.
 #Schedule
 Delivery is constrained to four formal milestone windows within the SEN381 term. There is no residual capacity to recover from late baseline errors. A requirement or design decision that is incorrect or incomplete at Milestone 1 propagates directly into Milestone 2 architecture work and the Milestone 3 construction window. Schedule risk is therefore front-loaded: errors in the engineering foundation are more costly than equivalent errors discovered later
