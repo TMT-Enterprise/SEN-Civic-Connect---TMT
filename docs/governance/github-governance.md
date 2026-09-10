@@ -1,4 +1,4 @@
-**# GitHub Governance
+# GitHub Governance
 
 **Repository**
 - One official repository.
