@@ -1,15 +1,24 @@
-# Team Accountability
+**# GitHub Governance
 
-| Area | Tinyiko Siwele | Mutshidzi Nduvheni | Thabang Molise |
-|---|---|---|---|
-| Frontend Development | Lead | Review/Support | Review/Support |
-| Backend Development | Review/Support | Lead | Lead/Support/Review |
-| Database | Lead/Support | Lead/Review/Support | Review/Support |
-| Documentation | Lead/Review/Support | Lead/Review/Support | Lead/Review/Support |
-| GitHub Governance | Review/Support | Lead/Review/Support | Lead |
-| AI Usage Register | Lead/Review/Support | Lead/Review/Support | Lead/Review/Support |
+**Repository**
+- One official repository.
+- All three members have 'owner' access, giving unrestricted administrative control.
 
-Each team member has designated areas of primary responsibility while remaining accountable
-for understanding and contributing to the complete CivicConnect system. Primary responsibility
-indicates ownership of the work, rather than complete responsibility. Members of the team are
-still required to provide contributions across the project.
+**Branching**
+- No development is done directly on the main branch, to protect and maintain it as the
+  controlled product state.
+
+**Pull requests**
+- Best for updates onto main.
+- Must be reviewed and approved by other team members, and not by the author of the request.
+
+**Tasks**
+- Work to be done should be represented on the project Kanban board and tracked.
+
+**Secrets**
+- Passwords, API keys, tokens, private keys or any confidential credentials must not be
+  committed.
+
+**Review**
+- Refrain from rubber-stamping.
+- Approval must be backed by a thorough and meaningful review.**
