@@ -1,4 +1,4 @@
-# CR-XXX: <Placeholder for request title>
+# CR-XXX: Placeholder for request title
 
 | Field | Detail |
 |---|---|
