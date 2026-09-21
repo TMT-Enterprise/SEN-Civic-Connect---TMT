@@ -10,4 +10,4 @@
 | Requirements/traceability checked | YES |
 | Risk review completed | YES |
 | Repository/governance controls checked | YES |
-| Outcome | ACCEPTED |
+| Outcome | CONDITIONALLY ACCEPTED |
