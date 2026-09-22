@@ -93,7 +93,7 @@ CivicConnect.
 CivicConnect must deliver a single, cohesive baseline (see In Scope, above) rather than an
 expanding feature set. Any proposed addition beyond the baseline must be justified against
 stakeholder value and its impact on schedule, cost, quality and security before it is accepted.
-Uncontrolled scope growth is not acceptable under the Master Project Brief.
+Uncontrolled expansion of scope without a corresponding adjustment to time, cost and resources is defined as scope creep, a recognized project risk that formal scope control is intended to prevent (Project Management Institute, 2017), and is not acceptable under the Master Project Brief.
 
 **Schedule**
 
@@ -101,7 +101,7 @@ Delivery is constrained to four formal milestone windows within the SEN381 term.
 residual capacity to recover from late baseline errors. A requirement or design decision that
 is incorrect or incomplete at Milestone 1 propagates directly into Milestone 2 architecture
 work and the Milestone 3 construction window. Schedule risk is therefore front-loaded: errors
-in the engineering foundation are more costly than equivalent errors discovered later.
+in the engineering foundation are more costly to correct the later they are discovered, which is why project planning treats early-stage schedule risk as something to manage proactively rather than defer (Summerville, 2015).
 
 **Cost and Resources**
 
@@ -110,7 +110,7 @@ continuous integration where practical. At the same time, the team must identify
 operational cost that would apply beyond the educational context so that cost implications
 remain visible. Three-person team capacity is itself a hard resource constraint: every
 additional feature or unfamiliar technology carries an opportunity cost against the other
-required engineering artefacts (RTM, risk register, decision log, governance evidence).
+required engineering artefacts (RTM, risk register, decision log, governance evidence), consistent with the general principle that project cost and resources estimate must account for the effort a team can realistically sustain, not only the effort a feature appears to require on paper (Summerville, 2015)
 
 **Quality**
 
