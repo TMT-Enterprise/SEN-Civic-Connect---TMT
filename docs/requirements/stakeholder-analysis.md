@@ -8,7 +8,7 @@ coordinating work, lack of security/privacy of request information, reporting ha
 found to be difficult to audit, requesters have reported cases of uncertainty about the
 status of their request, and many more system issues that make the system difficult for
 our stakeholders to use. These problems may lead to project failure due to the business
-failing to address stakeholder concerns (Li, Ng and Skitmore, 2013).
+failing to address stakeholder concerns.
 
 ## Stakeholder Analysis
 
