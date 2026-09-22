@@ -48,3 +48,9 @@ The Indeed Editorial Team (2026) *Common duties and responsibilities of an admin
 [online] Indeed Career Guide. Available at:
 https://uk.indeed.com/career-advice/finding-a-job/duties-responsibilities-of-administrator
 (Accessed: 8 September 2026).
+
+Project Management Institute (2017) *A Guide to the Project Management Body of Knowledge (PMBOK
+Guide)*. 6th edn. Newtown Square, PA: Project Management Institute.
+
+Sommerville, I. (2015) *Software engineering*. 10th ed. Boston: Pearson Education Limited.
+
