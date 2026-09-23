@@ -12,6 +12,21 @@
 - Best for updates onto main.
 - Must be reviewed and approved by other team members, and not by the author of the request.
 
+**PR Naming Convention**\
+PR Title\
+type: short description
+
+PR Description\
+##Summary
+- item 1
+- item 2
+
+Closes #(issue number)
+
+*types include
+feat, docs, test, fix, refactor
+
+
 **Tasks**
 - Work to be done should be represented on the project Kanban board and tracked.
 
