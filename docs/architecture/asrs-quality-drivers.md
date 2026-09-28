@@ -7,6 +7,6 @@ a stated constraint, or a recorded risk from the M1 baseline, rather than appear
 ## 1. Security: Authenticated Access and Role-Based Authorization
 
 **Source Requirements:** NF-001 (access restricted to authorized users); NF-002 (role-based access enforced requester, staff, admin and managements);
-NF-003 (secure password hashing) [View detailed requirements](../requirements/requirements.md#L7)
+NF-003 (secure password hashing) [View detailed requirements](../requirements/requirements.md#L28)
 
 Linked
