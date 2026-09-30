@@ -4,7 +4,7 @@
 | Criteria | React | Angular |
 |---|---|---|
 | **Requirements / ASRs** | Route guards + context/hooks or libraries handle RBAC (NF-001, NF-002). Forms via React Hook Form + Zod or Formik. Dashboards/tables via TanStack Table / Recharts / AG Grid. Status workflows and sequential transitions implemented with state machines or custom logic. Search/filter straightforward with client-side libraries or server queries. Strong for dynamic UIs and real-time dashboard refreshes (FR-014) (Djirdeh, 2025).| Built-in Router Guards + interceptors excel at RBAC and role-based UI (NF-002). Reactive Forms are powerful for complex validated forms with controlled lists (FR-003, FR-017 categories). Dependency injection and services make status transitions and sequential rules cleaner to enforce. (Angular Team, 2026)|
-| **Team capability** | | |
+| **Team capability** | Moderate learning curve but routing, forms, state management and other application concerns may require additional libraries or agreed team conventions. Only one team member is proficient| Steep learning curve but provides a more opinionated framework with built-in solutions for routing, forms, dependency injection and other application concerns. Two members have experience using Angular. |
 | **Schedule** |  |  |
 | **Cost / licensing** | Free | Free |
 | **Security** |   |   |
