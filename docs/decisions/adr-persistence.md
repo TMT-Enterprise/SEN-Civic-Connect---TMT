@@ -22,7 +22,7 @@ Assumptions
 * Status history is append only
 * created_at and sent_at provide notification timing evidence
 
-## Class Diagram 
+## ERD 
 
 ![class diagram](civicconnect-initial-model-schema.jpg)
 
