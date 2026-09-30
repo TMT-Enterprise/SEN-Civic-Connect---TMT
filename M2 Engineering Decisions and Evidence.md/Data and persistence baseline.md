@@ -28,6 +28,9 @@ Assumptions
 ![class diagram](civicconnect-initial-model-schema.jpg)
 
 ## Persistence model justification
+CivicConnect uses a relational persistence/database model because its data contains structured entities with well defined relationships, such as users, service requests, categories and request history. The system also requires data integrity and consistency across related operations. 
+
+## Important data
 
 | Entity | Purpose | Example |
 |---|---|---|
