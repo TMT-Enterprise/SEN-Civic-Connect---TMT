@@ -18,7 +18,7 @@
 7. [Team Accountability](../governance/team-accountability.md)
 8. [Baseline Sign-off](baseline-signoff.md)
 9. [AI Usage Register](../governance/ai-usage-register.md)
-10. [References](../references.md)
+10. [References](../research-material/references.md)
 
 This file is the entry point into the PED. Each section lives as its own file so that changes
 to one section (a requirement, a risk, a decision) show up as its own reviewable diff, rather
