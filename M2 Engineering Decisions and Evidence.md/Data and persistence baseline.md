@@ -25,7 +25,7 @@ Assumptions
 
 ## Class Diagram 
 
-(civicconnect-initial-model-schema.jpg)
+![class diagram](civicconnect-initial-model-schema.jpg)
 
 ## Persistence model justification
 
