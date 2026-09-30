@@ -1,4 +1,3 @@
-<img width="999" height="462" alt="image" src="https://github.com/user-attachments/assets/7e5c9a33-90aa-41c6-94e3-64d50a4d3339" /># Data and Persistence Baseline
 ## Initial Data Schema — Entity and Lifecycle Analysis
 
 | Entity / Aggregate | Important Attributes | Relationships | Ownership Traceability | Lifecycle Implications |
