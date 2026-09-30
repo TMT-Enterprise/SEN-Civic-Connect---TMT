@@ -63,4 +63,4 @@ The trade-off is accepted because the current requirement set does not justify t
 - Future concrete notifiers if additional channels are confirmed
 - Unit tests that supply a test double for the Notifier
 
-## Design Representation
+
