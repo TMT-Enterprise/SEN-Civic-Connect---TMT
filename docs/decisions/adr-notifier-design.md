@@ -38,6 +38,8 @@ The team selects the **dependency-injected Notifier interface (Strategy-style ab
 - The solution keeps the request-handling service decoupled and independently testable.
 - The decision remains open to controlled evolution: if a second channel is later confirmed and needs independent reactive behaviour, the same abstraction can be extended or replaced by Observer under change control.
 
+The decision is taken inside a Modular Monolith architecture. The Request module depends only on the `INotifier` abstraction; the concrete `EmailNotifier` resides in an Infrastructure (or Notifications) module. Communication remains in-process, avoiding an unnecessary network boundary while still preserving module separation and independent testability.
+
 ## Consequences
 
 **Expected benefits**
