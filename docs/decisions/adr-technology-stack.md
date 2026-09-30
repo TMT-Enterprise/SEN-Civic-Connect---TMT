@@ -19,7 +19,7 @@ The selection aligns with the team's existing capabilities and supports the proj
 
 ## Database selection and justification
 *PostgreSQL vs Supabase Comparison*
-| Criteria | React | Angular |
+| Criteria | Postgre | Supabase |
 |---|---|---|
 | **Requirements / ASRs** | | |
 | **Team capability** |  |   |
@@ -32,7 +32,7 @@ The selection aligns with the team's existing capabilities and supports the proj
 
 ## API selection and justification
 *Swagger vs RestAPI Comparison*
-| Criteria | React | Angular |
+| Criteria | Swagger | RestAPI |
 |---|---|---|
 | **Requirements / ASRs** | | |
 | **Team capability** |  |   |
