@@ -1,11 +1,83 @@
-# SEN-Civic-Connect---TMT
-# Scope 1
-CivicConnect must deliver a single, cohesive baseline (Section 1.1) rather than an expanding feature set. Any proposed addition beyond the baseline must be justified against stakeholder value and its impact on schedule, cost, quality and security before it is accepted. Uncontrolled scope growth is not acceptable under the Master Project Brief.
-#Schedule
-Delivery is constrained to four formal milestone windows within the SEN381 term. There is no residual capacity to recover from late baseline errors. A requirement or design decision that is incorrect or incomplete at Milestone 1 propagates directly into Milestone 2 architecture work and the Milestone 3 construction window. Schedule risk is therefore front-loaded: errors in the engineering foundation are more costly than equivalent errors discovered later
-Cost and Resources
-The team must prefer free or low-cost services for hosting, database, notification and continuous integration where practical. At the same time the team must identify the operational cost that would apply beyond the educational context so that cost implications remain visible. Three-person team capacity is itself a hard resource constraint: every additional feature or unfamiliar technology carries an opportunity cost against the other required engineering artefacts (RTM, risk register, decision log, governance evidence).
-Quality
-Quality attributes must be defined as measurable non-functional requirements and later supported by evidence. Assertions such as “the system is fast” is not evidence, while “status updates render within two seconds under normal load” is testable and can be verified later with real evidence. This follows the international standard for requirements engineering, which treats verifiability as a required characteristic of a well-formed requirement (ISO/IEC/IEEE, 2018). Quality requirements baselined now will be revisited once the hosting platform is confirmed at Milestone 2, since platform limits may affect what is realistically achievable.
-Security
-Security is a lifecycle-wide responsibility, not a final add-on. At minimum authenticated staff and management roles with role-based access control applying the principle of least privilege (National Institute of Standards and Technology, 2020), protection of requester personal data such as contact details and complaint content, and status transitions that are required and controlled so that request history cannot be silently altered. These implications must be captured as requirements at this milestone even though the technical implementation is not decided until later.
+# CivicConnect
+
+**Community Service Request Management Platform**
+SEN381 Integrated Software Engineering Project, 2026
+
+## Overview
+
+Community-focused organisations often manage service requests, facility faults, IT support,
+maintenance issues, lost property and similar, through a fragmented mix of email, phone calls,
+and paper records. Requests get lost or duplicated, requesters have no visibility into
+progress, staff struggle to prioritise and coordinate work, and management has no reliable way
+to report on outstanding or overdue requests.
+
+CivicConnect is a controlled web platform that gives requesters a single, traceable way to
+submit and track service requests, gives staff a coordinated queue with defined status
+transitions and accountability, and gives management real visibility into service performance.
+
+## Team
+
+| Name | Student Number | Primary Area |
+|---|---|---|
+| Tinyiko Siwele | 601726 | Frontend |
+| Mutshidzi Nduvheni | 601781 | Backend |
+| Thabang Molise | 601586 | Backend / GitHub Governance |
+
+All three members remain jointly accountable for the complete system, not only their primary
+area, per the project's individual accountability standard.
+
+## Project Status
+
+**Milestone 1 (Engineering Foundation & Requirements Baseline): complete.**
+Problem and stakeholder analysis, scope baseline, constraints, requirements with acceptance
+criteria, initial RTM, initial risk register, forward engineering considerations, and GitHub
+governance are baselined and signed off. See `docs/PED/PED-v1.0.md`.
+
+**Milestone 2 (Architecture, Technology & Initial Design Baseline): in progress.**
+ASRs and quality drivers are defined. Initial design decisions (notification handling, status
+transition logic) are in ADR form. Persistence, technology-stack, and API/integration decisions
+are still being finalised. See `docs/PED/PED-v2.0.md` for current status.
+
+## Documentation
+
+All controlled project evidence lives under `docs/`, not in this README:
+
+| Folder | Contents |
+|---|---|
+| `docs/PED/` | The Project Engineering Document (PED) and baseline sign-offs |
+| `docs/requirements/` | Stakeholder analysis, scope baseline, requirements, RTM |
+| `docs/architecture/` | ASRs/quality drivers, architecture decision and diagrams |
+| `docs/decisions/` | ADRs for architecture, persistence, technology and design decisions |
+| `docs/risk/` | Risk register and probability/impact matrix |
+| `docs/change/` | Change requests and impact analyses |
+| `docs/governance/` | GitHub governance, team accountability, AI usage register |
+| `docs/deployment/` | Deployment compatibility and environment considerations |
+| `docs/assignments/` | Assignment research (A2, A3) that has informed project decisions |
+
+## Technology Stack
+
+Not yet finalised. The technology-stack decision is being made as a formal ADR at Milestone 2,
+informed by requirements, ASRs, team capability and cost constraints, see
+`docs/decisions/adr-technology-stack.md` once it lands.
+
+## Repository Governance
+
+- `main` is protected: no direct pushes, pull requests require two independent approvals.
+- Each developer works from a persistent personal branch, pulling from `main` regularly
+  (see `docs/change/CR-002-branching-and-governance.md`).
+- A dedicated hotfix branch and a CI check freeze `main` to other merges while a critical fix
+  is in progress.
+- Automated checks (build, test, lint, dependency audit) run on every pull request.
+
+Full detail: `docs/governance/github-governance.md`.
+
+## Getting Started
+
+Setup and run instructions will be added here once the initial application scaffold is in
+place, tracked under the Milestone 2 development issues. This section will be updated before
+any milestone requiring a runnable application.
+
+## Academic Context
+
+Developed as the integrated team project for Software Engineering 381 (SEN381), 2026 academic
+year. Not intended for production use.
