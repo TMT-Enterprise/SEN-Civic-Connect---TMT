@@ -27,7 +27,7 @@ Assumptions
 ![class diagram](civicconnect-initial-model-schema.jpg)
 
 ## Persistence model justification
-CivicConnect uses a relational persistence/database model because its data contains structured entities with well defined relationships, such as users, service requests, categories and request history. The system also requires data integrity and consistency across related operations. 
+CivicConnect uses a relational persistence/database model because its data contains structured entities with well defined relationships, such as users, service requests, categories and request history. The system also requires data integrity and consistency across related operations. The relational persistence model is appropriate for CivicConnect because its structured entities and relationships require strong data integrity and consistency. Primary keys, foreign keys and database constraints can maintain valid relationships between users, service requests, categories and request history. Transactional processing is also relevant to operations such as request assignment, where the request, status and history should remain consistent. The database will contain personal and security-sensitive information such as user contact details and password hashes, requiring appropriate authentication, authorization and data-protection controls. As the number of users, service requests and history records increases, database access patterns, indexing and query performance will need to be considered to maintain the required search performance.
 
 ## Important data
 
