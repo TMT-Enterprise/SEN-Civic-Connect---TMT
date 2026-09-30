@@ -12,6 +12,9 @@
 | **Ecosystem / dependency risk** |  |  |
 | **Deployment compatibility** |  | |
 
+## Final Selection
+Angular is the stronger engineering choice and will be selected because of its native support for the core ASRs, long term maintainability and defense value as well as security and dependency posture.
+
 ## Backend selection and justification
 C# is selected as the backend/runtime for CivicConnect and ASP.NET Core as the framework.
 
@@ -32,7 +35,7 @@ The selection aligns with the team's existing capabilities and supports the proj
 | **Additional services** | Primarily provides the database itself. Additional services must be implemented separately. | Provides additional services such as authentication, file storage, APIs and database management tools. |
 | **Control** | High control over configuration, infrastructure and deployment. | Less infrastructure control, but significantly less infrastructure management. |
 
-##Final selection
+## Final selection
 Supabase will be selected as the database platform as it provides CivicConnect with a managed PostgreSQL environment while also offering supporting services that can reduce infrastructure and devlopment overhead.
 
 ## API selection and justification
