@@ -29,4 +29,13 @@ Assumptions
 
 ## Persistence model justification
 
+| Entity | Purpose | Example |
+|---|---|---|
+| User | Stores account and personal information | userId, name, email, password |
+| Role | Defines what type of user the account represents | Requester, Staff, Admin, Management |
+| ServiceRequest | Defines what type of user the account represents | Requester, Staff, Admin, Management |
+| RequestHistory | Records the lifecycle of a request | Status changes, timestamps, responsible staff |
+| Category | Stores available request categories | IT Support. Maintenance, security |
+| Notification | Supports email notifications | Status-change notification |
+| Comment | Stores rejection/resolution comments | Staff’s resolution description |
 
