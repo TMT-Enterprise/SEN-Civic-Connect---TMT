@@ -1,4 +1,4 @@
-# Data and Persistence Baseline
+<img width="999" height="462" alt="image" src="https://github.com/user-attachments/assets/7e5c9a33-90aa-41c6-94e3-64d50a4d3339" /># Data and Persistence Baseline
 ## Initial Data Schema — Entity and Lifecycle Analysis
 
 | Entity / Aggregate | Important Attributes | Relationships | Ownership Traceability | Lifecycle Implications |
@@ -41,4 +41,24 @@ CivicConnect uses a relational persistence/database model because its data conta
 | Category | Stores available request categories | IT Support. Maintenance, security |
 | Notification | Supports email notifications | Status-change notification |
 | Comment | Stores rejection/resolution comments | Staff’s resolution description |
+
+## Access patterns
+
+| Access pattern | Architectural implication |
+|---|---|
+| Staff search/filter requests | Efficient queries and appropriate indexes |
+| Requester views request history | Efficient relationship between User, ServiceRequest and History |
+| Admin views unassigned requests | Query/filter based on assignment state |
+| Management views dashboard | Aggregation queries over service requests |
+| Request lifecycle changes | Transactional updates across related records |
+
+## Database Concerns
+
+| Concern | CivicConnect implication |
+|---|---|
+| Database bottleneck | Heavy search/reporting queries could affect response time |
+| Single point of failure | If the database becomes unavailable, core request management becomes unavailable |
+| Scalability | Increasing requests/users may increase query and storage requirements |
+| Availability | Database availability directly affects system availability |
+| Backup/recovery | Request and history data must be recoverable after data loss |
 
