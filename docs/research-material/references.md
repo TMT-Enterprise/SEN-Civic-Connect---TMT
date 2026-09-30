@@ -54,3 +54,8 @@ Guide)*. 6th edn. Newtown Square, PA: Project Management Institute.
 
 Sommerville, I. (2015) *Software engineering*. 10th ed. Boston: Pearson Education Limited.
 
+Angular Team (2026). Home • angular. [online] Angular. Available at: https://angular.dev/ [Accessed 30 Sept. 2026].
+
+Djirdeh, H. (2025). What are the top libraries and tools for modern react frontend development? [online] Telerik Blogs. Available at: https://www.telerik.com/blogs/top-libraries-tools-modern-react-frontend-development [Accessed 30 Sept. 2026].
+
+React Team (2024). Quick start. [online] react.dev. Available at: https://react.dev/learn [Accessed 30 Sept. 2026].
