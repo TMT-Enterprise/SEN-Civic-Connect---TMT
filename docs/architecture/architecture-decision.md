@@ -48,6 +48,14 @@ Physical deployment tiers describe where software components actually execute.
 
 These concepts should not be treated as equivalent. For example, several logical CivicConnect modules can execute within the same deployed backend application, while the database can run as a separate deployment component. Therefore, having multiple logical modules does not mean that CivicConnect has multiple physical services.
 
+### Risks
+| Factor | Guidance / Mitigation |
+|---|---|
+| Risk Mitigation Module coupling | Define clear module boundaries and controlled interfaces. |
+| Layer coupling | Enforce clear dependencies between layers. |
+| Shared database coupling | Define data ownership and controlled data access. |
+| Transaction complexity | Clearly define transaction responsibilities for multi-step operations. |
+| Added complexity | Keep modules and layers proportional to CivicConnect's scope. |
 
 
 
