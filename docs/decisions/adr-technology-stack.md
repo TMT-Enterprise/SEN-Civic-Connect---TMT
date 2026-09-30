@@ -5,9 +5,9 @@
 |---|---|---|
 | **Requirements / ASRs** | Route guards + context/hooks or libraries handle RBAC (NF-001, NF-002). Forms via React Hook Form + Zod or Formik. Dashboards/tables via TanStack Table / Recharts / AG Grid. Status workflows and sequential transitions implemented with state machines or custom logic. Search/filter straightforward with client-side libraries or server queries. Strong for dynamic UIs and real-time dashboard refreshes (FR-014) (Djirdeh, 2025).| Built-in Router Guards + interceptors excel at RBAC and role-based UI (NF-002). Reactive Forms are powerful for complex validated forms with controlled lists (FR-003, FR-017 categories). Dependency injection and services make status transitions and sequential rules cleaner to enforce. (Angular Team, 2026)|
 | **Team capability** | Moderate learning curve but routing, forms, state management and other application concerns may require additional libraries or agreed team conventions. Only one team member is proficient| Steep learning curve but provides a more opinionated framework with built-in solutions for routing, forms, dependency injection and other application concerns. Two members have experience using Angular. |
-| **Schedule** |  |  |
-| **Cost / licensing** | Free | Free |
-| **Security** |   |   |
+| **Schedule** | Faster for experienced member but risk of slower overall progress due to mentoring and architectural overhead | Moderate start due to learning investment but later milestones benefit from greater predictability and less rework. |
+| **Cost / licensing** | Free; zero licensing cost | Free; zero licensing cost |
+| **Security** | Good defaults (JSX escaping) and Frontend guards remain UX-only (Djirdeh, 2025). However, token handling, route protection, and dependency hygiene must be deliberately engineered. | Router Guards, HTTP interceptors, and TypeScript discipline reduce common classes of mistake. Smaller, more predictable dependency surface simplifies security reviews and residual-risk recording (Angular Team, 2026) |
 | **Maintainability** |  |  |
 | **Ecosystem / dependency risk** |  |  |
 | **Deployment compatibility** |  | |
