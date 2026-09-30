@@ -48,7 +48,7 @@ Physical deployment tiers describe where software components actually execute.
 
 These concepts should not be treated as equivalent. For example, several logical CivicConnect modules can execute within the same deployed backend application, while the database can run as a separate deployment component. Therefore, having multiple logical modules does not mean that CivicConnect has multiple physical services.
 
-### Risks
+### Risks/Consequences
 | Factor | Guidance / Mitigation |
 |---|---|
 | Risk Mitigation Module coupling | Define clear module boundaries and controlled interfaces. |
