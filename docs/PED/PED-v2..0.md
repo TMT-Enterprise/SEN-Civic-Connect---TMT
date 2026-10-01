@@ -23,10 +23,11 @@
 11. [Architecture Decision](../architecture/architecture-decision.md)
 12. [ASRs and Quality Drivers](../architecture/architecture-decision.md)
 13. [API integration](../decisions/adr-api-integration.md)
-14. [Data and Persistence design](../decisions/adr-persistence.md)
-15. [Technology Stack](../decisions/adr-technology-stack.md)
-16. [Change Log](../change/change-log.md)
-17. [Test Cases](../tests/placeholder.md)
+14. [Deployment Capability](../deployment/deployment-compatibility,md)
+15. [Data and Persistence design](../decisions/adr-persistence.md)
+16. [Technology Stack](../decisions/adr-technology-stack.md)
+17. [Change Log](../change/change-log.md)
+18. [Test Cases](../tests/placeholder.md)
 
 This file is the entry point into the PED. Each section lives as its own file so that changes
 to one section (a requirement, a risk, a decision) show up as its own reviewable diff, rather
