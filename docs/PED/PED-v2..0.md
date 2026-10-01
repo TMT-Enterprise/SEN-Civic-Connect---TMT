@@ -20,8 +20,8 @@
 9. [AI Usage Register](../governance/ai-usage-register.md) (updated)
 10. [References](../research-material/references.md) (updated)\
 *Added*
-11. [Architecture Decision](../decisions/adr-architecture-decision.md)
-12. [ASRs and Quality Drivers](../architecture/asrs-quality-drivers.md)
+11. [Architecture Decision](../architecture/adr-architecture-decision.md)
+12. [ASRs and Quality Drivers](../architecture/architecture-decision.md)
 13. [API integration](../decisions/adr-api-integration.md)
 14. [Data and Persistence design](../decisions/adr-persistence.md)
 15. [Technology Stack](../decisions/adr-technology-stack.md)
