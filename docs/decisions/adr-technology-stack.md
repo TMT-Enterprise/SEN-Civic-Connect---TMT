@@ -13,14 +13,32 @@
 | **Schedule** | Faster for experienced member but risk of slower overall progress due to mentoring and architectural overhead | Moderate start due to learning investment but later milestones benefit from greater predictability and less rework. |
 | **Cost / licensing** | Free; zero licensing cost | Free; zero licensing cost |
 | **Security** | Good defaults (JSX escaping) and Frontend guards remain UX-only (Djirdeh, 2025). However, token handling, route protection, and dependency hygiene must be deliberately engineered. | Router Guards, HTTP interceptors, and TypeScript discipline reduce common classes of mistake. Smaller, more predictable dependency surface simplifies security reviews and residual-risk recording (Angular Team, 2026) |
+| **How it would fit CivicConnect** | Supports dynamic forms, dashboards, filtering and role-based interactions. Processes such as routing forms and state managemnet will require additional libraries | Provides routing, reactive forms and dependency injection within the framework. |
+| **Trade-offs** | - More freedom and flexibility leading to more architectural decisions and third-party dependencies for application features | - Larger framework and more concepts to learn initially (steeper learning curve)|
+
 
 ## Final Selection
-Angular is the stronger engineering choice and will be selected because of its native support for the core ASRs, long term maintainability and defense value as well as security and dependency posture.
+Angular is the stronger engineering choice for CivicConnect's frontend, particularly for validated request forms, role-based interfaces and service-based communication. Its reactive forms support scalable and testable form handling, while its framework structure reduces the need to select and integrate multiple libraries. The main trade-trade off is Angular's larger learning curve compared with React; however, existing team experience reduces this risk.
 
 ## Backend selection and justification
-C# is selected as the backend/runtime for CivicConnect and ASP.NET Core as the framework.
+| Criteria | C# + ASP.NET Core | Node.js + TypeScript |
+|---|---|---|
+| **Requirements / ASRs** | Supports the backend implementation of NF-001–NF-003 through authentication, authorization and secure password handling. ASP.NET Core can also implement the business rules required by FR-008–FR-013, including assignment, sequential status changes and audit-history recording. Its transaction and database-access ecosystem supports operations where related request changes must remain consistent. | Node.js + TypeScript can also implement NF-001–NF-003 and the business rules in FR-008–FR-013. However, the specific authentication, authorization, validation, dependency-injection and database approaches depend more heavily on the frameworks and packages selected by the team. |
+| **Modular Monolith fit** | Strong support for structured applications, dependency injection and service-based organisation. ASP.NET Core also includes a built-in dependency injection | Also suitable for modular applications, but the team must select and enforce its own framework/library structure. |
+| **Team capability** | The team is working with C# and ASP.NET Core, reducing the need to introduce another backend ecosystem due to the available experience with the technology. | TypeScript/Node.js would require the team to develop its backend using a different runtime and supporting ecosystem. |
+| **Cost / licensing** | Free | Free |
+| **Maintainability** | ASP.NET Core has built-in dependency injection. Microsoft states that DI can make applications easier to test and maintain, and recommends small, well-factored, testable services. This fits CivicConnect's modular monolith structure (ardalis, 2026). | TypeScript provides static checking, but the team has greater freedom over application structure and supporting libraries. This flexibility can be useful, but the team must establish conventions for modules, services and dependencies to maintain consistency. |
+| **Ecosystem/dependency risk** | The .NET ecosystem provides integrated tooling and libraries for APIs, authentication, dependency injection and database access. This can reduce the need to combine many unrelated frameworks. | Node.js has a very large npm ecosystem. This provides extensive choice but also increases the number of external packages that may need to be evaluated, updated and maintained. |
+| **Deployment compatibility** | ASP.NET Core can run as a single web application, making it compatible with CivicConnect's modular-monolith deployment model. | Node.js applications can also be deployed as a single service and are compatible with the modular-monolith approach. |
+| **Team capability** | The team is working with C# and ASP.NET Core, reducing the need to introduce another backend ecosystem. | TypeScript/Node.js would require the team to develop its backend using a different runtime and supporting ecosystem. |
+| **Schedule** | Faster for experienced member but risk of slower overall progress due to mentoring and architectural overhead | Moderate start due to learning investment but later milestones benefit from greater predictability and less rework. |
+| **Cost / licensing** | Free; zero licensing cost | Free; zero licensing cost |
+| **Security** | ASP.NET Core provides framework support for authentication, authorization and middleware-based security controls. These mechanisms still require correct implementation and configuration by the team. | Node.js supports authentication and security through frameworks and packages, but security controls depend more heavily on the selected packages and their configuration. |
+| **How it would fit CivicConnect** | Supports a modular monolith containing modules such as Request, User/Auth and Notification. ASP.NET Core can provide the REST API, business services, validation and database interaction within one application. | Can support the same modules and REST API, but the team would need to establish the framework and library structure required to implement them. |
+| **Trade-offs** | Despite having a more structured framework and conventions (improving consistency and maintainability), C#/.NET introduces a larger framework ecosystem that the team must understand and maintain. | Includes a flexible ecosystem and large package selection; however, more architectural and dependency choices can increase maintenance and dependency-management responsibilities. |
 
-The selection aligns with the team's existing capabilities and supports the project's requirements for API development, business logic, validation, security and transactional database operations. It also fits the modular monolith architecture, where the backend can contain clearly separated business modules within one deployable application.
+## Final selection
+C# with ASP.NET Core was selected as the backend/runtime because its framework capabilities align with CivicConnect's modular-monolith architecture and its requirements for structured business logic, API development, maintainability and transactional data operations. ASP.NET Core provides built-in dependency injection, which Microsoft identifies as supporting testability and maintainability, while its asynchronous programming model is designed to support concurrent request processing. The framework also provides documented mechanisms for performance concerns such as caching, response compression, rate limiting and load/stress testing.
 
 ## Database selection and justification
 *PostgreSQL vs Supabase Comparison*
@@ -36,6 +54,8 @@ The selection aligns with the team's existing capabilities and supports the proj
 | **Deployment compatibility** | Can be deployed on servers, containers and many cloud providers. | Database hosting is managed through Supabase, reducing database deployment work but creating dependency on the platform. |
 | **Additional services** | Primarily provides the database itself. Additional services must be implemented separately. | Provides additional services such as authentication, file storage, APIs and database management tools. |
 | **Control** | High control over configuration, infrastructure and deployment. | Less infrastructure control, but significantly less infrastructure management. |
+| **How it would fit CivicConnect** | Fits the relational model containing Users, Roles, ServiceRequests, Categories, RequestHistory and Notifications. | Provides the same PostgreSQL relational model while reducing database infrastructure management. |
+| **Trade-offs** | Greater infrastructure and configuration control but more responsibility for deployment, maintenance, backups and security configuration. | No significant trade-off specified yet |
 
 ## Final selection
 Supabase will be selected as the database platform as it provides CivicConnect with a managed PostgreSQL environment while also offering supporting services that can reduce infrastructure and devlopment overhead.
@@ -52,6 +72,8 @@ Supabase will be selected as the database platform as it provides CivicConnect w
 | **Maintainability** | Resource-oriented endpoints provide a consistent structure for API operations. | Keeps API documentation aligned with the API specification and helps developers understand available endpoints. |
 | **Ecosystem / dependency risk** | Very mature and widely supported by web frameworks and tools. | Widely adopted API documentation standard with multiple supporting tools. |
 | **Deployment compatibility** | Can operate within CivicConnect's .NET modular monolith. | Can be integrated with the .NET backend to expose interactive API documentation during development/testing. |
+| **How it would fit CivicConnect** | Provides the boundary between Angular and the ASP.NET Core application for operations such as submitting, assigning and updating requests. | Can document those endpoints and provide an interactive interface for developers to inspect/test the API. |
+| **Trade-offs** | Simple and widely supported comunication approach but requires the team to maintain consistent endpoint design and validation | Improves API visibility and developer understanding but adds documentation/tooling overhead and must remain synchronised with the actual API. |
 
 ## Final selection
 REST is selected as the API architectural approach, with Swagger/OpenAPI possibly beig used to dcument and test the RestAPI. REST provides a straigthforward resources-based communication mechanism between the frontend and backend, while Swagger/OpenAPI improves API visbility by documenting endpoints, request/response structures and security requirements. Although the team has limited prior experience with Swagger, its integration with ASP.NET Core and potential benefits for API documentation and testing justify the relatively small learning requirement. The team will monitor the learning curve asto ensuree it does not negatively affect the development schedule.
@@ -64,7 +86,7 @@ REST is selected as the API architectural approach, with Swagger/OpenAPI possibl
 | Backend unit testing | xUnit | Test individual C# components and business logic |
 | API testing | OpenAPI | Verify REST endpoints and request/response behaviour |
 | Integration testing | ASP.NET Core integration testing | Verify interactions between backend components |
-| End-to-end testing | Cypress | Verify important user workflows across frontend and backend |
+| End-to-end testing | Cypress/Playwright | Verify important user workflows across frontend and backend |
 
 For end-to-end testing, Cypress was selected instead of Playwright because it provides the required capabilities for testing CivicConnect's web workflows while keeping the learning and setup overhead manageable for the development team. Its interactive test runner also supports easier test creation and debugging, which is beneficial given the project's development schedule
 
