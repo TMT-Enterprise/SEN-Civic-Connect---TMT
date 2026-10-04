@@ -10,28 +10,55 @@ node_modules/
 # Local security keys, API tokens, and configurations 
 .env
 .env.*
-.angular
+!.env.example
+cypress.env.json
+appsettings.Development.json
+appsettings.*.local.json
+secrets.json
+*.pem
+*.key
+*.pfx
+*.p12
+.supabase/
+supabase/.temp/
+supabase/.env
 
 # =================================================================================
 # 3. BUILD ARTIFACTS & OUTPUTS 
 # =================================================================================
 # Compiled code, binaries, and production builds 
-.NET
-/dist
-/out-tsc
-/tmp
+bin/
+obj/
+publish/
+
+dist/
+out-tsc/
+.angular/
+tmp/
 
 # =================================================================================
-# 4. LOGS, CAHCHES, & DIAGNOSTICS
+# 4. LOGS, CACHES, & DIAGNOSTICS
 # =================================================================================
 # Temporary runtime logs and diagnostic folders 
-npm-debig.log*
-
+coverage/
+TestResults/
+cypress/videos/
+cypress/screenshots/
+cypress/downloads/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.sass-cache/
+testem.log
 
 # =================================================================================
 # 5. IDE / CODE EDITOR CONFIGURATIONS 
 # =================================================================================
-# User-specifc workspace settings for VS Code, Visual Studio, etc
+# User-specific workspace settings for VS Code, Visual Studio, etc
 .vscode/
 *.suo
 .idea/
+.vs/
+*.user
