@@ -1,1 +1,37 @@
+# =================================================================================
+# 1. DEPENDENCIES & PACKAGES
+# =================================================================================
+# Third-party source code and package manager directories
+node_modules/
 
+# =================================================================================
+# 2. ENVIRONMENT VARIABLES & SECRETS
+# =================================================================================
+# Local security keys, API tokens, and configurations 
+.env
+.env.*
+.angular
+
+# =================================================================================
+# 3. BUILD ARTIFACTS & OUTPUTS 
+# =================================================================================
+# Compiled code, binaries, and production builds 
+.NET
+/dist
+/out-tsc
+/tmp
+
+# =================================================================================
+# 4. LOGS, CAHCHES, & DIAGNOSTICS
+# =================================================================================
+# Temporary runtime logs and diagnostic folders 
+npm-debig.log*
+
+
+# =================================================================================
+# 5. IDE / CODE EDITOR CONFIGURATIONS 
+# =================================================================================
+# User-specifc workspace settings for VS Code, Visual Studio, etc
+.vscode/
+*.suo
+.idea/
