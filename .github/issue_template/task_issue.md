@@ -4,11 +4,6 @@ about: One PR-sized unit of work. One issue, one branch, one PR.
 title: "Sn-NN <task>"
 labels: task
 ---
-**Parent:** #
-**Slice milestone:** Sn
-**Blocked by:** #  (also set in the native field)
-**Requirement(s):** FR-/NF- (or n/a)
-**Size:** S / M (L = split first)
 
 ## Context
 <why this exists; links to ADR / CR / risk / PED section>
