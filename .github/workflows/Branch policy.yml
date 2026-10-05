@@ -1,0 +1,35 @@
+name: Branch policy
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, edited]
+
+permissions:
+  contents: read
+
+jobs:
+  branch-policy:
+    name: Branch policy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Only development or main-update may merge into main
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+        run: |
+          echo "PR head: $HEAD_REPO:$HEAD_REF -> main"
+
+          if [ "$HEAD_REPO" != "$GITHUB_REPOSITORY" ]; then
+            echo "::error::PRs from forks cannot target main."
+            exit 1
+          fi
+
+          if [ "$HEAD_REF" = "development" ]; then
+            echo "OK: standard release path (development -> main)."
+          elif [ "$HEAD_REF" = "main-update" ] || [[ "$HEAD_REF" == main-update/* ]]; then
+            echo "OK: main-update exception lane (hotfix / repo-level change)."
+          else
+            echo "::error::main only accepts PRs from 'development' or 'main-update' / 'main-update/*'. Got '$HEAD_REF'."
+            exit 1
+          fi
