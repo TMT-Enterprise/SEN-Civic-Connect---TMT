@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/api/" />
+  <Folder Name="/src/api/Api/">
+    <Project Path="src/api/Api/CivicConnect.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/api/Auth/">
+    <Project Path="src/api/Auth/CivicConnect.Auth.csproj" />
+  </Folder>
+  <Folder Name="/src/api/Data/">
+    <Project Path="src/api/Data/CivicConnect.Data.csproj" />
+  </Folder>
+  <Folder Name="/src/api/Notifications/">
+    <Project Path="src/api/Notifications/CivicConnect.Notifications.csproj" />
+  </Folder>
+  <Folder Name="/src/api/Requests/">
+    <Project Path="src/api/Requests/CivicConnect.Requests.csproj" />
+  </Folder>
+</Solution>
