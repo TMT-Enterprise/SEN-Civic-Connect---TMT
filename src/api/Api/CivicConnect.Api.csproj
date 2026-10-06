@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Auth\CivicConnect.Auth.csproj" />
+    <ProjectReference Include="..\Requests\CivicConnect.Requests.csproj" />
+    <ProjectReference Include="..\Data\CivicConnect.Data.csproj" />
+    <ProjectReference Include="..\Notifications\CivicConnect.Notifications.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>
