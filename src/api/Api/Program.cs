@@ -30,7 +30,6 @@ if (builder.Environment.IsDevelopment())
 }
 
 // Health checks
-// Health checks
 var connectionString = builder.Configuration.GetConnectionString("Default")
     ?? throw new InvalidOperationException("ConnectionStrings:Default is required.");
 
