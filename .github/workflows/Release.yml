@@ -1,6 +1,5 @@
 name: Release (main)
 
-# main is deployment-only. This runs only when something lands on main.
 on:
   push:
     branches: [main]
@@ -12,6 +11,9 @@ concurrency:
 permissions:
   contents: read
   pull-requests: read
+
+env:
+  API_PROJECT: src/api/Api/CivicConnect.Api.csproj
 
 jobs:
   verify-origin:
@@ -48,11 +50,11 @@ jobs:
           global-json-file: global.json
 
       - name: Publish API
-        run: dotnet publish src/api/CivicConnect.Api -c Release -o publish/api
+        run: dotnet publish $API_PROJECT -c Release -o publish/api
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22 # keep identical to ci.yml
+          node-version-file: .nvmrc
           cache: npm
           cache-dependency-path: src/web/package-lock.json
 
@@ -79,6 +81,6 @@ jobs:
     name: Deploy (placeholder)
     needs: build-release
     runs-on: ubuntu-latest
-    environment: staging # create this Environment in repo settings; hold secrets there, not in the repo
+    environment: staging
     steps:
       - run: echo "Deploy step not implemented yet."
