@@ -3,7 +3,6 @@ root = true
 # All files
 [*]
 indent_style = space
-end_of_line = lf
 
 # Xml files
 [*.xml]
