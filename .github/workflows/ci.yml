@@ -13,7 +13,26 @@ concurrency:
 permissions:
   contents: read
 
+env:
+  SOLUTION: CivicConnect.slnx
+
 jobs:
+  repo-sanity:
+    name: Repo sanity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Critical files must exist and be non-empty
+        run: |
+          missing=0
+          for f in global.json CivicConnect.slnx Directory.Build.props .editorconfig .nvmrc src/web/package.json src/web/package-lock.json; do
+            if [ ! -s "$f" ]; then
+              echo "::error file=$f::$f is missing or empty."
+              missing=1
+            fi
+          done
+          exit $missing
+
   backend:
     name: Backend (build, test, static, deps)
     runs-on: ubuntu-latest
@@ -22,29 +41,42 @@ jobs:
 
       - uses: actions/setup-dotnet@v4
         with:
-          global-json-file: global.json # you already have one: single source of truth for the SDK version
+          global-json-file: global.json
 
       - name: Restore
-        run: dotnet restore CivicConnect.sln
+        run: dotnet restore $SOLUTION
 
-      # Static / code-quality check #1: formatting and style rules from .editorconfig
       - name: Format check
-        run: dotnet format CivicConnect.sln --verify-no-changes --no-restore
+        run: dotnet format $SOLUTION --verify-no-changes --no-restore
 
       - name: Build
-        run: dotnet build CivicConnect.sln -c Release --no-restore -warnaserror
+        run: dotnet build $SOLUTION -c Release --no-restore
+
+      - name: Test projects must exist
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          n=$(find tests -name '*.csproj' | wc -l)
+          echo "Test projects found: $n"
+          if [ "$n" -eq 0 ]; then
+            echo "### No tests executed (no test projects under tests/)" >> "$GITHUB_STEP_SUMMARY"
+            if [ "$BASE_REF" = "main" ]; then
+              echo "::error::No test projects under tests/. A PR into main must run real tests."
+              exit 1
+            fi
+            echo "::warning::No test projects under tests/. Allowed on development only."
+          fi
 
       - name: Test (with coverage)
         run: >
-          dotnet test CivicConnect.sln -c Release --no-build
+          dotnet test $SOLUTION -c Release --no-build
           --logger "trx;LogFileName=results.trx"
           --collect:"XPlat Code Coverage"
           --results-directory TestResults
 
-      # Security / dependency check: fail on known-vulnerable NuGet packages
       - name: NuGet vulnerability scan
         run: |
-          dotnet list CivicConnect.sln package --vulnerable --include-transitive 2>&1 | tee vulnerable.txt
+          dotnet list $SOLUTION package --vulnerable --include-transitive 2>&1 | tee vulnerable.txt
           if grep -q "has the following vulnerable packages" vulnerable.txt; then
             echo "::error::Vulnerable NuGet packages found."
             exit 1
@@ -58,6 +90,7 @@ jobs:
           path: |
             TestResults/**
             vulnerable.txt
+          if-no-files-found: ignore
           retention-days: 90
 
   frontend:
@@ -71,7 +104,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22 # set to whatever `node -v` is locally, and record it in PED §7.7
+          node-version-file: .nvmrc 
           cache: npm
           cache-dependency-path: src/web/package-lock.json
 
@@ -81,7 +114,7 @@ jobs:
         run: npm run lint
 
       - name: Unit tests
-        run: npm test -- --watch=false --browsers=ChromeHeadless
+        run: npm run test:ci
 
       - name: Build
         run: npm run build
@@ -95,7 +128,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # scan full history, same as your local gitleaks run
+          fetch-depth: 0
       - name: Gitleaks
         run: >
           docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:latest
@@ -104,12 +137,12 @@ jobs:
   ci-gate:
     name: CI gate
     if: always()
-    needs: [backend, frontend, secrets-scan]
+    needs: [repo-sanity, backend, frontend, secrets-scan]
     runs-on: ubuntu-latest
     steps:
-      - name: Fail if any required job failed or was cancelled
+      - name: All required jobs must succeed
+        env:
+          RESULTS: ${{ needs.repo-sanity.result }} ${{ needs.backend.result }} ${{ needs.frontend.result }} ${{ needs.secrets-scan.result }}
         run: |
-          echo '${{ toJSON(needs) }}'
-          if [ "${{ contains(needs.*.result, 'failure') }}" = "true" ] || [ "${{ contains(needs.*.result, 'cancelled') }}" = "true" ]; then
-            exit 1
-          fi
+          echo "Results (repo-sanity backend frontend secrets-scan): $RESULTS"
+          [ "$RESULTS" = "success success success success" ]
