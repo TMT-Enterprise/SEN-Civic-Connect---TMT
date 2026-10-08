@@ -1,4 +1,4 @@
-name: Release (main)
+name: release (main)
 
 on:
   push:
