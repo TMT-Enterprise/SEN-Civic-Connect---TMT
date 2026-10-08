@@ -1,9 +1,11 @@
 using CivicConnect.Data;
-using HealthChecks.UI.Client;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Console.WriteLine($"Environment: {builder.Environment.EnvironmentName}");
+Console.WriteLine($"Config connection string: {builder.Configuration.GetConnectionString("Default")}");
 
 // Register data access
 builder.Services.AddDataAccess(builder.Configuration);
@@ -28,9 +30,33 @@ if (builder.Environment.IsDevelopment())
 }
 
 // Health checks
+var connectionString = builder.Configuration.GetConnectionString("Default")
+    ?? throw new InvalidOperationException("ConnectionStrings:Default is required.");
+
+    var csb = new Npgsql.NpgsqlConnectionStringBuilder(connectionString);
+
+    try
+{
+    await using var testConnection = new Npgsql.NpgsqlConnection(connectionString);
+    await testConnection.OpenAsync();
+    Console.WriteLine("DIRECT NPGSQL TEST: SUCCESS");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"DIRECT NPGSQL TEST: FAILED - {ex.Message}");
+}
+
+/* Console.WriteLine($"DB Host: {csb.Host}");
+Console.WriteLine($"DB Port: {csb.Port}");
+Console.WriteLine($"DB Name: {csb.Database}");
+Console.WriteLine($"DB User: {csb.Username}");
+Console.WriteLine($"DB Password supplied: {!string.IsNullOrEmpty(csb.Password)}");
+Console.WriteLine($"DB Password length: {csb.Password?.Length}");
+Console.WriteLine($"DB Connection String: {csb.ConnectionString}"); */
+
 builder.Services.AddHealthChecks()
     .AddNpgSql(
-        builder.Configuration.GetConnectionString("Default")!,
+        connectionString,
         tags: new[] { "ready" });
 
 var app = builder.Build();
