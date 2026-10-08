@@ -1,6 +1,8 @@
-using CivicConnect.Data;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Reflection;
+
+using CivicConnect.Data;
+
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,9 +35,9 @@ if (builder.Environment.IsDevelopment())
 var connectionString = builder.Configuration.GetConnectionString("Default")
     ?? throw new InvalidOperationException("ConnectionStrings:Default is required.");
 
-    var csb = new Npgsql.NpgsqlConnectionStringBuilder(connectionString);
+var csb = new Npgsql.NpgsqlConnectionStringBuilder(connectionString);
 
-    try
+try
 {
     await using var testConnection = new Npgsql.NpgsqlConnection(connectionString);
     await testConnection.OpenAsync();

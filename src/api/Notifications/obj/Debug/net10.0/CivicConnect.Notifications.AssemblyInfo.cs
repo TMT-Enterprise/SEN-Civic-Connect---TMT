@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CivicConnect.Notifications")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+82e3105c942490dfeb2f0f531765a8a3b09de3d3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a21ab57d1d1481689220fb0a130ede713539c13e")]
 [assembly: System.Reflection.AssemblyProductAttribute("CivicConnect.Notifications")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CivicConnect.Notifications")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
