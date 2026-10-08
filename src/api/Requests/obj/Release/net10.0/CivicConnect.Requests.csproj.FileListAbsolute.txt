@@ -1,0 +1,16 @@
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Requests\bin\Release\net10.0\CivicConnect.Requests.deps.json
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Requests\bin\Release\net10.0\CivicConnect.Requests.dll
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Requests\bin\Release\net10.0\CivicConnect.Requests.pdb
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Requests\bin\Release\net10.0\CivicConnect.Data.dll
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Requests\bin\Release\net10.0\CivicConnect.Data.pdb
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Requests\obj\Release\net10.0\CivicConnect.Requests.csproj.AssemblyReference.cache
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Requests\obj\Release\net10.0\CivicConnect.Requests.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Requests\obj\Release\net10.0\CivicConnect.Requests.AssemblyInfoInputs.cache
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Requests\obj\Release\net10.0\CivicConnect.Requests.AssemblyInfo.cs
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Requests\obj\Release\net10.0\CivicConnect.Requests.csproj.CoreCompileInputs.cache
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Requests\obj\Release\net10.0\CivicConnect.Requests.sourcelink.json
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Requests\obj\Release\net10.0\CivicCon.44268AF3.Up2Date
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Requests\obj\Release\net10.0\CivicConnect.Requests.dll
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Requests\obj\Release\net10.0\refint\CivicConnect.Requests.dll
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Requests\obj\Release\net10.0\CivicConnect.Requests.pdb
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Requests\obj\Release\net10.0\ref\CivicConnect.Requests.dll
