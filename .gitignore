@@ -27,8 +27,8 @@ supabase/.env
 # 3. BUILD ARTIFACTS & OUTPUTS 
 # =================================================================================
 # Compiled code, binaries, and production builds 
-bin/
-obj/
+**/bin/
+**/obj/
 publish/
 
 dist/
@@ -62,4 +62,5 @@ testem.log
 .idea/
 .vs/
 *.user
+
 
