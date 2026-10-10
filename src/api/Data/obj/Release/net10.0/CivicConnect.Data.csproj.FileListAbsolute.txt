@@ -1,0 +1,13 @@
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Data\bin\Release\net10.0\CivicConnect.Data.deps.json
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Data\bin\Release\net10.0\CivicConnect.Data.dll
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Data\bin\Release\net10.0\CivicConnect.Data.pdb
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Data\obj\Release\net10.0\CivicConnect.Data.csproj.AssemblyReference.cache
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Data\obj\Release\net10.0\CivicConnect.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Data\obj\Release\net10.0\CivicConnect.Data.AssemblyInfoInputs.cache
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Data\obj\Release\net10.0\CivicConnect.Data.AssemblyInfo.cs
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Data\obj\Release\net10.0\CivicConnect.Data.csproj.CoreCompileInputs.cache
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Data\obj\Release\net10.0\CivicConnect.Data.sourcelink.json
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Data\obj\Release\net10.0\CivicConnect.Data.dll
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Data\obj\Release\net10.0\refint\CivicConnect.Data.dll
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Data\obj\Release\net10.0\CivicConnect.Data.pdb
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Data\obj\Release\net10.0\ref\CivicConnect.Data.dll

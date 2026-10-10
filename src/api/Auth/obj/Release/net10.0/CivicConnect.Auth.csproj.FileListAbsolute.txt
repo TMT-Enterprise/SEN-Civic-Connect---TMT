@@ -1,0 +1,16 @@
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Auth\bin\Release\net10.0\CivicConnect.Auth.deps.json
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Auth\bin\Release\net10.0\CivicConnect.Auth.dll
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Auth\bin\Release\net10.0\CivicConnect.Auth.pdb
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Auth\bin\Release\net10.0\CivicConnect.Data.dll
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Auth\bin\Release\net10.0\CivicConnect.Data.pdb
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Auth\obj\Release\net10.0\CivicConnect.Auth.csproj.AssemblyReference.cache
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Auth\obj\Release\net10.0\CivicConnect.Auth.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Auth\obj\Release\net10.0\CivicConnect.Auth.AssemblyInfoInputs.cache
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Auth\obj\Release\net10.0\CivicConnect.Auth.AssemblyInfo.cs
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Auth\obj\Release\net10.0\CivicConnect.Auth.csproj.CoreCompileInputs.cache
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Auth\obj\Release\net10.0\CivicConnect.Auth.sourcelink.json
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Auth\obj\Release\net10.0\CivicCon.29276E49.Up2Date
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Auth\obj\Release\net10.0\CivicConnect.Auth.dll
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Auth\obj\Release\net10.0\refint\CivicConnect.Auth.dll
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Auth\obj\Release\net10.0\CivicConnect.Auth.pdb
+C:\Users\LTMol\Desktop\SEN381\Github\SEN-Civic-Connect---TMT\src\api\Auth\obj\Release\net10.0\ref\CivicConnect.Auth.dll
