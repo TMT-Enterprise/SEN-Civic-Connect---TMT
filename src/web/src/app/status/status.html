@@ -1,0 +1,47 @@
+<p>DEBUG: Status template is rendering.</p>
+
+<div class="status-page">
+  <h1>CivicConnect — System Status</h1>
+
+  <section class="status-card">
+    <h2>API Status</h2>
+
+    <p *ngIf="liveness; else apiLoading">
+      Status: {{ liveness.status }}
+    </p>
+    <ng-template #apiLoading>
+      <p *ngIf="apiError; else apiWaiting" class="error-state">
+        {{ apiError }}
+      </p>
+      <ng-template #apiWaiting>
+        <p>Status: Loading...</p>
+      </ng-template>
+    </ng-template>
+
+    <p *ngIf="liveness">Version: {{ liveness.version }}</p>
+    <p *ngIf="liveness">Commit: {{ liveness.commit }}</p>
+  </section>
+
+  <section class="status-card">
+    <h2>Database Status</h2>
+
+    <p *ngIf="readiness">
+      Status: {{ readiness.status }}
+    </p>
+
+    <p *ngIf="readiness">
+      <span *ngFor="let check of readiness.checks">
+        {{ check.name }}: {{ check.status }}
+        <span *ngIf="check.error"> — {{ check.error }}</span>
+      </span>
+    </p>
+
+    <p *ngIf="databaseError" class="error-state">
+      {{ databaseError }}
+    </p>
+
+    <p *ngIf="!readiness && !databaseError">
+      Status: Loading...
+    </p>
+  </section>
+</div>
