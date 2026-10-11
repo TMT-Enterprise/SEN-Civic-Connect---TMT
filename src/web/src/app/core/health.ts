@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable } from 'rxjs';
 
 export interface HealthResponse {
   status: string;
@@ -10,14 +11,18 @@ export interface HealthResponse {
 
 export interface ReadyResponse {
   status: string;
-  checks: { name: string; status: string; error: string | null }[];
+  checks: {
+    name: string;
+    status: string;
+    error: string | null;
+  }[];
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class HealthService {
-  constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient);
 
   getLiveness(): Observable<HealthResponse> {
     return this.http.get<HealthResponse>('/health');
