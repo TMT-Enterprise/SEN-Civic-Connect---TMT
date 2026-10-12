@@ -779,23 +779,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\LTMol\\.nuget\\packages\\": {},
+    "C:\\Users\\User\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\LTMol\\Desktop\\SEN381\\Github\\SEN-Civic-Connect---TMT\\src\\api\\Api\\CivicConnect.Api.csproj",
+      "projectUniqueName": "D:\\Documents\\2026\\SEN381\\SEN-Civic-Connect---TMT\\src\\api\\Api\\CivicConnect.Api.csproj",
       "projectName": "CivicConnect.Api",
-      "projectPath": "C:\\Users\\LTMol\\Desktop\\SEN381\\Github\\SEN-Civic-Connect---TMT\\src\\api\\Api\\CivicConnect.Api.csproj",
-      "packagesPath": "C:\\Users\\LTMol\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\LTMol\\Desktop\\SEN381\\Github\\SEN-Civic-Connect---TMT\\src\\api\\Api\\obj\\",
+      "projectPath": "D:\\Documents\\2026\\SEN381\\SEN-Civic-Connect---TMT\\src\\api\\Api\\CivicConnect.Api.csproj",
+      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+      "outputPath": "D:\\Documents\\2026\\SEN381\\SEN-Civic-Connect---TMT\\src\\api\\Api\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\LTMol\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -812,17 +812,17 @@
           "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {
-            "C:\\Users\\LTMol\\Desktop\\SEN381\\Github\\SEN-Civic-Connect---TMT\\src\\api\\Auth\\CivicConnect.Auth.csproj": {
-              "projectPath": "C:\\Users\\LTMol\\Desktop\\SEN381\\Github\\SEN-Civic-Connect---TMT\\src\\api\\Auth\\CivicConnect.Auth.csproj"
+            "D:\\Documents\\2026\\SEN381\\SEN-Civic-Connect---TMT\\src\\api\\Auth\\CivicConnect.Auth.csproj": {
+              "projectPath": "D:\\Documents\\2026\\SEN381\\SEN-Civic-Connect---TMT\\src\\api\\Auth\\CivicConnect.Auth.csproj"
             },
-            "C:\\Users\\LTMol\\Desktop\\SEN381\\Github\\SEN-Civic-Connect---TMT\\src\\api\\Data\\CivicConnect.Data.csproj": {
-              "projectPath": "C:\\Users\\LTMol\\Desktop\\SEN381\\Github\\SEN-Civic-Connect---TMT\\src\\api\\Data\\CivicConnect.Data.csproj"
+            "D:\\Documents\\2026\\SEN381\\SEN-Civic-Connect---TMT\\src\\api\\Data\\CivicConnect.Data.csproj": {
+              "projectPath": "D:\\Documents\\2026\\SEN381\\SEN-Civic-Connect---TMT\\src\\api\\Data\\CivicConnect.Data.csproj"
             },
-            "C:\\Users\\LTMol\\Desktop\\SEN381\\Github\\SEN-Civic-Connect---TMT\\src\\api\\Notifications\\CivicConnect.Notifications.csproj": {
-              "projectPath": "C:\\Users\\LTMol\\Desktop\\SEN381\\Github\\SEN-Civic-Connect---TMT\\src\\api\\Notifications\\CivicConnect.Notifications.csproj"
+            "D:\\Documents\\2026\\SEN381\\SEN-Civic-Connect---TMT\\src\\api\\Notifications\\CivicConnect.Notifications.csproj": {
+              "projectPath": "D:\\Documents\\2026\\SEN381\\SEN-Civic-Connect---TMT\\src\\api\\Notifications\\CivicConnect.Notifications.csproj"
             },
-            "C:\\Users\\LTMol\\Desktop\\SEN381\\Github\\SEN-Civic-Connect---TMT\\src\\api\\Requests\\CivicConnect.Requests.csproj": {
-              "projectPath": "C:\\Users\\LTMol\\Desktop\\SEN381\\Github\\SEN-Civic-Connect---TMT\\src\\api\\Requests\\CivicConnect.Requests.csproj"
+            "D:\\Documents\\2026\\SEN381\\SEN-Civic-Connect---TMT\\src\\api\\Requests\\CivicConnect.Requests.csproj": {
+              "projectPath": "D:\\Documents\\2026\\SEN381\\SEN-Civic-Connect---TMT\\src\\api\\Requests\\CivicConnect.Requests.csproj"
             }
           }
         }
