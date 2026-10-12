@@ -1,4 +1,5 @@
 using System.Xml.Linq;
+
 using Xunit;
 
 namespace CivicConnect.UnitTests;
@@ -152,4 +153,3 @@ public class ArchitectureTests
         );
     }
 }
-
