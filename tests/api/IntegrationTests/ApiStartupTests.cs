@@ -1,7 +1,9 @@
 using System.Net;
 using System.Text.Json;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+
 using Xunit;
 
 namespace CivicConnect.IntegrationTests;
