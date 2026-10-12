@@ -6,11 +6,7 @@ using Xunit;
 
 namespace CivicConnect.IntegrationTests;
 
-/// <summary>
-/// Basis: S1-06 / S1-05: In-memory API startup and liveness verification.
-/// Verifies that the Integration test project can bootstrap CivicConnect.Api in memory
-/// using WebApplicationFactory without external service dependencies.
-/// </summary>
+
 public class ApiStartupTests : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory;
@@ -28,7 +24,6 @@ public class ApiStartupTests : IClassFixture<WebApplicationFactory<Program>>
     public async Task GetHealth_WhenApiStartsInMemory_ReturnsOkWithHealthyStatus()
     {
         // Arrange
-        // Basis: S1-05 response shape specification: { status: "Healthy", version, commit }
         using var client = _factory.CreateClient();
 
         // Act
