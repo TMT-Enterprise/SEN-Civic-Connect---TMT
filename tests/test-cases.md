@@ -26,6 +26,7 @@
 | TC-FR003-02 | Submit without a required field or category | Submission is rejected with validation messages. |
 | TC-FR003-03 | Submit a description at the minimum/maximum length and just beyond the limit | Valid boundary values are accepted; invalid lengths are rejected. |
 | TC-FR003-04 | Submit SQL injection or script-like input | Input is handled safely; no unintended database operation or script execution occurs. |
+| TC-FR003-05 | Attempt to bypass authentication by manually changing the URL from /login to /requester | Access is denied, and the user must log in before accessing the application or submitting a request. |
 
 ## FR-005 - View Current Request Status
 
@@ -48,8 +49,7 @@
 |---|---|---|
 | TC-FR007-01 | View history containing multiple requests | All the requester's own requests and saved details are displayed correctly. |
 | TC-FR007-02 | View history when no requests exist | An appropriate empty-state message is displayed. |
-| TC-FR007-03 | Attempt to access another requester's history through the UI or API | Access is denied. |
-| TC-FR007-04 | View a completed request | Relevant completion timestamps and current status are displayed accurately. |
+| TC-FR007-03 | View a completed request | Relevant completion timestamps and current status are displayed accurately. |
 
 ## FR-008 - Admin Viewing and Assignment
 
@@ -57,9 +57,10 @@
 |---|---|---|
 | TC-FR008-01 | Admin views unassigned requests and their details | Unassigned requests and required details are displayed. |
 | TC-FR008-02 | Non-admin attempts to access the unassigned queue or assign a request | Access is denied. |
-| TC-FR008-03 | Admin assigns a request to eligible staff and sets a due date at least 24 hours ahead | Assignment succeeds and details are saved. |
-| TC-FR008-04 | Admin selects invalid staff, an invalid request or a due date less than 24 hours ahead | Assignment is rejected with an appropriate message. |
-| TC-FR008-05 | Verify the queue after successful assignment | The request's assignment is saved and its unassigned state is updated.|
+| TC-FR008-03 | Admin assigns a request to eligible staff | Assignment succeeds and the assigned staff member is saved. |
+| TC-FR008-04 | Admin sets a due date at least 24 hours after assignment | Due date is accepted and saved. |
+| TC-FR008-05 | Admin selects invalid staff, an invalid request or a due date less than 24 hours ahead | Assignment is rejected with an appropriate message. |
+| TC-FR008-06 | Verify the queue after successful assignment | The request's assignment is saved and its unassigned state is updated.|
 
 ## FR-009 & FR-015 - Search and Filter 
 
@@ -68,8 +69,9 @@
 | TC-FR915-01 | Search using a valid request ID or keyword | Matching requests are displayed. |
 | TC-FR915-02 | Filter requests using valid criteria | Only requests matching the selected filters are displayed. |
 | TC-FR915-03 | Search with no matching results or an empty query | No-results or default results are displayed appropriately. |
-| TC-FR915-04 | Search for a request using lowercase text when the stored value contains uppercase characters. | Matching results are returned regardless of letter case. |
-| TC-FR915-05 | Search using special characters or SQL-injection test strings. | Input is handled safely; no query manipulation or unauthorised data exposure occurs. |
+| TC-FR915-04 | Apply multiple filters | Results follow the defined filter-combination rules. |
+| TC-FR915-05 | Search for a request using lowercase text when the stored value contains uppercase characters. | Matching results are returned regardless of letter case. |
+| TC-FR915-06 | Search using special characters or SQL-injection test strings. | Input is handled safely; no query manipulation or unauthorised data exposure occurs. |
 
 ## FR-010: Accept or Reject Assigned Requests
 
@@ -106,7 +108,7 @@ For the sequential-transition tests below, the assumed normal workflow is:
 | TC-FR014-01 | Open the dashboard with existing requests | Displayed statistics match the underlying request data. |
 | TC-FR014-02 | Management refreshes the dashboard after request data has been changed. | Dashboard statistics reflect the saved change. |
 | TC-FR014-03 | Open the dashboard when no requests exist | System displays zero values without errors. |
-| TC-FR014-04 | Access the dashboard without management permission | Access is denied. |
+| TC-FR014-04 | Open the dashboard as a requester or normal staff member. | Access to management-only reporting is denied. |
 
 ## FR-016: Request Lifecycle History
 
@@ -126,3 +128,5 @@ For the sequential-transition tests below, the assumed normal workflow is:
 | TC-FR017-04 | Attempt to modify categories without admin permission | Access is denied. |
 | TC-FR017-05 | Delete the last category or a category used by existing requests | System enforces the approved deletion rules and preserves data integrity. |
 | TC-FR017-06 | Add or remove a category and open the requester form | Available categories reflect the saved changes; invalid category submissions are rejected. |
+
+*note*: Admin and management have access to the same functionality and may be used interchangeably as stated per change request CR-005.
