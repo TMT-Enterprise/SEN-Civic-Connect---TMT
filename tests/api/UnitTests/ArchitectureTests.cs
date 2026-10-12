@@ -39,7 +39,7 @@ public class ArchitectureTests
         return doc.Descendants("ProjectReference")
             .Select(pr => pr.Attribute("Include")?.Value)
             .Where(include => !string.IsNullOrWhiteSpace(include))
-            .Select(include => Path.GetFileNameWithoutExtension(include!))
+            .Select(include => Path.GetFileNameWithoutExtension(include!.Replace('\\', '/')))
             .ToList();
     }
 
