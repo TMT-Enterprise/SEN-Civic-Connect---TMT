@@ -1,1 +1,41 @@
+# Dependency update PRs (S1-17, risk R-16). All updates target `development`, never `main`
+# (main only accepts PRs from development or main-update, see branch-policy.yml).
+# Updates are grouped and capped so the review queue stays small for a three-person team.
+version: 2
+updates:
+  - package-ecosystem: nuget
+    directories:
+      - "/src/api/*"
+      - "/tests/api/*"
+    target-branch: development
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    labels: [dependencies]
+    groups:
+      nuget-minor-patch:
+        update-types: [minor, patch]
 
+  - package-ecosystem: npm
+    directories:
+      - "/"
+      - "/src/web"
+    target-branch: development
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    labels: [dependencies]
+    groups:
+      npm-minor-patch:
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    target-branch: development
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 2
+    labels: [dependencies]
