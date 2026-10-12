@@ -22,6 +22,7 @@ secrets.json
 .supabase/
 supabase/.temp/
 supabase/.env
+src/api/Api/appsettings.Development.json
 
 # =================================================================================
 # 3. BUILD ARTIFACTS & OUTPUTS 
