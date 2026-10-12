@@ -20,11 +20,11 @@
             <span class="input-group-text"><i class="fas fa-envelope" aria-hidden="true"></i></span>
             <input
               id="email"
+              [(ngModel)]="loginObj.email"
               name="email"
               type="email"
               class="form-control py-2.5"
               placeholder="alex.morgan@example.com"
-              value="alex.morgan@example.com"
               required
             />
           </div>
@@ -37,11 +37,11 @@
     <span class="input-group-text"><i class="fas fa-lock" aria-hidden="true"></i></span>
     <input
       id="password"
+      [(ngModel)]="loginObj.password"
       name="password"
       [type]="showPassword ? 'text' : 'password'"
       class="form-control py-2.5"
       placeholder="Password"
-      value="password123"
       required
     />
     <button
@@ -60,6 +60,7 @@
         <button
           type="submit"
           class="btn btn-orange w-100 py-2.5 rounded-3 fw-semibold small shadow-sm"
+          (click)="onLogin()"
         >
           Sign In
         </button>
