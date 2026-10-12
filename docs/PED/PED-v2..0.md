@@ -27,7 +27,7 @@
 15. [Data and Persistence design](../decisions/adr-persistence.md)
 16. [Technology Stack](../decisions/adr-technology-stack.md)
 17. [Change Log](../change/change-log.md)
-18. [Test Cases](../tests/test-cases.md)
+18. [Test Cases](../../tests/test-cases.md)
 
 This file is the entry point into the PED. Each section lives as its own file so that changes
 to one section (a requirement, a risk, a decision) show up as its own reviewable diff, rather
