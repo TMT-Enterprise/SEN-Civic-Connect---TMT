@@ -3,17 +3,6 @@ using Xunit;
 
 namespace CivicConnect.UnitTests;
 
-/// <summary>
-/// Architecture Tests enforcing ADR-001 and §5.2 Modular Monolith Dependency Rules.
-/// Basis: S1-06 / ADR-001 / R-09 / Issue #61.
-///
-/// Dependency rules baseline:
-/// - Data: zero internal project references.
-/// - Auth: Data only.
-/// - Requests: Data only.
-/// - Notifications: Data and Requests only.
-/// - Api: Auth, Data, Notifications, Requests (composition root).
-/// </summary>
 public class ArchitectureTests
 {
     private static readonly string SolutionRoot = FindSolutionRoot();
