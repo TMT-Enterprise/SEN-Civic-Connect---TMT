@@ -1,28 +1,25 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import {
   HealthService,
   HealthResponse,
-  ReadyResponse
+  ReadyResponse,
 } from '../core/health';
 
 @Component({
   selector: 'app-status',
   standalone: true,
-  imports: [CommonModule],
   templateUrl: './status.html',
   styleUrl: './status.css',
 })
 export class StatusComponent implements OnInit {
+  private readonly healthService = inject(HealthService);
+  private readonly cdr = inject(ChangeDetectorRef);
+
   liveness: HealthResponse | null = null;
   readiness: ReadyResponse | null = null;
   apiError: string | null = null;
   databaseError: string | null = null;
-
-  constructor(
-    private healthService: HealthService,
-    private cdr: ChangeDetectorRef
-  ) {}
 
   ngOnInit(): void {
     this.healthService.getLiveness().subscribe({
