@@ -1,0 +1,77 @@
+<!-- Responsive Auth Container -->
+<div class="parent">
+  <div class="auth-container">
+    <!-- Header / Logo section -->
+    <div class="text-center mb-4">
+      <div class="brand-box mx-auto mb-3">C</div>
+      <h2 class="fw-bold text-dark fs-3">Welcome Back</h2>
+      <p class="text-muted small">Sign in to track and submit your civic requests</p>
+    </div>
+
+    <!-- Form Card Container -->
+    <div class="card border border-light-subtle shadow-sm bg-white rounded-4 p-4">
+      <form>
+        <!-- Email Field -->
+        <div class="mb-3">
+          <label for="email" class="form-label small fw-semibold text-secondary"
+            >Email Address</label
+          >
+          <div class="input-group custom-input-group">
+            <span class="input-group-text"><i class="fas fa-envelope" aria-hidden="true"></i></span>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              class="form-control py-2.5"
+              placeholder="alex.morgan@example.com"
+              value="alex.morgan@example.com"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Password Field -->
+        <div class="mb-4">
+  <label for="password" class="form-label small fw-semibold text-secondary">Password</label>
+  <div class="input-group custom-input-group">
+    <span class="input-group-text"><i class="fas fa-lock" aria-hidden="true"></i></span>
+    <input
+      id="password"
+      name="password"
+      [type]="showPassword ? 'text' : 'password'"
+      class="form-control py-2.5"
+      placeholder="Password"
+      value="password123"
+      required
+    />
+    <button
+      class="btn password-toggle-btn px-3"
+      type="button"
+      (click)="togglePassword()"
+      [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+      [attr.aria-pressed]="showPassword"
+    >
+      <i class="fas" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword" aria-hidden="true"></i>
+    </button>
+  </div>
+</div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="btn btn-orange w-100 py-2.5 rounded-3 fw-semibold small shadow-sm"
+        >
+          Sign In
+        </button>
+      </form>
+
+      <!-- Register Link Footer -->
+      <div class="text-center mt-4 pt-3 border-top border-light">
+        <p class="small text-muted mb-0">
+          Don't have an account?
+          <a href="#" class="text-orange text-decoration-none fw-semibold">Register</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
