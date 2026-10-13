@@ -28,6 +28,9 @@
 16. [Technology Stack](../decisions/adr-technology-stack.md)
 17. [Change Log](../change/change-log.md)
 18. [Test Cases](../tests/placeholder.md)
+19. [CI Quality Gate](../quality/ci-quality-gate.md)
+20. [Static and Security Checks](../quality/static-and-security-checks.md)
+21. [Technical Debt Register](../quality/technical-debt-register.md)
 
 This file is the entry point into the PED. Each section lives as its own file so that changes
 to one section (a requirement, a risk, a decision) show up as its own reviewable diff, rather

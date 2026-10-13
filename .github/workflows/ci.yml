@@ -1,10 +1,16 @@
 name: CI
 
+# Required checks for main (see docs/governance/github-governance.md, "Required status checks"):
+#   Backend (build, test, static, deps) | Frontend (lint, test, build, deps) | Secrets scan | CI gate
+# Job names are part of the branch ruleset. Do not rename a job without updating the ruleset
+# and docs/quality/ci-quality-gate.md in the same PR. No job below uses path filters, so every
+# job reports a result on every pull request.
+
 on:
   pull_request:
     branches: [development, main]
   push:
-    branches: [development]
+    branches: [development, main]
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -36,6 +42,25 @@ jobs:
   backend:
     name: Backend (build, test, static, deps)
     runs-on: ubuntu-latest
+    env:
+      # Throwaway database that only exists for this job. Not a secret.
+      CI_DB_NAME: civicconnect_ci
+      CI_DB_USER: ci_user
+      CI_DB_PASSWORD: ci_only_not_a_secret
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: civicconnect_ci
+          POSTGRES_USER: ci_user
+          POSTGRES_PASSWORD: ci_only_not_a_secret
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ci_user -d civicconnect_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     steps:
       - uses: actions/checkout@v4
 
@@ -49,7 +74,7 @@ jobs:
       - name: Format check
         run: dotnet format $SOLUTION --verify-no-changes --no-restore
 
-      - name: Build
+      - name: Build (warnings are errors, see Directory.Build.props)
         run: dotnet build $SOLUTION -c Release --no-restore
 
       - name: Test projects must exist
@@ -67,12 +92,36 @@ jobs:
             echo "::warning::No test projects under tests/. Allowed on development only."
           fi
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Apply database migrations to the Postgres service
+        env:
+          CIVICCONNECT_DATABASE_URL: postgres://${{ env.CI_DB_USER }}:${{ env.CI_DB_PASSWORD }}@localhost:5432/${{ env.CI_DB_NAME }}
+        run: |
+          npm ci
+          node database/scripts/migrate.js
+
       - name: Test (with coverage)
+        env:
+          ConnectionStrings__Default: Host=localhost;Port=5432;Database=${{ env.CI_DB_NAME }};Username=${{ env.CI_DB_USER }};Password=${{ env.CI_DB_PASSWORD }}
         run: >
           dotnet test $SOLUTION -c Release --no-build
-          --logger "trx;LogFileName=results.trx"
+          --logger "trx;LogFilePrefix=results"
           --collect:"XPlat Code Coverage"
           --results-directory TestResults
+
+      - name: Coverage report must exist
+        run: |
+          n=$(find TestResults -name 'coverage.cobertura.xml' | wc -l)
+          echo "Coverage files found: $n"
+          if [ "$n" -eq 0 ]; then
+            echo "::error::No coverage.cobertura.xml produced. Is coverlet.collector referenced by every test project?"
+            exit 1
+          fi
 
       - name: NuGet vulnerability scan
         run: |
@@ -104,7 +153,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version-file: .nvmrc 
+          node-version-file: .nvmrc
           cache: npm
           cache-dependency-path: src/web/package-lock.json
 
@@ -119,20 +168,34 @@ jobs:
       - name: Build
         run: npm run build
 
+      # Threshold: fail on high and critical. Anything that cannot be fixed is recorded in
+      # docs/quality/technical-debt-register.md before this threshold is relaxed or bypassed.
       - name: npm audit (high and critical)
         run: npm audit --audit-level=high
 
   secrets-scan:
     name: Secrets scan
     runs-on: ubuntu-latest
+    env:
+      GITLEAKS_VERSION: 8.28.0
+      # sha256 of gitleaks_8.28.0_linux_x64.tar.gz, from the project's published checksums file.
+      GITLEAKS_SHA256: a65b5253807a68ac0cafa4414031fd740aeb55f54fb7e55f386acb52e6a840eb
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Gitleaks
-        run: >
-          docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:latest
-          detect --source=/repo --redact --verbose
+
+      - name: Install pinned gitleaks (checksum verified)
+        run: |
+          curl -sSfL -o gitleaks.tar.gz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tar.gz" | sha256sum -c -
+          tar -xzf gitleaks.tar.gz gitleaks
+
+      # Scans the full git history that was checked out, so a secret removed in a later
+      # commit is still reported. Exit code 1 on any finding fails the job.
+      - name: Gitleaks (full history)
+        run: ./gitleaks detect --source . --redact --verbose
 
   ci-gate:
     name: CI gate
