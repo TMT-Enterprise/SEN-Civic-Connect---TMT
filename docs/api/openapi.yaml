@@ -74,7 +74,7 @@ components:
           type: integer
         status:
           type: string
-          enum: [Submitted, Assigned, InProgress, Resolved, Overdue]
+          enum: [Submitted, Assigned, InProgress, Resolved, Closed, Overdue]
         submittedAt:
           type: string
           format: date-time
@@ -116,7 +116,7 @@ components:
       properties:
         status:
           type: string
-          enum: [InProgress, Resolved]
+          enum: [InProgress, Resolved, Closed]
         completionNote:
           type: string
       required: [status]
