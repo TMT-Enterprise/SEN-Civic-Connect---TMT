@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -22,14 +22,14 @@ export class Login {
   errorMessage = '';
 
   onLogin(): void {
-    // Hardcoded login - to be removed, testing purposes only
-    if (this.loginObj.email === 'test@gmail.com' && this.loginObj.password === 'test123') {
-      this.errorMessage = '';
-      this.router.navigateByUrl(''); // route will depend on requester vs employee
-    } else {
-      this.errorMessage = 'Wrong email or password';
-    }
+  // Hardcoded login - to be removed, testing purposes only
+  if (this.loginObj.email === 'test@gmail.com' && this.loginObj.password === 'test123') {
+    this.errorMessage = '';
+    this.router.navigateByUrl('/layout/requester');
+  } else {
+    this.errorMessage = 'Wrong email or password';
   }
+}
 }
 
 
