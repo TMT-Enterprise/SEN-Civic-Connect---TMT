@@ -6,8 +6,8 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
-Console.WriteLine($"Environment: {builder.Environment.EnvironmentName}");
-Console.WriteLine($"Config connection string: {builder.Configuration.GetConnectionString("Default")}");
+//Console.WriteLine($"Environment: {builder.Environment.EnvironmentName}");
+//Console.WriteLine($"Config connection string: {builder.Configuration.GetConnectionString("Default")}");
 
 // Register data access
 builder.Services.AddDataAccess(builder.Configuration);
@@ -37,6 +37,7 @@ var connectionString = builder.Configuration.GetConnectionString("Default")
 
 var csb = new Npgsql.NpgsqlConnectionStringBuilder(connectionString);
 
+/*
 try
 {
     await using var testConnection = new Npgsql.NpgsqlConnection(connectionString);
@@ -46,7 +47,7 @@ try
 catch (Exception ex)
 {
     Console.WriteLine($"DIRECT NPGSQL TEST: FAILED - {ex.Message}");
-}
+}*/
 
 /* Console.WriteLine($"DB Host: {csb.Host}");
 Console.WriteLine($"DB Port: {csb.Port}");
@@ -114,3 +115,5 @@ app.MapHealthChecks("/health/ready", new Microsoft.AspNetCore.Diagnostics.Health
 });
 
 app.Run();
+
+public partial class Program { }
