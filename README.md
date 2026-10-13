@@ -81,3 +81,22 @@ any milestone requiring a runnable application.
 
 Developed as the integrated team project for Software Engineering 381 (SEN381), 2026 academic
 year. Not intended for production use.
+
+## E2E Testing
+
+CivicConnect uses Cypress for a local end-to-end smoke test of the system status page.
+
+### Requirements
+
+- Start the PostgreSQL database, CivicConnect API, and Angular frontend.
+- Cypress version: 16.1.1.
+- Cypress configuration and tests are located in `tests/e2e/`.
+
+### Run the smoke test
+
+From the repository root, execute:
+
+```powershell
+cd tests/e2e
+$env:CYPRESS_BASE_URL = "http://localhost:4200"
+npx cypress run 
