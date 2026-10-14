@@ -131,6 +131,27 @@ Protected main
 
 ---
 
+## Required Status Checks
+
+* The branch ruleset on `main` requires these checks to pass before a pull request can merge:
+  `Repo sanity`, `Backend (build, test, static, deps)`, `Frontend (lint, test, build, deps)`,
+  `Secrets scan`, `CI gate` and `Branch policy`.
+* Names must match the job names in `.github/workflows/ci.yml` and `branch-policy.yml` exactly.
+  A job is never renamed without updating the ruleset and `docs/quality/ci-quality-gate.md` in
+  the same pull request.
+* The ruleset has no bypass actors. A red check is fixed, not overridden.
+* Pull requests must also be up to date with `main`, as set in the ruleset.
+* Details, evidence and the blocked-merge demonstration: `docs/quality/ci-quality-gate.md`.
+
+### Automated dependency updates
+
+* Dependabot opens weekly pull requests for NuGet, npm and GitHub Actions, targeting
+  `development`.
+* Dependabot branches (`dependabot/...`) are exempt from the branch and PR naming convention.
+  Their pull requests still need green CI and two approvals from team members.
+
+---
+
 ## Secrets and Sensitive Information
 
 * Passwords, API keys, access tokens, private keys, and other confidential credentials must not be committed to the repository.

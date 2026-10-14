@@ -16,4 +16,12 @@
   <Folder Name="/src/api/Requests/">
     <Project Path="src/api/Requests/CivicConnect.Requests.csproj" />
   </Folder>
+  <Folder Name="/tests/" />
+  <Folder Name="/tests/api/" />
+  <Folder Name="/tests/api/IntegrationTests/">
+    <Project Path="tests/api/IntegrationTests/CivicConnect.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/tests/api/UnitTests/">
+    <Project Path="tests/api/UnitTests/CivicConnect.UnitTests.csproj" />
+  </Folder>
 </Solution>
