@@ -1,5 +1,7 @@
 using System.Security.Claims;
 
+using CivicConnect.Data;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -60,7 +62,7 @@ public static class RequestsEndpoints
                     detail: ex.Message,
                     statusCode: StatusCodes.Status500InternalServerError);
             }
-        });
+        }).RequireAuthorization(policy => policy.RequireRole(Roles.Requester));
 
         // GET /requests — list requester's own requests
         endpoints.MapGet("/requests", async (
@@ -78,7 +80,7 @@ public static class RequestsEndpoints
                 cancellationToken);
 
             return Results.Ok(requests);
-        });
+        }).RequireAuthorization(policy => policy.RequireRole(Roles.Requester));
 
         // GET /requests/{id} — get one request
         endpoints.MapGet("/requests/{id:long}", async (
@@ -100,7 +102,7 @@ public static class RequestsEndpoints
             return request is null
                 ? Results.NotFound()
                 : Results.Ok(request);
-        });
+        }).RequireAuthorization(policy => policy.RequireRole(Roles.Requester));
 
         return endpoints;
     }

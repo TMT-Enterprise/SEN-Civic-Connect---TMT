@@ -161,6 +161,24 @@ public class RequestsTests : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.Unauthorized, submitResponse.StatusCode);
     }
 
+    [Theory(DisplayName = "FR-007: request endpoints reject non-requester roles")]
+    [InlineData(Roles.Staff)]
+    [InlineData(Roles.Admin)]
+    public async Task Requests_WithNonRequesterRole_Returns403(string role)
+    {
+        using var nonRequester = CreateRequesterClient(1, role);
+
+        var listResponse = await nonRequester.GetAsync("/requests");
+        var detailResponse = await nonRequester.GetAsync("/requests/999999");
+        var submitResponse = await nonRequester.PostAsJsonAsync(
+            "/requests",
+            new { categoryId = 1, description = "Non-requester attempt" });
+
+        Assert.Equal(HttpStatusCode.Forbidden, listResponse.StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, detailResponse.StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, submitResponse.StatusCode);
+    }
+
     [Fact(DisplayName = "FR-005: GET /requests/{id} returns status name not status id")]
     public async Task GetRequestById_ReturnsStatusName()
     {
@@ -209,10 +227,11 @@ public class RequestsTests : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal("Overdue", doc.RootElement.GetProperty("status").GetString());
     }
 
-    private HttpClient CreateRequesterClient(long requesterId)
+    private HttpClient CreateRequesterClient(long requesterId, string role = Roles.Requester)
     {
         var client = _factory.CreateClient();
         client.DefaultRequestHeaders.Add("X-Test-Requester-Id", requesterId.ToString());
+        client.DefaultRequestHeaders.Add("X-Test-Role", role);
         return client;
     }
 
@@ -239,9 +258,10 @@ public class RequestsTests : IClassFixture<WebApplicationFactory<Program>>
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, parsedRequesterId.ToString())
+                new Claim(ClaimTypes.NameIdentifier, parsedRequesterId.ToString()),
+                new Claim("role", Request.Headers["X-Test-Role"].ToString())
             };
-            var identity = new ClaimsIdentity(claims, SchemeName);
+            var identity = new ClaimsIdentity(claims, SchemeName, ClaimTypes.NameIdentifier, "role");
             var principal = new ClaimsPrincipal(identity);
             var ticket = new AuthenticationTicket(principal, SchemeName);
 
