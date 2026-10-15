@@ -1,20 +1,27 @@
 using System.Reflection;
 
+using CivicConnect.Api;
+using CivicConnect.Auth;
 using CivicConnect.Data;
 
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//Console.WriteLine($"Environment: {builder.Environment.EnvironmentName}");
-//Console.WriteLine($"Config connection string: {builder.Configuration.GetConnectionString("Default")}");
-
-// Register data access
+// Register data access and the Auth module (hashing, tokens, AuthService)
 builder.Services.AddDataAccess(builder.Configuration);
+builder.Services.AddAuthModule();
+builder.Services.AddApiAuthentication();
 
-// CORS from config
-var corsOrigins = builder.Configuration["Cors__Origins"]?.Split(",")
-    ?? throw new InvalidOperationException("Cors__Origins is required.");
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddHostedService<DemoCredentialSeeder>();
+}
+
+// CORS from config. "Cors:Origins" is what the Cors__Origins environment variable maps to;
+// the literal "Cors__Origins" key is kept as a fallback for existing local setups.
+var corsOrigins = (builder.Configuration["Cors:Origins"] ?? builder.Configuration["Cors__Origins"])?.Split(",")
+    ?? throw new InvalidOperationException("Cors:Origins (Cors__Origins) is required.");
 
 builder.Services.AddCors(options =>
 {
@@ -35,28 +42,6 @@ if (builder.Environment.IsDevelopment())
 var connectionString = builder.Configuration.GetConnectionString("Default")
     ?? throw new InvalidOperationException("ConnectionStrings:Default is required.");
 
-var csb = new Npgsql.NpgsqlConnectionStringBuilder(connectionString);
-
-/*
-try
-{
-    await using var testConnection = new Npgsql.NpgsqlConnection(connectionString);
-    await testConnection.OpenAsync();
-    Console.WriteLine("DIRECT NPGSQL TEST: SUCCESS");
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"DIRECT NPGSQL TEST: FAILED - {ex.Message}");
-}*/
-
-/* Console.WriteLine($"DB Host: {csb.Host}");
-Console.WriteLine($"DB Port: {csb.Port}");
-Console.WriteLine($"DB Name: {csb.Database}");
-Console.WriteLine($"DB User: {csb.Username}");
-Console.WriteLine($"DB Password supplied: {!string.IsNullOrEmpty(csb.Password)}");
-Console.WriteLine($"DB Password length: {csb.Password?.Length}");
-Console.WriteLine($"DB Connection String: {csb.ConnectionString}"); */
-
 builder.Services.AddHealthChecks()
     .AddNpgSql(
         connectionString,
@@ -66,12 +51,16 @@ var app = builder.Build();
 
 // Configure pipeline
 app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.MapAuthEndpoints();
 
 // /health — liveness only, no DB call
 var version = Assembly.GetExecutingAssembly()
@@ -116,4 +105,5 @@ app.MapHealthChecks("/health/ready", new Microsoft.AspNetCore.Diagnostics.Health
 
 app.Run();
 
-public partial class Program { }
+// Lets the integration test project host the API in memory (WebApplicationFactory<Program>).
+public partial class Program;
