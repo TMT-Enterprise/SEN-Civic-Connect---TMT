@@ -4,7 +4,7 @@ import {
   HealthService,
   HealthResponse,
   ReadyResponse,
-} from '../core/health';
+} from '../../core/health';
 
 @Component({
   selector: 'app-status',

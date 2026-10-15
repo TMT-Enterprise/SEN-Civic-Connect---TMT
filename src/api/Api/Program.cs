@@ -1,20 +1,31 @@
 using System.Reflection;
 
+using CivicConnect.Api;
+using CivicConnect.Auth;
 using CivicConnect.Data;
 
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Register data access and the Auth module (hashing, tokens, AuthService)
 //Console.WriteLine($"Environment: {builder.Environment.EnvironmentName}");
 //Console.WriteLine($"Config connection string: {builder.Configuration.GetConnectionString("Default")}");
 
 // Register data access
 builder.Services.AddDataAccess(builder.Configuration);
+builder.Services.AddAuthModule();
+builder.Services.AddApiAuthentication();
 
-// CORS from config
-var corsOrigins = builder.Configuration["Cors__Origins"]?.Split(",")
-    ?? throw new InvalidOperationException("Cors__Origins is required.");
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddHostedService<DemoCredentialSeeder>();
+}
+
+// CORS from config. "Cors:Origins" is what the Cors__Origins environment variable maps to;
+// the literal "Cors__Origins" key is kept as a fallback for existing local setups.
+var corsOrigins = (builder.Configuration["Cors:Origins"] ?? builder.Configuration["Cors__Origins"])?.Split(",")
+    ?? throw new InvalidOperationException("Cors:Origins (Cors__Origins) is required.");
 
 builder.Services.AddCors(options =>
 {
@@ -66,12 +77,16 @@ var app = builder.Build();
 
 // Configure pipeline
 app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.MapAuthEndpoints();
 
 // /health — liveness only, no DB call
 var version = Assembly.GetExecutingAssembly()
@@ -116,4 +131,6 @@ app.MapHealthChecks("/health/ready", new Microsoft.AspNetCore.Diagnostics.Health
 
 app.Run();
 
+// Lets the integration test project host the API in memory (WebApplicationFactory<Program>).
+public partial class Program;
 public partial class Program { }
