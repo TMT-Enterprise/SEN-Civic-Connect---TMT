@@ -3,19 +3,27 @@ const { Pool } = require("pg");
 const fs = require("node:fs/promises");
 const path = require("node:path");
 
-const connectionString =
-  process.env.CIVICCONNECT_DATABASE_URL;
+const connectionString = process.env.CIVICCONNECT_DATABASE_URL;
 
-if (!connectionString) {
+if (
+  !connectionString &&
+  !process.env.CIVICCONNECT_DB_PASSWORD
+) {
   console.error(
-    "Migration failed: CIVICCONNECT_DATABASE_URL is not set."
+    "Migration failed: set CIVICCONNECT_DATABASE_URL or CIVICCONNECT_DB_PASSWORD."
   );
   process.exit(1);
 }
 
-const pool = new Pool({
-  connectionString,
-});
+const pool = connectionString
+  ? new Pool({ connectionString })
+  : new Pool({
+      host: process.env.CIVICCONNECT_DB_HOST || "localhost",
+      port: Number(process.env.CIVICCONNECT_DB_PORT || 5432),
+      database: process.env.CIVICCONNECT_DB_NAME || "TMT_civicconnect",
+      user: process.env.CIVICCONNECT_DB_USER || "postgres",
+      password: process.env.CIVICCONNECT_DB_PASSWORD,
+    });
 
 const migrationsDirectory = path.resolve(
   __dirname,
@@ -24,21 +32,21 @@ const migrationsDirectory = path.resolve(
 
 async function runMigrations() {
   const client = await pool.connect();
+  let lockAcquired = false;
 
   try {
-    // Create a table that records successful migrations.
+    await client.query(
+      "SELECT pg_advisory_lock($1)",
+      [3812026]
+    );
+    lockAcquired = true;
+
     await client.query(`
       CREATE TABLE IF NOT EXISTS public.schema_migrations (
         migration_name TEXT PRIMARY KEY,
         applied_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       );
     `);
-
-    // Prevent two runners from applying migrations simultaneously.
-    await client.query(
-      "SELECT pg_advisory_lock($1)",
-      [3812026]
-    );
 
     const files = (await fs.readdir(migrationsDirectory))
       .filter((file) => /^\d+_.+\.sql$/.test(file))
@@ -62,8 +70,10 @@ async function runMigrations() {
         continue;
       }
 
-      const filePath = path.join(migrationsDirectory, file);
-      const sql = await fs.readFile(filePath, "utf8");
+      const sql = await fs.readFile(
+        path.join(migrationsDirectory, file),
+        "utf8"
+      );
 
       console.log(`RUNNING: ${file}`);
 
@@ -73,14 +83,12 @@ async function runMigrations() {
         await client.query(sql);
 
         await client.query(
-          `INSERT INTO public.schema_migrations
-             (migration_name)
+          `INSERT INTO public.schema_migrations (migration_name)
            VALUES ($1)`,
           [file]
         );
 
         await client.query("COMMIT");
-
         console.log(`SUCCESS: ${file}`);
       } catch (error) {
         await client.query("ROLLBACK");
@@ -91,13 +99,16 @@ async function runMigrations() {
 
     console.log("All pending migrations completed.");
   } finally {
-    // Release the advisory lock, then return the connection.
-    try {
-      await client.query(
-        "SELECT pg_advisory_unlock($1)",
-        [3812026]
-      );
-    } finally {
+    if (lockAcquired) {
+      try {
+        await client.query(
+          "SELECT pg_advisory_unlock($1)",
+          [3812026]
+        );
+      } finally {
+        client.release();
+      }
+    } else {
       client.release();
     }
   }

@@ -1,5 +1,4 @@
-
-import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import {
   HealthService,
   HealthResponse,

@@ -4,6 +4,7 @@ using CivicConnect.Api;
 using CivicConnect.Auth;
 using CivicConnect.Data;
 using CivicConnect.Requests;
+using CivicConnect.Requests.Requests;
 
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
@@ -15,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Register data access
 builder.Services.AddDataAccess(builder.Configuration);
+builder.Services.AddScoped<RequestsService>();
 builder.Services.AddAuthModule();
 builder.Services.AddRequestsModule(builder.Configuration);
 builder.Services.AddApiAuthentication();
@@ -132,8 +134,10 @@ app.MapHealthChecks("/health/ready", new Microsoft.AspNetCore.Diagnostics.Health
     }
 }).AllowAnonymous();
 
+app.MapRequestsEndpoints();
+
 app.Run();
 
 // Lets the integration test project host the API in memory (WebApplicationFactory<Program>).
-public partial class Program;
+
 public partial class Program { }
