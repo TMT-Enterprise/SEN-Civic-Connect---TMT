@@ -31,6 +31,23 @@ components:
               type: string
       required: [code, message]
 
+    ValidationProblem:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+      required: [title, status, errors]
+
     RegisterRequest:
       type: object
       properties:
@@ -74,7 +91,7 @@ components:
           type: integer
         status:
           type: string
-          enum: [Submitted, Assigned, InProgress, Resolved, Closed, Overdue]
+          enum: [Submitted, Assigned, In Progress, Resolved, Closed, Overdue]
         submittedAt:
           type: string
           format: date-time
@@ -308,6 +325,10 @@ paths:
           description: Forbidden - requester only
         '422':
           description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationProblem'
     get:
       summary: List requester's own requests (FR-007)
       tags: [Requests]

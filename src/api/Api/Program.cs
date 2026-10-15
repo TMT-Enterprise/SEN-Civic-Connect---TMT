@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Register data access
 builder.Services.AddDataAccess(builder.Configuration);
 builder.Services.AddScoped<RequestsService>();
+builder.Services.AddAuthentication();
 
 // CORS from config
 var corsOrigins = builder.Configuration["Cors__Origins"]?.Split(",")
@@ -69,6 +70,7 @@ var app = builder.Build();
 
 // Configure pipeline
 app.UseCors();
+app.UseAuthentication();
 
 if (app.Environment.IsDevelopment())
 {
