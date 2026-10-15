@@ -47,6 +47,7 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         builder.UseSetting("Jwt:Audience", "CivicConnect.Tests");
         builder.UseSetting("Jwt:ExpiryMinutes", ExpiryMinutes.ToString(System.Globalization.CultureInfo.InvariantCulture));
         builder.UseSetting("Seed:DemoPassword", DemoPassword);
+        builder.UseSetting("Overdue:Enabled", "false");
     }
 
     public async Task<T?> ScalarAsync<T>(string sql, params (string Name, object Value)[] parameters)

@@ -37,6 +37,41 @@ public sealed class RequestStatusTransitionValidator
         return new StatusTransitionResult(true, null);
     }
 
+    public StatusTransitionResult ValidateOverdueFlag(
+        RequestStatus current,
+        DateTimeOffset? dueAt,
+        DateTimeOffset now,
+        bool alreadyFlagged)
+    {
+        if (!Enum.IsDefined(current))
+        {
+            return Reject("The current status is invalid.");
+        }
+
+        if (current == RequestStatus.Closed)
+        {
+            return Reject("A closed request cannot become overdue.");
+        }
+
+        if (alreadyFlagged)
+        {
+            return Reject("The request is already flagged overdue.");
+        }
+
+        if (dueAt is null)
+        {
+            return Reject("The request has no due date.");
+        }
+
+        // Overdue once the due time has passed: at exactly the due time it is still on time.
+        if (now <= dueAt.Value)
+        {
+            return Reject("The request is not past its due date yet.");
+        }
+
+        return new StatusTransitionResult(true, null);
+    }
+
     private static StatusTransitionResult Reject(string error)
     {
         return new StatusTransitionResult(false, error);

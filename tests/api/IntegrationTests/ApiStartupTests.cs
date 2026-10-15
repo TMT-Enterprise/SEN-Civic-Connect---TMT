@@ -22,6 +22,7 @@ public class ApiStartupTests : IClassFixture<WebApplicationFactory<Program>>
             builder.UseSetting("Jwt:Secret", Convert.ToBase64String(System.Security.Cryptography.RandomNumberGenerator.GetBytes(48)));
             builder.UseSetting("Jwt:Issuer", "CivicConnect.Tests");
             builder.UseSetting("Jwt:Audience", "CivicConnect.Tests");
+            builder.UseSetting("Overdue:Enabled", "false");
         });
     }
 
