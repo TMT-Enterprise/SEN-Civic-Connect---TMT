@@ -30,6 +30,9 @@ public class RequestsTests : IClassFixture<WebApplicationFactory<Program>>
             builder.UseSetting("Cors__Origins", "http://localhost:4200");
             builder.UseSetting("ConnectionStrings:Default",
                 "Host=localhost;Port=5432;Database=TMT_civicconnect;Username=postgres;Password=CivicConnect123");
+            builder.UseSetting("Jwt:Secret", Convert.ToBase64String(System.Security.Cryptography.RandomNumberGenerator.GetBytes(48)));
+            builder.UseSetting("Jwt:Issuer", "CivicConnect.Tests");
+            builder.UseSetting("Jwt:Audience", "CivicConnect.Tests");
             builder.ConfigureTestServices(services =>
             {
                 services.AddAuthentication(options =>

@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import {
   HealthService,
   HealthResponse,
-  ReadyResponse
-} from '../core/health';
+  ReadyResponse,
+} from '../../core/health';
 
 @Component({
   selector: 'app-status',

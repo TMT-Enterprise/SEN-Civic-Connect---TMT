@@ -11,6 +11,8 @@ public static class DataExtensions
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("Default")));
 
+        services.AddScoped<IAccountRepository, AccountRepository>();
+
         return services;
     }
 }
