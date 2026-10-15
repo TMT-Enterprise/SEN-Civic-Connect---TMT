@@ -4,6 +4,8 @@ using CivicConnect.Data;
 
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
+using CivicConnect.Requests.Requests;
+
 var builder = WebApplication.CreateBuilder(args);
 
 //Console.WriteLine($"Environment: {builder.Environment.EnvironmentName}");
@@ -11,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Register data access
 builder.Services.AddDataAccess(builder.Configuration);
+builder.Services.AddScoped<RequestsService>();
 
 // CORS from config
 var corsOrigins = builder.Configuration["Cors__Origins"]?.Split(",")
@@ -113,6 +116,8 @@ app.MapHealthChecks("/health/ready", new Microsoft.AspNetCore.Diagnostics.Health
         await context.Response.WriteAsync(result);
     }
 });
+
+app.MapRequestsEndpoints();
 
 app.Run();
 
