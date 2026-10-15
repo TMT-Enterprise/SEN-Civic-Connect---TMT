@@ -100,7 +100,7 @@ app.MapGet("/health", () => Results.Ok(new
     status = "Healthy",
     version,
     commit
-}));
+})).AllowAnonymous();
 
 // /health/ready — checks DB reachability
 app.MapHealthChecks("/health/ready", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
@@ -127,7 +127,7 @@ app.MapHealthChecks("/health/ready", new Microsoft.AspNetCore.Diagnostics.Health
         });
         await context.Response.WriteAsync(result);
     }
-});
+}).AllowAnonymous();
 
 app.Run();
 
