@@ -3,6 +3,7 @@ using System.Reflection;
 using CivicConnect.Api;
 using CivicConnect.Auth;
 using CivicConnect.Data;
+using CivicConnect.Requests;
 
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
@@ -15,7 +16,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Register data access
 builder.Services.AddDataAccess(builder.Configuration);
 builder.Services.AddAuthModule();
+builder.Services.AddRequestsModule(builder.Configuration);
 builder.Services.AddApiAuthentication();
+
 
 if (builder.Environment.IsDevelopment())
 {

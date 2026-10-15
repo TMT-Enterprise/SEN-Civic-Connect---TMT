@@ -12,6 +12,7 @@ public static class DataExtensions
             options.UseNpgsql(configuration.GetConnectionString("Default")));
 
         services.AddScoped<IAccountRepository, AccountRepository>();
+        services.AddScoped<IOverdueRepository, OverdueRepository>();
 
         return services;
     }
