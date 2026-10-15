@@ -6,42 +6,36 @@
   <section class="status-card">
     <h2>API Status</h2>
 
-    <p *ngIf="liveness; else apiLoading">
-      Status: {{ liveness.status }}
-    </p>
-    <ng-template #apiLoading>
-      <p *ngIf="apiError; else apiWaiting" class="error-state">
-        {{ apiError }}
-      </p>
-      <ng-template #apiWaiting>
-        <p>Status: Loading...</p>
-      </ng-template>
-    </ng-template>
-
-    <p *ngIf="liveness">Version: {{ liveness.version }}</p>
-    <p *ngIf="liveness">Commit: {{ liveness.commit }}</p>
+    @if (liveness; as live) {
+      <p>Status: {{ live.status }}</p>
+      <p>Version: {{ live.version }}</p>
+      <p>Commit: {{ live.commit }}</p>
+    } @else if (apiError) {
+      <p class="error-state">{{ apiError }}</p>
+    } @else {
+      <p>Status: Loading...</p>
+    }
   </section>
 
   <section class="status-card">
     <h2>Database Status</h2>
 
-    <p *ngIf="readiness">
-      Status: {{ readiness.status }}
-    </p>
-
-    <p *ngIf="readiness">
-      <span *ngFor="let check of readiness.checks">
-        {{ check.name }}: {{ check.status }}
-        <span *ngIf="check.error"> — {{ check.error }}</span>
-      </span>
-    </p>
-
-    <p *ngIf="databaseError" class="error-state">
-      {{ databaseError }}
-    </p>
-
-    <p *ngIf="!readiness && !databaseError">
-      Status: Loading...
-    </p>
+    @if (readiness; as ready) {
+      <p>Status: {{ ready.status }}</p>
+      <ul>
+        @for (check of ready.checks; track check.name) {
+          <li>
+            {{ check.name }}: {{ check.status }}
+            @if (check.error) {
+              <span> — {{ check.error }}</span>
+            }
+          </li>
+        }
+      </ul>
+    } @else if (databaseError) {
+      <p class="error-state">{{ databaseError }}</p>
+    } @else {
+      <p>Status: Loading...</p>
+    }
   </section>
 </div>

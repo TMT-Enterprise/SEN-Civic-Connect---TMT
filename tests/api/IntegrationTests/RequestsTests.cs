@@ -19,21 +19,16 @@ using Xunit;
 
 namespace CivicConnect.IntegrationTests;
 
-public class RequestsTests : IClassFixture<WebApplicationFactory<Program>>
+[Collection(ApiCollection.Name)]
+public class RequestsTests : IDisposable
 {
     private readonly WebApplicationFactory<Program> _factory;
     private readonly HttpClient _client;
 
-    public RequestsTests(WebApplicationFactory<Program> factory)
+    public RequestsTests(ApiFactory factory)
     {
         _factory = factory.WithWebHostBuilder(builder =>
         {
-            builder.UseSetting("Cors__Origins", "http://localhost:4200");
-            builder.UseSetting("ConnectionStrings:Default",
-                "Host=localhost;Port=5432;Database=TMT_civicconnect;Username=postgres;Password=CivicConnect123");
-            builder.UseSetting("Jwt:Secret", Convert.ToBase64String(System.Security.Cryptography.RandomNumberGenerator.GetBytes(48)));
-            builder.UseSetting("Jwt:Issuer", "CivicConnect.Tests");
-            builder.UseSetting("Jwt:Audience", "CivicConnect.Tests");
             builder.ConfigureTestServices(services =>
             {
                 services.AddAuthentication(options =>
@@ -47,6 +42,12 @@ public class RequestsTests : IClassFixture<WebApplicationFactory<Program>>
         });
 
         _client = CreateRequesterClient(1);
+    }
+
+    public void Dispose()
+    {
+        _client.Dispose();
+        _factory.Dispose();
     }
 
     [Fact(DisplayName = "FR-003/FR-004: POST /requests with valid input returns 201 with requestId and Submitted status")]
