@@ -4,10 +4,9 @@ using CivicConnect.Api;
 using CivicConnect.Auth;
 using CivicConnect.Data;
 using CivicConnect.Requests;
+using CivicConnect.Requests.Requests;
 
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-
-using CivicConnect.Requests.Requests;
 
 var builder = WebApplication.CreateBuilder(args);
 

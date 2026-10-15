@@ -1,5 +1,6 @@
 using CivicConnect.Data;
 using CivicConnect.Data.Entities;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace CivicConnect.Requests.Requests;
