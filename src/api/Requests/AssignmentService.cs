@@ -249,7 +249,7 @@ public sealed class AssignmentService(
             return Result<StatusChangeDto>.Fail(Outcome.Invalid, "Request is in an unsupported status.");
         }
 
-        // 409 for a disallowed transition, 422 for a missing completion note.
+                // 409 for a disallowed transition, 422 for a missing completion note.
         if (!StatusTransitionMap.IsAllowed(current, target))
         {
             return Result<StatusChangeDto>.Fail(
