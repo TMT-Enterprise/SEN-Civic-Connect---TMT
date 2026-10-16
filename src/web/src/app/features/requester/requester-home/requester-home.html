@@ -1,0 +1,61 @@
+<section class="home-page">
+  <div class="welcome-section">
+    <p class="eyebrow">Overview</p>
+
+    <h2>
+      Welcome <span class="welcome-name">Alex</span>
+      <span aria-hidden="true">👋</span>
+    </h2>
+
+    <p class="welcome-description">
+      What service can we help you with today?
+    </p>
+  </div>
+
+  <div class="quick-actions">
+    <a
+      class="action-card action-primary"
+      routerLink="/requester/new-request"
+    >
+      <span class="action-icon">
+        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+      </span>
+
+      <span>
+        <strong>New Request</strong>
+        <small>Submit an issue fast</small>
+      </span>
+    </a>
+
+    <a
+      class="action-card action-secondary"
+      routerLink="/requester/history"
+    >
+      <span class="action-icon">
+        <i
+          class="fa-solid fa-clock-rotate-left"
+          aria-hidden="true"
+        ></i>
+      </span>
+
+      <span>
+        <strong>Past Requests</strong>
+        <small>View status and history</small>
+      </span>
+    </a>
+  </div>
+
+  <section class="recent-section">
+    <div class="section-heading">
+      <h3>Recent Request</h3>
+
+      <a routerLink="/requester/history">See All</a>
+    </div>
+
+        <div class="request-card-grid">
+      @for (request of requests; track request.id) {
+        <app-request-card [request]="request"></app-request-card>
+      }
+    </div>
+  </section>
+</section>

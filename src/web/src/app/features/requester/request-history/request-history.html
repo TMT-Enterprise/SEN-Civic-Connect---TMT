@@ -1,0 +1,26 @@
+<section class="history-page">
+  <div class="history-heading">
+    <div>
+      <h2>Request History</h2>
+      <p>Track and view your past requests</p>
+    </div>
+
+    <span class="history-count">0 Total</span>
+  </div>
+
+  <div class="history-filters" aria-label="Filter requests">
+    <button type="button" class="filter active">All</button>
+    <button type="button" class="filter">Pending</button>
+    <button type="button" class="filter">In Progress</button>
+    <button type="button" class="filter">Completed</button>
+    <button type="button" class="filter">Rejected</button>
+  </div>
+
+  <div class="history-list">
+    <div class="request-card-grid">
+      @for (request of requests; track request.id) {
+        <app-request-card [request]="request"></app-request-card>
+      }
+    </div>
+  </div>
+</section>

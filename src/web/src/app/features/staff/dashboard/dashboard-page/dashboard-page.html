@@ -1,0 +1,37 @@
+
+<div class="dashboard-page">
+
+  <section class="metrics-grid" aria-label="Request summary">
+
+    <app-metric-card
+      label="Active Queue"
+      value="6"
+      detail="Marcus Vance"
+      icon="fa-clipboard-list">
+    </app-metric-card>
+
+    <app-metric-card
+      label="Pending Action"
+      value="3"
+      icon="fa-clock-rotate-left">
+    </app-metric-card>
+
+    <app-metric-card
+      label="In Progress"
+      value="2"
+      icon="fa-spinner">
+    </app-metric-card>
+
+    <app-metric-card
+      label="Resolved"
+      value="1"
+      icon="fa-circle-check">
+    </app-metric-card>
+
+  </section>
+
+  <app-request-table></app-request-table>
+
+</div>
+
+
