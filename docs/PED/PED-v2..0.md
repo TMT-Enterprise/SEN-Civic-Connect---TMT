@@ -27,7 +27,7 @@
 15. [Data and Persistence design](../decisions/adr-persistence.md)
 16. [Technology Stack](../decisions/adr-technology-stack.md)
 17. [Change Log](../change/change-log.md)
-18. [Test Cases](../tests/placeholder.md)
+18. [Test Cases]((../../tests/test-cases.md)
 19. [CI Quality Gate](../quality/ci-quality-gate.md)
 20. [Static and Security Checks](../quality/static-and-security-checks.md)
 21. [Technical Debt Register](../quality/technical-debt-register.md)
