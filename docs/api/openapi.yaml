@@ -434,7 +434,7 @@ paths:
         '404':
           description: Not found
 
-    /requests/{id}/assign:
+      /requests/{id}/assign:
     post:
       summary: Assign a request to staff (FR-008) - management only
       description: >
