@@ -12,7 +12,7 @@ public sealed class AssignmentService(
     RequestStatusTransitionValidator validator,
     TimeProvider clock)
 {
-    // ---------- ASSIGN (FR-008) ----------
+    // Assign FR-008
     public async Task<Result<AssignmentDto>> AssignAsync(
         long requestId,
         long employeeId,
@@ -101,7 +101,7 @@ public sealed class AssignmentService(
         return Result<AssignmentDto>.Ok(ToDto(assignment, request, RequestStatus.Assigned));
     }
 
-    // ---------- ACCEPT (FR-010) ----------
+    // Accept FR-010
     public async Task<Result<AssignmentDto>> AcceptAsync(
         long requestId,
         long employeeId,
@@ -144,7 +144,7 @@ public sealed class AssignmentService(
         return Result<AssignmentDto>.Ok(ToDto(assignment, request, current));
     }
 
-    // ---------- REJECT (FR-011) ----------
+    // Reject FR-011
     public async Task<Result<AssignmentDto>> RejectAsync(
         long requestId,
         long employeeId,
@@ -278,7 +278,7 @@ public sealed class AssignmentService(
         return Result<StatusChangeDto>.Ok(new StatusChangeDto(requestId, target));
     }
 
-    // ---------- HISTORY (read-only) ----------
+    // History (read only)
     public async Task<IReadOnlyList<HistoryEntryDto>> GetHistoryAsync(long requestId, CancellationToken ct)
     {
         return await (
