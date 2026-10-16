@@ -1,0 +1,53 @@
+
+<article class="request-card">
+  <div class="request-card-header">
+    <div>
+      <span class="request-id">{{ request.id }}</span>
+      <h3>{{ request.category }}</h3>
+      <p class="request-citizen">
+        <i class="fa-solid fa-user" aria-hidden="true"></i>
+        {{ request.citizen }}
+      </p>
+    </div>
+
+    <span
+      class="request-status"
+      [class.status-assigned]="request.status === 'Assigned'"
+      [class.status-progress]="request.status === 'In Progress'"
+      [class.status-resolved]="request.status === 'Resolved'"
+      [class.status-closed]="request.status === 'Closed'"
+      [class.status-overdue]="request.status === 'Overdue'"
+      [class.status-rejected]="request.status === 'Rejected'">
+      {{ statusLabel }}
+    </span>
+  </div>
+
+  <p class="request-description">
+    {{ request.description }}
+  </p>
+
+  <div class="request-card-details">
+    <span
+      class="request-priority"
+      [class.priority-critical]="request.priority === 'Critical'"
+      [class.priority-high]="request.priority === 'High'"
+      [class.priority-medium]="request.priority === 'Medium'"
+      [class.priority-normal]="request.priority === 'Normal'">
+      {{ request.priority }} Priority
+    </span>
+
+    <span class="request-due-date">
+      <i class="fa-regular fa-clock" aria-hidden="true"></i>
+      Due: {{ request.dueDate }}
+    </span>
+  </div>
+
+  <div class="request-card-footer">
+    <button
+      type="button"
+      class="btn btn-sm btn-outline-secondary"
+      disabled>
+      View Details
+    </button>
+  </div>
+</article>

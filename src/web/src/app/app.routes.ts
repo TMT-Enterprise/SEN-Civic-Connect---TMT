@@ -1,9 +1,18 @@
 import { Routes } from '@angular/router';
 import { StatusComponent } from './components/status/status';
 import { Login } from './components/login/login';
-import { Layout } from './components/layout/layout';
 import { Register } from './components/register/register';
-import { RequesterDashboard } from './components/requester-dashboard/requester-dashboard';
+import { RequesterLayout } from './layout/requester-layout/requester-layout';
+import { RequesterHome } from './features/requester/requester-home/requester-home';
+import { NewRequest } from './features/requester/new-request/new-request';
+import { RequestHistory } from './features/requester/request-history/request-history';
+import { StaffLayout } from './layout/staff-layout/staff-layout';
+import { DashboardPage } from './features/staff/dashboard/dashboard-page/dashboard-page';
+import { HistoryPage } from './features/staff/dashboard/history-page/history-page';
+import { AdminLayout } from './layout/admin-layout/admin-layout';
+import { RequestsOverview } from './features/admin/requests-overview/requests-overview';
+import { Analytics } from './features/admin/analytics/analytics';
+import { StaffDirectory } from './features/admin/staff-directory/staff-directory';
 
 export const routes: Routes = [
   {
@@ -24,11 +33,68 @@ export const routes: Routes = [
     component: Register
   },
   {
-    path: 'layout',
-    component: Layout,
-    children: [
-      { path: '', redirectTo: 'requester', pathMatch: 'full' },
-      { path: 'requester', component: RequesterDashboard }
-    ],
+    path: 'requester',
+      component: RequesterLayout,
+      children: [
+        {
+          path: '',
+          component: RequesterHome
+        },
+        {
+          path: 'new-request',
+          component: NewRequest
+        },
+        {
+          path: 'history',
+          component: RequestHistory
+        }
+      ]
   },
+  {
+    path: 'staff',
+    component: StaffLayout,
+    children: [
+      {
+        path: '',
+        component: DashboardPage
+      },
+      {
+        path: 'history',
+        component: HistoryPage
+      }
+    ]
+  },
+  {
+    path: 'admin',
+    component: AdminLayout,
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'requests'
+      },
+      {
+        path: 'requests',
+        component: RequestsOverview
+      },
+      {
+        path: 'history',
+        component: RequestHistory
+      },
+      {
+        path: 'analytics',
+        component: Analytics
+      },
+      {
+        path: 'staff',
+        component: StaffDirectory
+      }
+    ]
+  },
+
+  {
+    path: '**',
+    redirectTo: 'admin/requests'
+  }
 ];
+

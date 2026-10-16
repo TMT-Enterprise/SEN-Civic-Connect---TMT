@@ -1,0 +1,38 @@
+<aside class="staff-sidebar">
+  <a class="sidebar-brand" routerLink="/staff">
+    <span class="brand-logo">C</span>
+    <span>
+      <strong>CivicConnect</strong>
+      <small>Staff Portal</small>
+    </span>
+  </a>
+
+  <nav class="sidebar-nav" aria-label="Staff navigation">
+    <a
+      class="sidebar-link"
+      routerLink="/staff"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+      <span>Dashboard</span>
+    </a>
+
+    <a
+      class="sidebar-link"
+      routerLink="/staff/history"
+      routerLinkActive="active"
+    >
+      <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
+      <span>Request History</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <span class="staff-avatar">S</span>
+    <span>
+      <strong>Staff Member</strong>
+      <small>Staff Portal</small>
+    </span>
+  </div>
+</aside>

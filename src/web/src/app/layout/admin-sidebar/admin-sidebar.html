@@ -1,0 +1,64 @@
+<aside class="admin-sidebar">
+  <a class="admin-brand" routerLink="/admin/requests">
+    <span class="brand-logo">C</span>
+
+    <span class="brand-copy">
+      <strong>CivicConnect</strong>
+      <small>Admin &amp; Dispatch Portal</small>
+    </span>
+  </a>
+
+  <nav class="admin-nav" aria-label="Admin navigation">
+    <a
+      class="admin-nav-link"
+      routerLink="/admin/requests"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <i class="fa-solid fa-list-check" aria-hidden="true"></i>
+      <span>Requests Overview</span>
+    </a>
+
+    <a
+      class="admin-nav-link"
+      routerLink="/admin/history"
+      routerLinkActive="active"
+    >
+      <i class="fa-solid fa-box-archive" aria-hidden="true"></i>
+      <span>Request History</span>
+    </a>
+
+    <a
+      class="admin-nav-link"
+      routerLink="/admin/analytics"
+      routerLinkActive="active"
+    >
+      <i class="fa-solid fa-chart-pie" aria-hidden="true"></i>
+      <span>Analytics &amp; Insights</span>
+    </a>
+
+    <a
+      class="admin-nav-link"
+      routerLink="/admin/staff"
+      routerLinkActive="active"
+    >
+      <i class="fa-solid fa-users-gear" aria-hidden="true"></i>
+      <span>Staff Directory</span>
+    </a>
+  </nav>
+
+  <div class="admin-profile">
+    <div class="admin-avatar">AD</div>
+
+    <div class="admin-profile-copy">
+      <strong>Admin Dispatcher</strong>
+      <small>Central Oversight</small>
+    </div>
+
+    <i
+      class="fa-solid fa-shield-halved admin-shield"
+      title="System Administrator"
+      aria-hidden="true"
+    ></i>
+  </div>
+</aside>
