@@ -20,6 +20,8 @@ public class AppDbContext : DbContext
     public DbSet<RequestAssignment> RequestAssignments => Set<RequestAssignment>();
     public DbSet<RequestStatusHistory> RequestStatusHistory => Set<RequestStatusHistory>();
 
+    public DbSet<Notification> Notifications => Set<Notification>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -134,6 +136,34 @@ public class AppDbContext : DbContext
                 .HasForeignKey(x => x.RoleId);
         });
 
+        modelBuilder.Entity<Notification>(entity =>
+{
+    entity.ToTable("notification");
+    entity.HasKey(n => n.NotificationId);
+
+    entity.Property(n => n.NotificationId)
+        .HasColumnName("notification_id")
+        .ValueGeneratedOnAdd();
+
+    entity.Property(n => n.RequestId).HasColumnName("request_id");
+    entity.Property(n => n.Channel).HasColumnName("channel");
+    entity.Property(n => n.NewStatus).HasColumnName("new_status");
+    entity.Property(n => n.Status).HasColumnName("status");
+
+    entity.Property(n => n.CreatedAt)
+        .HasColumnName("created_at")
+        .HasColumnType("timestamp with time zone");
+
+    entity.Property(n => n.SentAt)
+        .HasColumnName("sent_at")
+        .HasColumnType("timestamp with time zone")
+        .IsRequired(false);
+
+    entity.Property(n => n.FailureReason)
+        .HasColumnName("failure_reason")
+        .HasColumnType("text")
+        .IsRequired(false);
+});
         modelBuilder.Entity<RequestAssignment>(entity =>
         {
             entity.ToTable("request_assignment");

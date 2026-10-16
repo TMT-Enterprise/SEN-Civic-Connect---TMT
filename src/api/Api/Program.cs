@@ -3,6 +3,7 @@ using System.Reflection;
 using CivicConnect.Api;
 using CivicConnect.Auth;
 using CivicConnect.Data;
+using CivicConnect.Notifications;
 using CivicConnect.Requests;
 using CivicConnect.Requests.Requests;
 
@@ -20,6 +21,7 @@ builder.Services.AddScoped<RequestsService>();
 builder.Services.AddScoped<AssignmentService>();
 builder.Services.AddAuthModule();
 builder.Services.AddRequestsModule(builder.Configuration);
+builder.Services.AddNotificationsModule();
 builder.Services.AddApiAuthentication();
 builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()));

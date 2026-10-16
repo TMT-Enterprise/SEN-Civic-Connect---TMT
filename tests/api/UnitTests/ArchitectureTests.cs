@@ -141,4 +141,23 @@ public class ArchitectureTests
             $"Architecture test failed for '{projectName}'. Forbidden project reference(s) detected: [{string.Join(", ", forbiddenReferences)}]. Allowed references: [{string.Join(", ", expectedAllowed)}]."
         );
     }
+
+    [Fact(DisplayName = "S2-09 / ADR-005 / R-09: Request module depends on INotifier only, never on the Notifications assembly")]
+    public void RequestsModule_DependsOn_INotifierOnly()
+    {
+        // Basis: ADR-005: the Request module sees the INotifier abstraction; EmailNotifier lives in Notifications.
+        var referenced = typeof(CivicConnect.Requests.INotifier).Assembly
+            .GetReferencedAssemblies()
+            .Select(a => a.Name);
+
+        Assert.DoesNotContain("CivicConnect.Notifications", referenced);
+
+        var constructorTypes = typeof(CivicConnect.Requests.StatusChangeNotifier)
+            .GetConstructors()
+            .Single()
+            .GetParameters()
+            .Select(p => p.ParameterType);
+
+        Assert.Contains(typeof(CivicConnect.Requests.INotifier), constructorTypes);
+    }
 }

@@ -29,6 +29,7 @@ public static class RequestsModuleExtensions
         services.TryAddSingleton<RequestStatusTransitionValidator>();
         services.AddSingleton<RequestStatusTransitionValidator>();
         services.AddScoped<OverdueProcessor>();
+        services.AddScoped<StatusChangeNotifier>();
 
         if (configuration.GetValue($"{OverdueOptions.SectionName}:Enabled", true))
         {
