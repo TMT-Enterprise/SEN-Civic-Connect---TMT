@@ -8,8 +8,13 @@ public static class DataExtensions
 {
     public static IServiceCollection AddDataAccess(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("Default")));
+        services.AddSingleton<AppendOnlyHistoryInterceptor>();
+
+        services.AddDbContext<AppDbContext>((sp, options) =>
+        {
+            options.UseNpgsql(configuration.GetConnectionString("Default"));
+            options.AddInterceptors(sp.GetRequiredService<AppendOnlyHistoryInterceptor>());
+        });
 
         services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddScoped<IOverdueRepository, OverdueRepository>();

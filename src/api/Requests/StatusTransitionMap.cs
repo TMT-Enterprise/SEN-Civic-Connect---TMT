@@ -1,3 +1,4 @@
+// src/api/Requests/StatusTransitionMap.cs
 namespace CivicConnect.Requests;
 
 public static class StatusTransitionMap
@@ -6,6 +7,7 @@ public static class StatusTransitionMap
         AllowedTransitions =
         [
             (RequestStatus.Submitted, RequestStatus.Assigned),
+            (RequestStatus.Assigned, RequestStatus.Submitted),
             (RequestStatus.Assigned, RequestStatus.InProgress),
             (RequestStatus.InProgress, RequestStatus.Closed)
         ];

@@ -26,6 +26,7 @@ public static class RequestsModuleExtensions
             .ValidateOnStart();
 
         services.TryAddSingleton(TimeProvider.System);
+        services.TryAddSingleton<RequestStatusTransitionValidator>();
         services.AddSingleton<RequestStatusTransitionValidator>();
         services.AddScoped<OverdueProcessor>();
         services.AddScoped<StatusChangeNotifier>();
