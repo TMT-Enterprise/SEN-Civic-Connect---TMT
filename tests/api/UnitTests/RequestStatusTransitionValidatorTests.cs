@@ -18,6 +18,7 @@ public class RequestStatusTransitionValidatorTests
                     (current, requested) switch
                     {
                         (RequestStatus.Submitted, RequestStatus.Assigned) => true,
+                        (RequestStatus.Assigned, RequestStatus.Submitted) => true,
                         (RequestStatus.Assigned, RequestStatus.InProgress) => true,
                         (RequestStatus.InProgress, RequestStatus.Closed) => true,
                         _ => false
@@ -41,6 +42,17 @@ public class RequestStatusTransitionValidatorTests
             completionDescription: "Work completed successfully");
 
         Assert.Equal(expectedAllowed, result.IsAllowed);
+    }
+
+    [Fact]
+    public void Validate_AllowsReturningAssignedRequestToPool()
+    {
+        var result = _validator.Validate(
+            RequestStatus.Assigned,
+            RequestStatus.Submitted);
+
+        Assert.True(result.IsAllowed);
+        Assert.Null(result.Error);
     }
 
     [Theory]
