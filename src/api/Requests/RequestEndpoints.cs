@@ -82,6 +82,105 @@ public static class RequestsEndpoints
             return Results.Ok(requests);
         }).RequireAuthorization(policy => policy.RequireRole(Roles.Requester));
 
+        endpoints.MapGet("/staff/requests", async (
+            HttpContext context,
+            string? search,
+            string? id,
+            string? status,
+            string? dueDate,
+            string? category,
+            string? assignee,
+            long? categoryId,
+            RequestsService service,
+            CancellationToken cancellationToken) =>
+        {
+            if (!TryGetEmployeeId(context.User, out var employeeId))
+            {
+                return Results.Unauthorized();
+            }
+
+            if (!TryCreateFilters(
+                    search,
+                    id,
+                    status,
+                    dueDate,
+                    category,
+                    assignee,
+                    categoryId,
+                    assignedEmployeeId: null,
+                    unassigned: false,
+                    out var filters))
+            {
+                return Results.ValidationProblem(
+                    new Dictionary<string, string[]>
+                    {
+                        ["dueDate"] = ["Use an ISO date or date prefix (yyyy, yyyy-MM, or yyyy-MM-dd)."]
+                    });
+            }
+
+            return Results.Ok(await service.SearchStaffAsync(
+                employeeId,
+                filters,
+                cancellationToken));
+        })
+        .RequireAuthorization(policy => policy.RequireRole(Roles.Staff))
+        .WithName("SearchStaffRequests")
+        .WithSummary("Search and filter requests assigned to the authenticated staff member")
+        .WithDescription("Returns only requests assigned to the authenticated staff member. Text filters are case-insensitive partial matches.")
+        .Produces<RequestSearchResponse>()
+        .ProducesValidationProblem()
+        .Produces(StatusCodes.Status401Unauthorized)
+        .Produces(StatusCodes.Status403Forbidden);
+
+        endpoints.MapGet("/admin/requests", async (
+            HttpContext context,
+            string? search,
+            string? id,
+            string? status,
+            string? dueDate,
+            string? category,
+            string? assignee,
+            long? categoryId,
+            long? assignedEmployeeId,
+            bool? unassigned,
+            RequestsService service,
+            CancellationToken cancellationToken) =>
+        {
+            if (!TryGetEmployeeId(context.User, out _))
+            {
+                return Results.Unauthorized();
+            }
+
+            if (!TryCreateFilters(
+                    search,
+                    id,
+                    status,
+                    dueDate,
+                    category,
+                    assignee,
+                    categoryId,
+                    assignedEmployeeId,
+                    unassigned ?? false,
+                    out var filters))
+            {
+                return Results.ValidationProblem(
+                    new Dictionary<string, string[]>
+                    {
+                        ["dueDate"] = ["Use an ISO date or date prefix (yyyy, yyyy-MM, or yyyy-MM-dd)."]
+                    });
+            }
+
+            return Results.Ok(await service.SearchAdminAsync(filters, cancellationToken));
+        })
+        .RequireAuthorization(policy => policy.RequireRole(Roles.Admin))
+        .WithName("SearchAdminRequests")
+        .WithSummary("Search and filter all requests, including unassigned requests")
+        .WithDescription("Admin-only request queue. Text filters are case-insensitive partial matches.")
+        .Produces<RequestSearchResponse>()
+        .ProducesValidationProblem()
+        .Produces(StatusCodes.Status401Unauthorized)
+        .Produces(StatusCodes.Status403Forbidden);
+
         // GET /requests/{id} — get one request
         endpoints.MapGet("/requests/{id:long}", async (
             HttpContext context,
@@ -105,6 +204,58 @@ public static class RequestsEndpoints
         }).RequireAuthorization(policy => policy.RequireRole(Roles.Requester));
 
         return endpoints;
+    }
+
+    private static bool TryCreateFilters(
+        string? search,
+        string? id,
+        string? status,
+        string? dueDate,
+        string? category,
+        string? assignee,
+        long? categoryId,
+        long? assignedEmployeeId,
+        bool unassigned,
+        out RequestSearchFilters filters)
+    {
+        RequestSearchDateRange? dateRange = null;
+        if (!string.IsNullOrWhiteSpace(dueDate))
+        {
+            if (!RequestSearchDateRange.TryParse(dueDate, out var parsedDateRange))
+            {
+                filters = new RequestSearchFilters();
+                return false;
+            }
+
+            dateRange = parsedDateRange;
+        }
+
+        filters = new RequestSearchFilters(
+            search,
+            id,
+            status,
+            dateRange,
+            category,
+            assignee,
+            categoryId,
+            assignedEmployeeId,
+            unassigned);
+        return true;
+    }
+
+    private static bool TryGetEmployeeId(ClaimsPrincipal user, out long employeeId)
+    {
+        employeeId = 0;
+
+        if (user.Identity?.IsAuthenticated != true)
+        {
+            return false;
+        }
+
+        var subject = user.FindFirstValue(ClaimTypes.NameIdentifier)
+            ?? user.FindFirstValue("sub");
+
+        return long.TryParse(subject, out employeeId) && employeeId > 0;
     }
 
     private static bool TryGetRequesterId(ClaimsPrincipal user, out long requesterId)

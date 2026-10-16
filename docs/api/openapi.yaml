@@ -99,6 +99,68 @@ components:
           type: string
           format: date-time
 
+    RequestSearchResponse:
+      type: object
+      properties:
+        requests:
+          type: array
+          items:
+            $ref: '#/components/schemas/RequestSearchItem'
+        message:
+          type: string
+          nullable: true
+      required: [requests, message]
+
+    RequestSearchItem:
+      type: object
+      properties:
+        requestId:
+          type: integer
+          format: int64
+        categoryId:
+          type: integer
+          format: int64
+        category:
+          type: string
+        assignedEmployeeId:
+          type: integer
+          format: int64
+          nullable: true
+        assignee:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [Submitted, Assigned, In Progress, Resolved, Closed, Overdue]
+        description:
+          type: string
+        submittedAt:
+          type: string
+          format: date-time
+        dueAt:
+          type: string
+          format: date-time
+          nullable: true
+        updatedAt:
+          type: string
+          format: date-time
+        closedAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - requestId
+        - categoryId
+        - category
+        - assignedEmployeeId
+        - assignee
+        - status
+        - description
+        - submittedAt
+        - dueAt
+        - updatedAt
+        - closedAt
+
     SubmitRequestBody:
       type: object
       properties:
@@ -434,7 +496,7 @@ paths:
         '404':
           description: Not found
 
-      /requests/{id}/assign:
+  /requests/{id}/assign:
     post:
       summary: Assign a request to staff (FR-008) - management only
       description: >
@@ -586,6 +648,11 @@ paths:
   /staff/requests:
     get:
       summary: Staff queue - search and filter own requests (FR-009)
+      description: >
+        Staff can only see requests assigned to their employee account.
+        Text filters use case-insensitive partial matching. dueDate accepts
+        yyyy, yyyy-MM, or yyyy-MM-dd. An empty filter returns all permitted
+        requests; an empty result includes a helpful message.
       tags: [Staff]
       security:
         - bearerAuth: []
@@ -594,36 +661,59 @@ paths:
           name: search
           schema:
             type: string
+          description: Partial match against request ID, status, due date, category, or assignee.
+        - in: query
+          name: id
+          schema:
+            type: string
+          description: Case-insensitive partial request ID match.
         - in: query
           name: status
           schema:
             type: string
-        - in: query
-          name: categoryId
-          schema:
-            type: integer
+          description: Case-insensitive partial status match.
         - in: query
           name: dueDate
           schema:
             type: string
-            format: date
+            pattern: '^\d{4}(-\d{2}(-\d{2})?)?$'
+          description: Match a UTC date, month, or year prefix.
+        - in: query
+          name: category
+          schema:
+            type: string
+          description: Case-insensitive partial category name.
+        - in: query
+          name: assignee
+          schema:
+            type: string
+          description: Case-insensitive partial assignee name.
+        - in: query
+          name: categoryId
+          schema:
+            type: integer
       responses:
         '200':
           description: Filtered list
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ServiceRequest'
+                $ref: '#/components/schemas/RequestSearchResponse'
         '401':
           description: Unauthenticated
         '403':
           description: Forbidden — staff only
+        '400':
+          description: Invalid date filter
 
   /admin/requests:
     get:
       summary: Admin view - all requests with filters (FR-008, FR-009)
+      description: >
+        Admins can see all requests, including unassigned requests, and can
+        filter by assignee. Text filters use case-insensitive partial matching.
+        dueDate accepts yyyy, yyyy-MM, or yyyy-MM-dd. An empty filter returns
+        all requests; an empty result includes a helpful message.
       tags: [Admin]
       security:
         - bearerAuth: []
@@ -632,10 +722,33 @@ paths:
           name: search
           schema:
             type: string
+          description: Partial match against request ID, status, due date, category, or assignee.
+        - in: query
+          name: id
+          schema:
+            type: string
+          description: Case-insensitive partial request ID match.
         - in: query
           name: status
           schema:
             type: string
+          description: Case-insensitive partial status match.
+        - in: query
+          name: dueDate
+          schema:
+            type: string
+            pattern: '^\d{4}(-\d{2}(-\d{2})?)?$'
+          description: Match a UTC date, month, or year prefix.
+        - in: query
+          name: category
+          schema:
+            type: string
+          description: Case-insensitive partial category name.
+        - in: query
+          name: assignee
+          schema:
+            type: string
+          description: Case-insensitive partial assignee name.
         - in: query
           name: categoryId
           schema:
@@ -644,19 +757,25 @@ paths:
           name: assignedEmployeeId
           schema:
             type: integer
+          description: Restrict to a single assignee.
+        - in: query
+          name: unassigned
+          schema:
+            type: boolean
+          description: Restrict results to requests without an assignee.
       responses:
         '200':
           description: Filtered list
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ServiceRequest'
+                $ref: '#/components/schemas/RequestSearchResponse'
         '401':
           description: Unauthenticated
         '403':
           description: Forbidden - admin only
+        '400':
+          description: Invalid date filter
 
   /management/dashboard:
     get:
