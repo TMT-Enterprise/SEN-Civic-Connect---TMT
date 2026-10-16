@@ -17,6 +17,8 @@ public class AppDbContext : DbContext
     public DbSet<RequestStatusEntity> RequestStatuses => Set<RequestStatusEntity>();
     public DbSet<EmployeeRole> EmployeeRoles => Set<EmployeeRole>();
     public DbSet<Employee> Employees => Set<Employee>();
+    public DbSet<RequestAssignment> RequestAssignments => Set<RequestAssignment>();
+    public DbSet<RequestStatusHistory> RequestStatusHistory => Set<RequestStatusHistory>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -130,6 +132,55 @@ public class AppDbContext : DbContext
             entity.HasOne(x => x.Role)
                 .WithMany()
                 .HasForeignKey(x => x.RoleId);
+        });
+
+        modelBuilder.Entity<RequestAssignment>(entity =>
+        {
+            entity.ToTable("request_assignment");
+            entity.HasKey(a => a.AssignmentId);
+
+            entity.Property(a => a.AssignmentId)
+                .HasColumnName("assignment_id")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(a => a.RequestId).HasColumnName("request_id");
+            entity.Property(a => a.EmployeeId).HasColumnName("employee_id");
+            entity.Property(a => a.AssignedByEmployeeId).HasColumnName("assigned_by_employee_id");
+
+            entity.Property(a => a.AssignedAt)
+                .HasColumnName("assigned_at")
+                .HasColumnType("timestamp with time zone");
+
+            entity.Property(a => a.Decision)
+                .HasColumnName("decision")
+                .HasMaxLength(20)
+                .IsRequired();
+
+            entity.Property(a => a.DecisionAt)
+                .HasColumnName("decision_at")
+                .HasColumnType("timestamp with time zone");
+
+            entity.Property(a => a.RejectionComment)
+                .HasColumnName("rejection_comment")
+                .HasColumnType("text");
+        });
+
+        modelBuilder.Entity<RequestStatusHistory>(entity =>
+        {
+            entity.ToTable("request_status_history");
+            entity.HasKey(h => h.HistoryId);
+
+            entity.Property(h => h.HistoryId)
+                .HasColumnName("history_id")
+                .ValueGeneratedOnAdd();
+
+            entity.Property(h => h.RequestId).HasColumnName("request_id");
+            entity.Property(h => h.EmployeeId).HasColumnName("employee_id");
+            entity.Property(h => h.StatusId).HasColumnName("status_id");
+
+            entity.Property(h => h.ChangedAt)
+                .HasColumnName("changed_at")
+                .HasColumnType("timestamp with time zone");
         });
     }
 }

@@ -17,9 +17,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Register data access
 builder.Services.AddDataAccess(builder.Configuration);
 builder.Services.AddScoped<RequestsService>();
+builder.Services.AddScoped<AssignmentService>();
 builder.Services.AddAuthModule();
 builder.Services.AddRequestsModule(builder.Configuration);
 builder.Services.AddApiAuthentication();
+builder.Services.ConfigureHttpJsonOptions(options =>
+    options.SerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()));
 
 
 if (builder.Environment.IsDevelopment())
@@ -135,6 +138,7 @@ app.MapHealthChecks("/health/ready", new Microsoft.AspNetCore.Diagnostics.Health
 }).AllowAnonymous();
 
 app.MapRequestsEndpoints();
+app.MapAssignmentEndpoints();
 
 app.Run();
 

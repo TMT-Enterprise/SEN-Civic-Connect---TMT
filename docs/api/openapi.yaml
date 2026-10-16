@@ -138,6 +138,66 @@ components:
           type: string
       required: [status]
 
+    Assignment:
+      type: object
+      properties:
+        assignmentId:
+          type: integer
+          format: int64
+        requestId:
+          type: integer
+          format: int64
+        employeeId:
+          type: integer
+          format: int64
+        assignedAt:
+          type: string
+          format: date-time
+        dueAt:
+          type: string
+          format: date-time
+          nullable: true
+        decision:
+          type: string
+          enum: [Pending, Accepted, Rejected]
+        decisionAt:
+          type: string
+          format: date-time
+          nullable: true
+        requestStatus:
+          type: string
+          enum: [Submitted, Assigned, InProgress, Closed]
+
+    StatusChange:
+      type: object
+      properties:
+        requestId:
+          type: integer
+          format: int64
+        status:
+          type: string
+          enum: [Submitted, Assigned, InProgress, Closed]
+
+    HistoryEntry:
+      type: object
+      properties:
+        historyId:
+          type: integer
+          format: int64
+        requestId:
+          type: integer
+          format: int64
+        employeeId:
+          type: integer
+          format: int64
+          nullable: true
+        status:
+          type: string
+          description: Status name as stored, for example Assigned or In Progress
+        changedAt:
+          type: string
+          format: date-time
+
     Category:
       type: object
       properties:
@@ -374,9 +434,12 @@ paths:
         '404':
           description: Not found
 
-  /requests/{id}/assign:
+    /requests/{id}/assign:
     post:
       summary: Assign a request to staff (FR-008) - management only
+      description: >
+        The due date must be at least 24 hours from now (exactly 24 hours is accepted).
+        The assignment, the status change and the history row are committed in one transaction.
       tags: [Requests]
       security:
         - bearerAuth: []
@@ -386,6 +449,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
       requestBody:
         required: true
         content:
@@ -395,20 +459,28 @@ paths:
       responses:
         '200':
           description: Assigned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assignment'
         '401':
           description: Unauthenticated
         '403':
           description: Forbidden - management only
         '404':
-          description: Request not found
+          description: Request not found, or employee not found or inactive
         '409':
-          description: Already assigned
+          description: Already assigned (including a concurrent assignment)
         '422':
           description: Due date less than 24 hours
 
   /requests/{id}/decide:
     post:
-      summary: Accept or reject an assigned request (FR-010) - staff only
+      summary: Accept or reject an assigned request (FR-010, FR-011) - staff only
+      description: >
+        Only the assigned employee can decide, and only once. Accepting leaves the request Assigned.
+        Rejecting stores the comment, returns the request to the unassigned pool (Submitted) and
+        writes a history row, all in one transaction.
       tags: [Requests]
       security:
         - bearerAuth: []
@@ -418,6 +490,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
       requestBody:
         required: true
         content:
@@ -427,6 +500,10 @@ paths:
       responses:
         '200':
           description: Decision recorded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assignment'
         '401':
           description: Unauthenticated
         '403':
@@ -434,13 +511,16 @@ paths:
         '404':
           description: Request not found
         '409':
-          description: Decision already made
+          description: Decision already made, or no open assignment
         '422':
-          description: Rejection requires comment
+          description: Rejection requires comment, or decision is not Accepted or Rejected
 
   /requests/{id}/status:
     patch:
       summary: Update request status (FR-011, FR-013) - staff only
+      description: >
+        Allowed for the assigned employee. Closing requires a completionNote.
+        Assigned and Submitted are only set through assign and reject.
       tags: [Requests]
       security:
         - bearerAuth: []
@@ -450,6 +530,7 @@ paths:
           required: true
           schema:
             type: integer
+            format: int64
       requestBody:
         required: true
         content:
@@ -459,17 +540,49 @@ paths:
       responses:
         '200':
           description: Status updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusChange'
         '401':
           description: Unauthenticated
         '403':
-          description: Forbidden - staff only
+          description: Forbidden - assigned staff only
         '404':
           description: Request not found
         '409':
           description: Invalid status transition
         '422':
-          description: Closing requires completion note
+          description: Closing requires completion note, or status value not supported
 
+  /requests/{id}/history:
+    get:
+      summary: Read a request's status history (FR-013) - employees only
+      description: History is insert-and-read only. There is no update or delete.
+      tags: [Requests]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: History entries, oldest first
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HistoryEntry'
+        '401':
+          description: Unauthenticated
+        '403':
+          description: Forbidden - employees only
+  
   /staff/requests:
     get:
       summary: Staff queue - search and filter own requests (FR-009)
