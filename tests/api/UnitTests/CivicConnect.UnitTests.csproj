@@ -22,6 +22,7 @@
     <ProjectReference Include="..\..\..\src\api\Requests\CivicConnect.Requests.csproj" />
     <ProjectReference Include="..\..\..\src\api\Auth\CivicConnect.Auth.csproj" />
     <ProjectReference Include="..\..\..\src\api\Data\CivicConnect.Data.csproj" />
+    <ProjectReference Include="..\..\..\src\api\Notifications\CivicConnect.Notifications.csproj" />
   </ItemGroup>
 
 </Project>

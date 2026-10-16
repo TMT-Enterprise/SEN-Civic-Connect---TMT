@@ -13,6 +13,7 @@ public static class DataExtensions
 
         services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddScoped<IOverdueRepository, OverdueRepository>();
+        services.AddScoped<INotificationRepository, NotificationRepository>();
 
         return services;
     }

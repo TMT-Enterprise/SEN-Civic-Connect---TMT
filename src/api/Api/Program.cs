@@ -3,6 +3,7 @@ using System.Reflection;
 using CivicConnect.Api;
 using CivicConnect.Auth;
 using CivicConnect.Data;
+using CivicConnect.Notifications;
 using CivicConnect.Requests;
 using CivicConnect.Requests.Requests;
 
@@ -19,6 +20,7 @@ builder.Services.AddDataAccess(builder.Configuration);
 builder.Services.AddScoped<RequestsService>();
 builder.Services.AddAuthModule();
 builder.Services.AddRequestsModule(builder.Configuration);
+builder.Services.AddNotificationsModule();
 builder.Services.AddApiAuthentication();
 
 
