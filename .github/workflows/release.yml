@@ -1,0 +1,86 @@
+name: release (main)
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: release-main
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pull-requests: read
+
+env:
+  API_PROJECT: src/api/Api/CivicConnect.Api.csproj
+
+jobs:
+  verify-origin:
+    name: Verify origin of main commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Commit must come from an allowed PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          heads=$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" \
+            --jq '[.[] | select(.base.ref=="main") | .head.ref] | .[]')
+          if [ -z "$heads" ]; then
+            echo "::error::Commit $GITHUB_SHA reached main without a PR (direct push)."
+            exit 1
+          fi
+          for h in $heads; do
+            if [ "$h" = "development" ] || [ "$h" = "main-update" ] || [[ "$h" == main-update/* ]]; then
+              echo "OK: came from '$h'"; exit 0
+            fi
+          done
+          echo "::error::PR head(s) not allowed: $heads"
+          exit 1
+
+  build-release:
+    name: Build release artefacts
+    needs: verify-origin
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Publish API
+        run: dotnet publish $API_PROJECT -c Release -o publish/api
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: src/web/package-lock.json
+
+      - name: Build web
+        working-directory: src/web
+        run: |
+          npm ci
+          npm run build
+
+      - name: Record release identity
+        run: |
+          echo "commit=$GITHUB_SHA" > publish/RELEASE.txt
+          echo "built=$(date -u +%FT%TZ)" >> publish/RELEASE.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: civicconnect-${{ github.sha }}
+          path: |
+            publish/
+            src/web/dist/
+          retention-days: 90
+
+  deploy:
+    name: Deploy (placeholder)
+    needs: build-release
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - run: echo "Deploy step not implemented yet."

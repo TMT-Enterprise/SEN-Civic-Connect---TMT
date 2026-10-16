@@ -1,0 +1,83 @@
+.parent {
+  font-family: 'Inter', sans-serif;
+  background-color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Custom Theme Colors & Styling */
+.btn-orange {
+  background-color: #ff6b00;
+  border-color: #ff6b00;
+  color: #ffffff;
+}
+
+.btn-orange:hover {
+  background-color: #ea580c;
+  border-color: #ea580c;
+  color: #ffffff;
+}
+
+.text-orange {
+  color: #ff6b00;
+}
+
+.brand-box {
+  width: 56px;
+  height: 56px;
+  background-color: #ff6b00;
+  color: #ffffff;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  box-shadow: 0 10px 15px -3px rgba(255, 107, 0, 0.3);
+}
+
+.custom-input-group .input-group-text {
+  background-color: #f9fafb;
+  border-right: none;
+  border-top-left-radius: 0.75rem;
+  border-bottom-left-radius: 0.75rem;
+  color: #9ca3af;
+  font-size: 0.85rem;
+}
+
+.custom-input-group .form-control {
+  background-color: #f9fafb;
+  border-left: none;
+  border-top-right-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+  font-size: 0.85rem;
+}
+
+.custom-input-group .form-control:focus {
+  background-color: #ffffff;
+  border-color: #ff6b00;
+  box-shadow: 0 0 0 0.25rem rgba(255, 107, 0, 0.15);
+}
+
+.password-toggle-btn {
+            background-color: #F9FAFB;
+            border-left: none;
+            border-top-right-radius: 0.75rem;
+            border-bottom-right-radius: 0.75rem;
+            color: #9CA3AF;
+            font-size: 0.85rem;
+            border-color: #dee2e6;
+        }
+
+        .password-toggle-btn:hover {
+            color: #495057;
+            background-color: #F9FAFB;
+        }
+        
+.auth-container {
+  width: 100%;
+  max-width: 420px;
+  padding: 1.5rem;
+}
