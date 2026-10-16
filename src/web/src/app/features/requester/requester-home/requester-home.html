@@ -52,6 +52,10 @@
       <a routerLink="/requester/history">See All</a>
     </div>
 
-    <app-request-card></app-request-card>
+        <div class="request-card-grid">
+      @for (request of requests; track request.id) {
+        <app-request-card [request]="request"></app-request-card>
+      }
+    </div>
   </section>
 </section>

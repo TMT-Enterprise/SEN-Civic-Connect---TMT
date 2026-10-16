@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AdminSidebar } from './admin-sidebar';
+import { provideRouter } from '@angular/router';
 
 describe('AdminSidebar', () => {
   let component: AdminSidebar;
@@ -9,6 +10,7 @@ describe('AdminSidebar', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AdminSidebar],
+      providers: [provideRouter([])]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AdminSidebar);
