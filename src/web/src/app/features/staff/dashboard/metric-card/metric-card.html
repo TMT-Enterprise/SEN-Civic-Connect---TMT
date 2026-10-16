@@ -1,0 +1,27 @@
+
+<article class="metric-card card h-100">
+  <div class="card-body">
+
+    <span class="metric-label">{{ label() }}</span>
+
+    <div class="metric-bottom">
+      <h3>{{ value() }}</h3>
+
+      @if (detail()) {
+        <span class="metric-detail">
+          {{ detail() }}
+        </span>
+      }
+
+      @if (icon()) {
+        <i
+          class="fa-solid metric-icon"
+          [class]=" 'fa-solid metric-icon ' + icon()"
+          aria-hidden="true">
+        </i>
+      }
+    </div>
+
+  </div>
+</article>
+
