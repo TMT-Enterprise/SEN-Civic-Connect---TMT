@@ -1,6 +1,18 @@
 @CivicConnect.Api_HostAddress = http://localhost:5228
+@staffToken = paste-staff-jwt-here
+@adminToken = paste-admin-jwt-here
 
 GET {{CivicConnect.Api_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+### Search requests assigned to the authenticated staff member
+GET {{CivicConnect.Api_HostAddress}}/staff/requests?status=assign&category=it&dueDate=2026-10
+Authorization: Bearer {{staffToken}}
+Accept: application/json
+
+### Admin request queue, including unassigned requests
+GET {{CivicConnect.Api_HostAddress}}/admin/requests?unassigned=true
+Authorization: Bearer {{adminToken}}
+Accept: application/json
