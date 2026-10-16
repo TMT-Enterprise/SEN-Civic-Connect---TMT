@@ -102,6 +102,7 @@ For end-to-end testing, Cypress was selected instead of Playwright because it pr
 | Source control | Git/GitHub | Version control and collaboration |
 | Database platform | Supabase | Provide managed PostgreSQL hosting and database |
 
+## Version and compatibility baseline
 | Technology | Version | Justification |
 |---|---|---|
 | Angular | 21.x | Chosen frontend framework |
