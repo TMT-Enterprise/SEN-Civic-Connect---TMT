@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 
 export interface ServiceRequest {
@@ -16,6 +16,10 @@ export interface ServiceRequest {
     | 'Overdue'
     | 'Rejected';
   dueDate: string;
+
+  // Optional details used by the modal
+  contactPhone?: string;
+  contactEmail?: string;
 }
 
 
@@ -28,10 +32,15 @@ export interface ServiceRequest {
 export class RequestCard {
   @Input({ required: true }) request!: ServiceRequest;
 
+  @Output() viewDetails = new EventEmitter<ServiceRequest>();
+
   get statusLabel(): string {
     return this.request.status === 'Assigned'
       ? 'Pending Accept'
       : this.request.status;
   }
-}
 
+  onViewDetails(): void {
+    this.viewDetails.emit(this.request);
+  }
+}

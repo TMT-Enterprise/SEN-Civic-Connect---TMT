@@ -45,7 +45,7 @@
     <div class="panel-heading">
       <div>
         <h2>Active Service Requests</h2>
-        <p>Assign submitted requests to an active staff member.</p>
+        <p>Review request details and assign submitted requests to active staff.</p>
       </div>
 
       <div class="filter-tabs" aria-label="Request status filters">
@@ -62,7 +62,9 @@
     </div>
 
     @if (successMessage()) {
-      <p class="queue-message success-message" role="status">{{ successMessage() }}</p>
+      <p class="queue-message success-message" role="status">
+        {{ successMessage() }}
+      </p>
     }
 
     @if (isLoading()) {
@@ -70,7 +72,10 @@
     } @else if (errorMessage()) {
       <div class="queue-message error-message" role="alert">
         <span>{{ errorMessage() }}</span>
-        <button type="button" class="btn btn-sm assign-button" (click)="loadRequests()">
+        <button
+          type="button"
+          class="btn btn-sm assign-button"
+          (click)="loadRequests()">
           Try Again
         </button>
       </div>
@@ -89,12 +94,13 @@
               <th class="text-end">Actions</th>
             </tr>
           </thead>
-
           <tbody>
             @for (request of filteredRequests(); track request.requestId) {
               <tr>
                 <td>
-                  <strong class="request-id">{{ requestLabel(request.requestId) }}</strong>
+                  <strong class="request-id">
+                    {{ requestLabel(request.requestId) }}
+                  </strong>
                   <small>{{ formatDate(request.submittedAt) }}</small>
                 </td>
                 <td>
@@ -120,16 +126,20 @@
                 </td>
                 <td>{{ formatDate(request.dueAt) }}</td>
                 <td class="text-end">
+                  <button
+                    type="button"
+                    class="btn btn-sm assign-button"
+                    (click)="openDetails(request)">
+                    View Details
+                  </button>
                   @if (request.status === 'Submitted') {
                     <button
                       type="button"
-                      class="btn btn-sm assign-button"
+                      class="btn btn-sm assign-button ms-2"
                       (click)="openAssignment(request)">
                       <i class="fa-solid fa-user-gear me-1"></i>
                       Assign Staff
                     </button>
-                  } @else {
-                    <span class="text-muted">—</span>
                   }
                 </td>
               </tr>
@@ -153,7 +163,13 @@
             <h2 id="assignment-title">Assign {{ requestLabel(request.requestId) }}</h2>
             <p>{{ request.category }}</p>
           </div>
-          <button type="button" class="dialog-close" aria-label="Close" (click)="closeAssignment()">×</button>
+          <button
+            type="button"
+            class="dialog-close"
+            aria-label="Close"
+            (click)="closeAssignment()">
+            ×
+          </button>
         </div>
 
         @if (assignmentError()) {
@@ -164,7 +180,9 @@
           <p role="status">Loading active staff...</p>
         } @else {
           @if (employees().length === 0 && !assignmentError()) {
-            <p class="error-message" role="alert">No active staff members are available to assign.</p>
+            <p class="error-message" role="alert">
+              No active staff members are available to assign.
+            </p>
           }
 
           <form (ngSubmit)="submitAssignment()">
@@ -191,10 +209,16 @@
               (ngModelChange)="dueAt.set($event)"
               name="dueAt"
               required>
-            <p class="assignment-hint">Due date must be at least 24 hours from now.</p>
+            <p class="assignment-hint">
+              Due date must be at least 24 hours from now.
+            </p>
 
             <div class="assignment-actions">
-              <button type="button" class="btn btn-outline-secondary" [disabled]="isAssigning()" (click)="closeAssignment()">
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                [disabled]="isAssigning()"
+                (click)="closeAssignment()">
                 Cancel
               </button>
               <button
@@ -209,4 +233,9 @@
       </section>
     </div>
   }
+
+  <app-request-detail-modal
+    [request]="selectedRequest()"
+    [isOpen]="selectedRequest() !== null"
+    (closed)="closeDetails()" />
 </section>

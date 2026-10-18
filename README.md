@@ -33,10 +33,15 @@ Problem and stakeholder analysis, scope baseline, constraints, requirements with
 criteria, initial RTM, initial risk register, forward engineering considerations, and GitHub
 governance are baselined and signed off. See `docs/PED/PED-v1.0.md`.
 
-**Milestone 2 (Architecture, Technology & Initial Design Baseline): in progress.**
+**Milestone 2 (Architecture, Technology & Initial Design Baseline): complete**
 ASRs and quality drivers are defined. Initial design decisions (notification handling, status
 transition logic) are in ADR form. Persistence, technology-stack, and API/integration decisions
-are still being finalised. See `docs/PED/PED-v2.0.md` for current status.
+are still being finalised. See `docs/PED/PED-v2.0.md`.
+
+**Milestone 3 (Testing & Deployment): current**
+Focuses on comprehensive backend/frontend testing, CI/CD pipelines, containerisation, and deployment configurations. 
+See `docs/PED/PED-v3.0.md` for current status.
+
 
 ## Documentation
 
@@ -56,9 +61,23 @@ All controlled project evidence lives under `docs/`, not in this README:
 
 ## Technology Stack
 
-Not yet finalised. The technology-stack decision is being made as a formal ADR at Milestone 2,
-informed by requirements, ASRs, team capability and cost constraints, see
-`docs/decisions/adr-technology-stack.md` once it lands.
+| Technology | Version | Justification |
+|---|---|---|
+| Angular | 21.x | Chosen frontend framework |
+| TypeScript | 5.9x | Angular 21 requires >=5.9.0 <6.0.0 |
+| Node.js | 24.x LTS | Angular 21 supports Node 24; LTS gives a stable development environment. |
+| npm | 11.x | Bundled with Node |
+| C# | 14 | Paored with .Net 10 |
+| .NET | 10.x | Builds/runs the backend and provides C# 14 |
+| ASP.NET Core | 10.x | Backend REST API; matches .NET 10 |
+| PostgreSQL | Supabase-managed | Supabase manages actual DB version |
+| xUnit | 3.x | Backend testing |
+| Cypress | 16.x | End-to-end testing |
+| Docker Engine | 29.8.1 | API architectural style, implemented over HTTP/HTTPS |
+| OpenAPI | 3.x | Define API contracts |
+| Swagger UI | Compatible with OpenAPI setup | Interactive API documentation/testing |
+| GitHub | Current supported | Source/version control |
+
 
 ## Repository Governance
 
@@ -77,20 +96,12 @@ Setup and run instructions will be added here once the initial application scaff
 place, tracked under the Milestone 2 development issues. This section will be updated before
 any milestone requiring a runnable application.
 
-## Academic Context
 
-Developed as the integrated team project for Software Engineering 381 (SEN381), 2026 academic
-year. Not intended for production use.
+## Testing and Quality Assurance
 
-## E2E Testing
+*Backend Unit Testing:* Implemented using xUnit 3.x for business logic, services, and controller verification.
+*End-to-End (E2E) Testing:* Uses Cypress 16.x to execute smoke and integration flows against the application.
 
-CivicConnect uses Cypress for a local end-to-end smoke test of the system status page.
-
-### Requirements
-
-- Start the PostgreSQL database, CivicConnect API, and Angular frontend.
-- Cypress version: 16.1.1.
-- Cypress configuration and tests are located in `tests/e2e/`.
 
 ### Run the smoke test
 
@@ -99,4 +110,10 @@ From the repository root, execute:
 ```powershell
 cd tests/e2e
 $env:CYPRESS_BASE_URL = "http://localhost:4200"
-npx cypress run 
+npx cypress run
+```
+
+## Academic Context
+
+Developed as the integrated team project for Software Engineering 381 (SEN381), 2026 academic
+year. Not intended for production use.

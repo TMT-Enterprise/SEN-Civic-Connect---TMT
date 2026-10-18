@@ -1,22 +1,22 @@
-
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
 
+import { AuthService } from '../../../core/auth';
+import {
+  RequestHistoryItem,
+  RequestsService,
+} from '../../../core/requests';
+import { RequestDetailModal } from '../../../shared/request-detail-modal/request-detail-modal';
 import {
   RequestCard,
   ServiceRequest,
 } from '../../../shared/request-card/request-card';
-import { AuthService } from '../../../core/auth';
-import {
-  RequestsService,
-  RequestHistoryItem,
-} from '../../../core/requests';
 
 @Component({
   selector: 'app-requester-home',
   standalone: true,
-  imports: [RouterLink, RequestCard],
+  imports: [RouterLink, RequestCard, RequestDetailModal],
   templateUrl: './requester-home.html',
   styleUrl: './requester-home.css',
 })
@@ -31,6 +31,7 @@ export class RequesterHome implements OnInit {
   readonly requests = signal<ServiceRequest[]>([]);
   readonly isLoading = signal(true);
   readonly errorMessage = signal('');
+  readonly selectedRequest = signal<ServiceRequest | null>(null);
 
   ngOnInit(): void {
     this.loadRequests();
@@ -47,13 +48,9 @@ export class RequesterHome implements OnInit {
       },
       error: (error: unknown) => {
         console.error('Failed to load requests:', error);
-
         this.isLoading.set(false);
 
-        if (
-          error instanceof HttpErrorResponse &&
-          error.status === 401
-        ) {
+        if (error instanceof HttpErrorResponse && error.status === 401) {
           this.errorMessage.set(
             'Your session may have expired. Please sign in again.',
           );
@@ -77,6 +74,14 @@ export class RequesterHome implements OnInit {
     this.loadRequests();
   }
 
+  openDetails(request: ServiceRequest): void {
+    this.selectedRequest.set(request);
+  }
+
+  closeDetails(): void {
+    this.selectedRequest.set(null);
+  }
+
   private toCard(item: RequestHistoryItem): ServiceRequest {
     const supportedStatuses: ServiceRequest['status'][] = [
       'Submitted',
@@ -87,7 +92,6 @@ export class RequesterHome implements OnInit {
       'Overdue',
       'Rejected',
     ];
-
     const status = supportedStatuses.includes(
       item.status as ServiceRequest['status'],
     )

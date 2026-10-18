@@ -1,78 +1,71 @@
+<section class="history-page">
+  <div class="history-panel">
+    <div class="history-heading">
+      <div>
+        <h2>Request History &amp; Audit Log</h2>
+        <p>Record of your closed, overdue, and rejected requests.</p>
+      </div>
 
-<section class="history-panel card">
-
-  <div class="history-header">
-    <div>
-      <h2>Request History &amp; Archive</h2>
-      <p>
-        Log of closed, overdue, and rejected requests.
-      </p>
+      <div class="filter-tabs" aria-label="History status filters">
+        <button type="button" class="filter-tab active">All Archived</button>
+        <button type="button" class="filter-tab">Closed</button>
+        <button type="button" class="filter-tab">Overdue</button>
+        <button type="button" class="filter-tab">Rejected</button>
+      </div>
     </div>
 
-    <div class="filter-tabs">
-      <button type="button" class="btn btn-sm active">
-        All Archived
-      </button>
-      <button type="button" class="btn btn-sm">Closed</button>
-      <button type="button" class="btn btn-sm">Overdue</button>
-      <button type="button" class="btn btn-sm">Rejected</button>
+    <div class="history-list">
+      <article class="history-card closed-card">
+        <div class="history-main">
+          <div class="history-title-row">
+            <strong class="request-id">REQ-6102</strong>
+            <span class="history-status closed">
+              <i class="fa-solid fa-circle-check me-1"></i>
+              CLOSED
+            </span>
+          </div>
+
+          <p class="history-description">
+            Plumbing: Radiator bleeding and pressure balancing on the third floor.
+          </p>
+
+          <p class="history-meta">
+            Citizen: Pam Beesly · Assigned Specialist:
+            <strong>Marcus Vance</strong>
+          </p>
+        </div>
+
+        <div class="history-date">
+          <span>Due: 02 Oct 2026</span>
+          <strong>Archived: 01 Oct 2026</strong>
+        </div>
+      </article>
+
+      <article class="history-card overdue-card">
+        <div class="history-main">
+          <div class="history-title-row">
+            <strong class="request-id">REQ-7721</strong>
+            <span class="history-status overdue">
+              <i class="fa-solid fa-triangle-exclamation me-1"></i>
+              OVERDUE
+            </span>
+          </div>
+
+          <p class="history-description">
+            Plumbing: Water meter box seal repair and sensor replacement.
+          </p>
+
+          <p class="history-meta">
+            Citizen: Michael Scott · Assigned Specialist:
+            <strong>Marcus Vance</strong>
+          </p>
+        </div>
+
+        <div class="history-date">
+          <span>Due: 05 Oct 2026</span>
+          <strong>Overdue: 06 Oct 2026</strong>
+        </div>
+      </article>
     </div>
   </div>
-
-  <div class="history-list">
-
-    <article class="history-item">
-      <div class="history-main">
-        <div class="d-flex align-items-center flex-wrap gap-2">
-          <span class="request-id">REQ-6102</span>
-          <span class="status-badge status-closed">
-            <i class="fa-solid fa-circle-check me-1"></i>
-            CLOSED
-          </span>
-        </div>
-
-        <p class="history-description">
-          Plumbing: Radiator bleeding and pressure balancing
-          on the third floor.
-        </p>
-
-        <p class="history-meta">
-          Citizen: Pam Beesly · Specialist: Marcus Vance
-        </p>
-      </div>
-
-      <div class="history-dates">
-        <span>Due: 02 Oct 2026</span>
-        <strong>Archived: 01 Oct 2026</strong>
-      </div>
-    </article>
-
-    <article class="history-item overdue-item">
-      <div class="history-main">
-        <div class="d-flex align-items-center flex-wrap gap-2">
-          <span class="request-id">REQ-7721</span>
-          <span class="status-badge status-overdue">
-            <i class="fa-solid fa-triangle-exclamation me-1"></i>
-            OVERDUE
-          </span>
-        </div>
-
-        <p class="history-description">
-          Plumbing: Water meter box seal repair and sensor replacement.
-        </p>
-
-        <p class="history-meta">
-          Citizen: Michael Scott · Specialist: Marcus Vance
-        </p>
-      </div>
-
-      <div class="history-dates">
-        <span>Due: 05 Oct 2026</span>
-        <strong>Overdue: 06 Oct 2026</strong>
-      </div>
-    </article>
-
-  </div>
-
 </section>
-

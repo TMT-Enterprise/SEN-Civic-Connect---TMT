@@ -7,13 +7,20 @@ import {
   AssignableEmployee,
   RequestsService,
 } from '../../../core/requests';
+import { RequestDetailModal } from '../../../shared/request-detail-modal/request-detail-modal';
+import { ServiceRequest } from '../../../shared/request-card/request-card';
 
-type QueueFilter = 'All Active' | 'Unassigned' | 'Assigned' | 'In Progress' | 'Resolved';
+type QueueFilter =
+  | 'All Active'
+  | 'Unassigned'
+  | 'Assigned'
+  | 'In Progress'
+  | 'Resolved';
 
 @Component({
-  selector: 'app-requests-overview',
+  selector: 'app-request-overview',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RequestDetailModal],
   templateUrl: './requests-overview.html',
   styleUrl: './requests-overview.css',
 })
@@ -37,6 +44,7 @@ export class RequestsOverview implements OnInit {
   readonly successMessage = signal('');
   readonly filter = signal<QueueFilter>('All Active');
   readonly assignmentRequest = signal<AdminRequestItem | null>(null);
+  readonly selectedRequest = signal<ServiceRequest | null>(null);
   readonly selectedEmployeeId = signal<number | null>(null);
   readonly dueAt = signal(this.localDateTimeAfterHours(48));
 
@@ -106,6 +114,14 @@ export class RequestsOverview implements OnInit {
 
   selectFilter(filter: QueueFilter): void {
     this.filter.set(filter);
+  }
+
+  openDetails(request: AdminRequestItem): void {
+    this.selectedRequest.set(this.toServiceRequest(request));
+  }
+
+  closeDetails(): void {
+    this.selectedRequest.set(null);
   }
 
   openAssignment(request: AdminRequestItem): void {
@@ -196,6 +212,33 @@ export class RequestsOverview implements OnInit {
       this.assignmentRequest.set(null);
       this.assignmentError.set('');
     }
+  }
+
+  private toServiceRequest(request: AdminRequestItem): ServiceRequest {
+    const supportedStatuses: ServiceRequest['status'][] = [
+      'Submitted',
+      'Assigned',
+      'In Progress',
+      'Resolved',
+      'Closed',
+      'Overdue',
+      'Rejected',
+    ];
+    const status = supportedStatuses.includes(
+      request.status as ServiceRequest['status'],
+    )
+      ? (request.status as ServiceRequest['status'])
+      : 'Submitted';
+
+    return {
+      id: this.requestLabel(request.requestId),
+      citizen: 'Requester',
+      category: request.category,
+      description: request.description,
+      priority: null,
+      status,
+      dueDate: request.dueAt ?? '',
+    };
   }
 
   private localDateTimeAfterHours(hours: number): string {
