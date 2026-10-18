@@ -87,6 +87,14 @@
   color: #c2410c;
   font-size: 11px;
   white-space: nowrap;
+    font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.staff-mode:hover {
+  border-color: #fdba74;
+  background: #ffedd5;
 }
 
 .staff-mode i {

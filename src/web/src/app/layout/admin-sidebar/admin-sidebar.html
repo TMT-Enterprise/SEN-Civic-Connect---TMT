@@ -47,18 +47,26 @@
     </a>
   </nav>
 
-  <div class="admin-profile">
-    <div class="admin-avatar">AD</div>
+<button
+  type="button"
+  class="admin-profile"
+  aria-label="Account menu. Click to log out"
+  (click)="openLogout()">
+  <div class="admin-avatar">AD</div>
 
-    <div class="admin-profile-copy">
-      <strong>Admin Dispatcher</strong>
-      <small>Central Oversight</small>
-    </div>
-
-    <i
-      class="fa-solid fa-shield-halved admin-shield"
-      title="System Administrator"
-      aria-hidden="true"
-    ></i>
+  <div class="admin-profile-copy">
+    <strong>Admin Dispatcher</strong>
+    <small>Central Oversight</small>
   </div>
+
+  <i
+    class="fa-solid fa-shield-halved admin-shield"
+    title="System Administrator"
+    aria-hidden="true"
+  ></i>
+</button>
 </aside>
+<app-logout-modal
+  [isOpen]="isLogoutOpen"
+  (closed)="closeLogout()">
+</app-logout-modal>

@@ -24,9 +24,17 @@
       <i class="fa-regular fa-bell" aria-hidden="true"></i>
     </button>
 
-    <div class="staff-mode">
-      <i class="fa-solid fa-user-check" aria-hidden="true"></i>
-      <span>Staff Mode: <strong>Active</strong></span>
-    </div>
+    <button
+  type="button"
+  class="staff-mode"
+  aria-label="Staff mode active. Click to log out"
+  (click)="openLogout()">
+  <i class="fa-solid fa-user-check" aria-hidden="true"></i>
+  <span>Staff Mode: <strong>Active</strong></span>
+</button>
   </div>
 </header>
+<app-logout-modal
+  [isOpen]="isLogoutOpen"
+  (closed)="closeLogout()">
+</app-logout-modal>
