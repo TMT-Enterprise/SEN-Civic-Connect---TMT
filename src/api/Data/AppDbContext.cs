@@ -215,6 +215,7 @@ public class AppDbContext : DbContext
 
             entity.Property(h => h.RequestId).HasColumnName("request_id");
             entity.Property(h => h.EmployeeId).HasColumnName("employee_id");
+            entity.Property(h => h.RequesterId).HasColumnName("requester_id");
             entity.Property(h => h.StatusId).HasColumnName("status_id");
 
             entity.Property(h => h.ChangedAt)

@@ -6,6 +6,7 @@ export interface ServiceRequest {
   citizen: string;
   category: string;
   description: string;
+  requestId?: number;
   priority: 'Critical' | 'High' | 'Medium' | 'Normal' | null;
   status:
     | 'Submitted'
@@ -13,6 +14,7 @@ export interface ServiceRequest {
     | 'In Progress'
     | 'Resolved'
     | 'Closed'
+    | 'Withdrawn'
     | 'Overdue'
     | 'Rejected';
   dueDate: string;
@@ -31,8 +33,10 @@ export interface ServiceRequest {
 })
 export class RequestCard {
   @Input({ required: true }) request!: ServiceRequest;
+  @Input() allowWithdraw = false;
 
   @Output() viewDetails = new EventEmitter<ServiceRequest>();
+  @Output() withdraw = new EventEmitter<ServiceRequest>();
 
   get statusLabel(): string {
     return this.request.status === 'Assigned'
@@ -42,5 +46,9 @@ export class RequestCard {
 
   onViewDetails(): void {
     this.viewDetails.emit(this.request);
+  }
+
+  onWithdraw(): void {
+    this.withdraw.emit(this.request);
   }
 }

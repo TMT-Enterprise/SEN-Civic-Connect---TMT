@@ -16,6 +16,11 @@ export interface RequestHistoryItem {
   closedAt: string | null;
 }
 
+export interface WithdrawRequestResponse {
+  requestId: number;
+  status: string;
+}
+
 export interface SubmitRequestPayload {
   categoryId: number;
   description: string;
@@ -73,6 +78,10 @@ export class RequestsService {
       '/requests',
       payload,
     );
+  }
+
+  withdrawRequest(requestId: number): Observable<void> {
+    return this.http.delete<void>(`/requests/${requestId}`);
   }
 
   getAdminRequests(): Observable<AdminRequestSearchResponse> {

@@ -297,7 +297,13 @@ public sealed class AssignmentService(
             join s in db.RequestStatuses.AsNoTracking() on h.StatusId equals s.StatusId
             where h.RequestId == requestId
             orderby h.ChangedAt, h.HistoryId
-            select new HistoryEntryDto(h.HistoryId, h.RequestId, h.EmployeeId, s.Name, h.ChangedAt))
+            select new HistoryEntryDto(
+                h.HistoryId,
+                h.RequestId,
+                h.EmployeeId,
+                h.RequesterId,
+                s.Name,
+                h.ChangedAt))
             .ToListAsync(ct);
     }
 

@@ -11,6 +11,13 @@
     </div>
   </div>
 
+  @if (withdrawalMessage()) {
+    <p role="status">{{ withdrawalMessage() }}</p>
+  }
+  @if (withdrawalError()) {
+    <p role="alert">{{ withdrawalError() }}</p>
+  }
+
   @if (isLoading()) {
     <p role="status">Loading your requests...</p>
   } @else if (errorMessage()) {
@@ -26,7 +33,9 @@
       @for (request of requests().slice(0, 3); track request.id) {
         <app-request-card
           [request]="request"
-          (viewDetails)="openDetails($event)" />
+          [allowWithdraw]="true"
+          (viewDetails)="openDetails($event)"
+          (withdraw)="withdrawRequest($event)" />
       }
     </div>
   }

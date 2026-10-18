@@ -31,6 +31,8 @@ export class RequesterHome implements OnInit {
   readonly requests = signal<ServiceRequest[]>([]);
   readonly isLoading = signal(true);
   readonly errorMessage = signal('');
+  readonly withdrawalMessage = signal('');
+  readonly withdrawalError = signal('');
   readonly selectedRequest = signal<ServiceRequest | null>(null);
 
   ngOnInit(): void {
@@ -82,6 +84,44 @@ export class RequesterHome implements OnInit {
     this.selectedRequest.set(null);
   }
 
+  withdrawRequest(request: ServiceRequest): void {
+    if (
+      request.requestId === undefined ||
+      request.status !== 'Submitted' ||
+      !window.confirm(`Withdraw ${request.id}? This request will remain in your history.`)
+    ) {
+      return;
+    }
+
+    this.withdrawalMessage.set('');
+    this.withdrawalError.set('');
+    this.requestsService.withdrawRequest(request.requestId).subscribe({
+      next: () => {
+        this.requests.update((items) =>
+          items.map((item) =>
+            item.requestId === request.requestId
+              ? { ...item, status: 'Withdrawn' }
+              : item,
+          ),
+        );
+        this.withdrawalMessage.set(`${request.id} was withdrawn.`);
+      },
+      error: (error: unknown) => {
+        console.error('Failed to withdraw request:', error);
+        if (error instanceof HttpErrorResponse && error.status === 409) {
+          this.withdrawalError.set(
+            'This request can no longer be withdrawn. Your history has been refreshed.',
+          );
+          this.loadRequests();
+        } else {
+          this.withdrawalError.set(
+            'We could not withdraw this request. Please try again.',
+          );
+        }
+      },
+    });
+  }
+
   private toCard(item: RequestHistoryItem): ServiceRequest {
     const supportedStatuses: ServiceRequest['status'][] = [
       'Submitted',
@@ -89,6 +129,7 @@ export class RequesterHome implements OnInit {
       'In Progress',
       'Resolved',
       'Closed',
+      'Withdrawn',
       'Overdue',
       'Rejected',
     ];
@@ -100,6 +141,7 @@ export class RequesterHome implements OnInit {
 
     return {
       id: `REQ-${String(item.requestId).padStart(3, '0')}`,
+      requestId: item.requestId,
       citizen: this.userName,
       category: item.category,
       description: item.description,

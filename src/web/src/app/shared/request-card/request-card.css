@@ -119,6 +119,12 @@
   color: #047857;
 }
 
+.status-withdrawn {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+  color: #4b5563;
+}
+
 .status-overdue {
   background: #fee2e2;
   border-color: #fecaca;

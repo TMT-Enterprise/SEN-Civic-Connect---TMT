@@ -152,4 +152,19 @@ describe('RequestsService', () => {
 
     expect(completed).toBe(true);
   });
+
+  it('withdraws a request with DELETE and the bearer token', () => {
+    let completed = false;
+
+    service.withdrawRequest(42).subscribe(() => {
+      completed = true;
+    });
+
+    const request = httpTesting.expectOne('/requests/42');
+    expect(request.request.method).toBe('DELETE');
+    expect(request.request.headers.has('Authorization')).toBe(true);
+    request.flush(null, { status: 204, statusText: 'No Content' });
+
+    expect(completed).toBe(true);
+  });
 });

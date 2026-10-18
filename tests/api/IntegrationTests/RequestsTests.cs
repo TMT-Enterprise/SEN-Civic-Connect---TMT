@@ -123,6 +123,86 @@ public class RequestsTests : IDisposable
         }
     }
 
+    [Fact(DisplayName = "requester can withdraw their own submitted request and history is preserved")]
+    public async Task WithdrawRequest_ChangesStatusAndRecordsRequesterHistory()
+    {
+        var submitResponse = await _client.PostAsJsonAsync(
+            "/requests",
+            new { categoryId = 1, description = "Request to withdraw" });
+        Assert.Equal(HttpStatusCode.Created, submitResponse.StatusCode);
+        var submitted = await submitResponse.Content.ReadFromJsonAsync<JsonElement>();
+        var requestId = submitted.GetProperty("requestId").GetInt64();
+
+        var response = await _client.DeleteAsync($"/requests/{requestId}");
+
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+
+        var historyResponse = await _client.GetAsync("/requests");
+        using var history = JsonDocument.Parse(await historyResponse.Content.ReadAsStringAsync());
+        var request = history.RootElement
+            .EnumerateArray()
+            .Single(item => item.GetProperty("requestId").GetInt64() == requestId);
+        Assert.Equal("Withdrawn", request.GetProperty("status").GetString());
+
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var withdrawal = await db.RequestStatusHistory
+            .SingleAsync(item => item.RequestId == requestId && item.RequesterId == 1);
+        Assert.Equal("Withdrawn", await db.RequestStatuses
+            .Where(status => status.StatusId == withdrawal.StatusId)
+            .Select(status => status.Name)
+            .SingleAsync());
+
+        using var admin = CreateRequesterClient(1, Roles.Admin);
+        var auditResponse = await admin.GetAsync($"/requests/{requestId}/history");
+        Assert.Equal(HttpStatusCode.OK, auditResponse.StatusCode);
+        using var audit = JsonDocument.Parse(await auditResponse.Content.ReadAsStringAsync());
+        var auditEntry = audit.RootElement
+            .EnumerateArray()
+            .Single(item => item.GetProperty("status").GetString() == "Withdrawn");
+        Assert.Equal(1, auditEntry.GetProperty("requesterId").GetInt64());
+    }
+
+    [Fact(DisplayName = "requester cannot withdraw another requester's request")]
+    public async Task WithdrawRequest_WithAnotherRequestersId_Returns404()
+    {
+        using var otherRequester = CreateRequesterClient(2);
+        var submitResponse = await otherRequester.PostAsJsonAsync(
+            "/requests",
+            new { categoryId = 1, description = "Another requester's request" });
+        var submitted = await submitResponse.Content.ReadFromJsonAsync<JsonElement>();
+        var requestId = submitted.GetProperty("requestId").GetInt64();
+
+        var response = await _client.DeleteAsync($"/requests/{requestId}");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact(DisplayName = "only submitted requests can be withdrawn")]
+    public async Task WithdrawRequest_AfterRequestIsAssigned_Returns409()
+    {
+        var submitResponse = await _client.PostAsJsonAsync(
+            "/requests",
+            new { categoryId = 1, description = "Already assigned request" });
+        var submitted = await submitResponse.Content.ReadFromJsonAsync<JsonElement>();
+        var requestId = submitted.GetProperty("requestId").GetInt64();
+
+        using (var scope = _factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var request = await db.ServiceRequests.SingleAsync(item => item.RequestId == requestId);
+            request.CurrentStatusId = await db.RequestStatuses
+                .Where(status => status.Name == "Assigned")
+                .Select(status => status.StatusId)
+                .SingleAsync();
+            await db.SaveChangesAsync();
+        }
+
+        var response = await _client.DeleteAsync($"/requests/{requestId}");
+
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+    }
+
     [Fact(DisplayName = "FR-007: GET /requests/{id} with non-existent id returns 404 (isolation)")]
     public async Task GetRequestById_WithNonExistentId_Returns404()
     {
@@ -158,9 +238,11 @@ public class RequestsTests : IDisposable
         var submitResponse = await anonymousClient.PostAsJsonAsync(
             "/requests",
             new { categoryId = 1, description = "Unauthenticated request" });
+        var withdrawResponse = await anonymousClient.DeleteAsync("/requests/1");
 
         Assert.Equal(HttpStatusCode.Unauthorized, listResponse.StatusCode);
         Assert.Equal(HttpStatusCode.Unauthorized, submitResponse.StatusCode);
+        Assert.Equal(HttpStatusCode.Unauthorized, withdrawResponse.StatusCode);
     }
 
     [Theory(DisplayName = "FR-007: request endpoints reject non-requester roles")]
@@ -175,10 +257,12 @@ public class RequestsTests : IDisposable
         var submitResponse = await nonRequester.PostAsJsonAsync(
             "/requests",
             new { categoryId = 1, description = "Non-requester attempt" });
+        var withdrawResponse = await nonRequester.DeleteAsync("/requests/1");
 
         Assert.Equal(HttpStatusCode.Forbidden, listResponse.StatusCode);
         Assert.Equal(HttpStatusCode.Forbidden, detailResponse.StatusCode);
         Assert.Equal(HttpStatusCode.Forbidden, submitResponse.StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, withdrawResponse.StatusCode);
     }
 
     [Fact(DisplayName = "FR-005: GET /requests/{id} returns status name not status id")]

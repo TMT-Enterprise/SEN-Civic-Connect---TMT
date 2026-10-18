@@ -23,6 +23,7 @@ public sealed record HistoryEntryDto(
     long HistoryId,
     long RequestId,
     long? EmployeeId,
+    long? RequesterId,
     string Status,
     DateTimeOffset ChangedAt);
 
