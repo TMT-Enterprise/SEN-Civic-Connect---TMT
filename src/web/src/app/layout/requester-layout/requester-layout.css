@@ -1,4 +1,4 @@
-:host {
+/* :host {
   display: block;
   min-height: 100dvh;
 }
@@ -41,5 +41,42 @@
     height: 850px;
     max-height: calc(100vh - 30px);
     border: 1px solid #eeeeee;
+  }
+} */
+
+
+:host {
+  display: block;
+  min-height: 100dvh;
+  font-family: 'Inter', sans-serif;
+  color: #1a1a1a;
+}
+
+.requester-screen {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100dvh;
+  height: 100dvh;
+  overflow: hidden;
+  background: #fff;
+}
+
+.requester-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 1.25rem;
+  background: rgba(248, 250, 252, 0.7);
+  scrollbar-width: none;
+}
+
+.requester-content::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 575.98px) {
+  .requester-content {
+    padding: 1rem;
   }
 }

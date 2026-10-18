@@ -37,7 +37,7 @@ export const routes: Routes = [
       component: RequesterLayout,
       children: [
         {
-          path: '',
+          path: 'home',
           component: RequesterHome
         },
         {
