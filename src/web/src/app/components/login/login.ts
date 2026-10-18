@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService, isUserRole, loginErrorMessage } from '../../core/auth';
 
 @Component({
   selector: 'app-login',
@@ -9,27 +10,55 @@ import { Router, RouterLink } from '@angular/router';
   styleUrl: './login.css',
 })
 export class Login {
-  private router = inject(Router);
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
   //Password toggle
   showPassword = false;
+  isSubmitting = false;
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
 
   //login
-  loginObj = new LoginModel()
+  loginObj = new LoginModel();
   errorMessage = '';
 
   onLogin(): void {
-  // Hardcoded login - to be removed, testing purposes only
-  if (this.loginObj.email === 'test@gmail.com' && this.loginObj.password === 'test123') {
+    if (this.isSubmitting) {
+      return;
+    }
+
     this.errorMessage = '';
-    this.router.navigateByUrl('/layout/requester');
-  } else {
-    this.errorMessage = 'Wrong email or password';
+    this.isSubmitting = true;
+    this.auth.login(this.loginObj.email, this.loginObj.password).subscribe({
+      next: (response) => {
+        if (!isUserRole(response.role)) {
+          this.errorMessage = 'This account has an unsupported role.';
+          this.isSubmitting = false;
+          return;
+        }
+
+        void this.router.navigateByUrl(this.destinationForRole(response.role));
+        this.isSubmitting = false;
+      },
+      error: (error: unknown) => {
+        this.errorMessage = loginErrorMessage(error);
+        this.isSubmitting = false;
+      },
+    });
   }
-}
+
+  private destinationForRole(role: 'Requester' | 'Staff' | 'Admin'): string {
+    switch (role) {
+      case 'Requester':
+        return '/requester';
+      case 'Staff':
+        return '/staff';
+      case 'Admin':
+        return '/admin';
+    }
+  }
 }
 
 

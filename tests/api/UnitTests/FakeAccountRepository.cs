@@ -9,6 +9,8 @@ internal sealed class FakeAccountRepository : IAccountRepository
 
     public List<AccountRecord> Accounts { get; } = [];
 
+    public List<AccountRecord> SuccessfulLogins { get; } = [];
+
     /// <summary>Simulates a concurrent registration winning between the pre-check and the INSERT.</summary>
     public bool FailCreateWithDuplicate { get; set; }
 
@@ -19,7 +21,7 @@ internal sealed class FakeAccountRepository : IAccountRepository
         Task.FromResult(Accounts.Any(a => a.Email.ToLowerInvariant() == email));
 
     public Task<AccountRecord> CreateRequesterAsync(
-        string name, string email, string passwordHash, CancellationToken cancellationToken)
+        string name, string email, string passwordHash, string? phoneNumber, CancellationToken cancellationToken)
     {
         if (FailCreateWithDuplicate || Accounts.Any(a => a.Email.ToLowerInvariant() == email))
         {
@@ -29,5 +31,11 @@ internal sealed class FakeAccountRepository : IAccountRepository
         var account = new AccountRecord(_nextId++, AccountTypes.Requester, name, email, passwordHash, Roles.Requester, true);
         Accounts.Add(account);
         return Task.FromResult(account);
+    }
+
+    public Task UpdateLastLoginAsync(AccountRecord account, CancellationToken cancellationToken)
+    {
+        SuccessfulLogins.Add(account);
+        return Task.CompletedTask;
     }
 }

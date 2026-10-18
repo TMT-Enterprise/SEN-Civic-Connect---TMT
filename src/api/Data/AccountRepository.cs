@@ -39,12 +39,14 @@ public sealed class AccountRepository(AppDbContext db) : IAccountRepository
         string name,
         string email,
         string passwordHash,
+        string? phoneNumber,
         CancellationToken cancellationToken)
     {
         var requester = new Requester
         {
             Name = name,
             Email = email,
+            PhoneNumber = phoneNumber,
             PasswordHash = passwordHash,
             IsActive = true,
             CreatedAt = DateTimeOffset.UtcNow
@@ -65,5 +67,29 @@ public sealed class AccountRepository(AppDbContext db) : IAccountRepository
         return new AccountRecord(
             requester.RequesterId, AccountTypes.Requester, requester.Name, requester.Email,
             requester.PasswordHash, Roles.Requester, requester.IsActive);
+    }
+
+    public async Task UpdateLastLoginAsync(AccountRecord account, CancellationToken cancellationToken)
+    {
+        var lastLoginAt = DateTimeOffset.UtcNow;
+        var updated = account.AccountType switch
+        {
+            AccountTypes.Requester => await db.Requesters
+                .Where(r => r.RequesterId == account.Id)
+                .ExecuteUpdateAsync(
+                    setters => setters.SetProperty(r => r.LastLoginAt, lastLoginAt),
+                    cancellationToken),
+            AccountTypes.Employee => await db.Employees
+                .Where(e => e.EmployeeId == account.Id)
+                .ExecuteUpdateAsync(
+                    setters => setters.SetProperty(e => e.LastLoginAt, lastLoginAt),
+                    cancellationToken),
+            _ => throw new InvalidOperationException($"Unsupported account type '{account.AccountType}'.")
+        };
+
+        if (updated != 1)
+        {
+            throw new InvalidOperationException("Could not record the successful login for the account.");
+        }
     }
 }

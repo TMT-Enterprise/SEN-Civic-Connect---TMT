@@ -12,8 +12,11 @@ Requester, Staff, and a combined Admin/Management role (change request to be rec
 | Tokens | HS256 JWT; claims `sub`, `acct`, `email`, `role` (exactly one of Requester, Staff, Admin) | `sub` is only unique within an account table, so `acct` (requester or employee) disambiguates. |
 | Configuration | `Jwt:Secret`, `Jwt:Issuer`, `Jwt:Audience`, `Jwt:ExpiryMinutes` validated at startup | The app refuses to start with a missing or short secret. The secret comes from user-secrets or environment variables and is never committed. |
 | Registration | Creates Requesters only; the request has no role field | Staff and Admin accounts come from seed or admin tooling, so nobody can self-register as Admin. |
+| Web registration | The registration form posts name, email, phone number, and password to `/api/v1/auth/register`; after creation it signs the requester in and routes to the requester dashboard | Passwords are hashed by the API; the phone number is stored on the requester record. |
 | Email uniqueness | Normalised to lower-case; checked in both account tables; the database unique index is the real guard | Emails are only unique per table in the schema, so the cross-table check is application-level. |
 | Failure messages | One generic 401 for unknown email, wrong password, inactive account or unusable stored hash; a dummy verification equalises timing | Prevents account enumeration through login. The register endpoint does report 409 for a duplicate, as FR-001 requires an error message. |
+| Web sign-in | The login form posts to `/api/v1/auth/login`, stores the returned JWT and role in browser local storage, and sends the token as a Bearer token on API requests | The server-provided role selects the Requester, Staff, or Admin dashboard; role assignment remains server-controlled. |
+| Last successful login | A successful credential check updates nullable `last_login_at` on the requester or employee account | Migration `006_account_last_login.sql` adds the field to both account tables; failed logins do not change it. |
 
 ## Evidence map (issue #113 checklist)
 
@@ -21,6 +24,8 @@ Requester, Staff, and a combined Admin/Management role (change request to be rec
 |---|---|
 | Duplicate email rejected with an error message | `AuthServiceTests.Register_rejects_a_duplicate_email_in_any_casing`; `AuthEndpointsTests.Register_rejects_a_duplicate_email_in_any_casing_with_409_and_a_message`; concurrent registration test |
 | Wrong password fails; correct login returns a token | `AuthEndpointsTests.Wrong_password_and_unknown_email_both_fail_with_the_same_401_response`; `Login_returns_a_token_whose_expiry_comes_from_configuration` |
+| Web sign-in calls the API, persists the token, and routes each role | `src/web/src/app/core/auth.spec.ts`; `src/web/src/app/components/login/login.spec.ts` |
+| Successful requester/staff/admin login updates the database | `AuthEndpointsTests.Successful_requester_login_updates_last_login_in_the_database`; `AuthEndpointsTests.Seeded_employees_log_in_with_their_own_role` |
 | Stored value is a one-way hash | `BCryptPasswordHasherTests`; `Register_creates_the_account_and_stores_only_a_bcrypt_hash` (reads the real row) |
 | JWT secret and expiry come from configuration | `JwtOptionsTests`; `JwtTokenServiceTests.Expiry_comes_from_the_configured_minutes`; token expiry in the integration test equals `Jwt:ExpiryMinutes` |
 

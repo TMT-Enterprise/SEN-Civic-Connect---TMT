@@ -11,6 +11,39 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var cfgRoot = (IConfigurationRoot)builder.Configuration;
+Console.WriteLine($"ENV={builder.Environment.EnvironmentName}");
+foreach (var line in cfgRoot.GetDebugView()
+             .Split('\n')
+             .Where(l => l.Contains("ConnectionStrings", StringComparison.OrdinalIgnoreCase)))
+{
+    Console.WriteLine(System.Text.RegularExpressions.Regex.Replace(line, "Password=[^;]*", "Password=***"));
+}
+
+var cs = builder.Configuration.GetConnectionString("Default");
+
+try
+{
+    await using var connection = new Npgsql.NpgsqlConnection(cs);
+    await connection.OpenAsync();
+    Console.WriteLine("DIRECT CONNECTION TEST: SUCCESS");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"DIRECT CONNECTION TEST: {ex.GetType().Name} - {ex.Message}");
+}
+
+var diagnosticConnection =
+    new Npgsql.NpgsqlConnectionStringBuilder(
+        builder.Configuration.GetConnectionString("Default"));
+
+Console.WriteLine($"DB host: {diagnosticConnection.Host}");
+Console.WriteLine($"DB port: {diagnosticConnection.Port}");
+Console.WriteLine($"DB name: {diagnosticConnection.Database}");
+Console.WriteLine($"DB user: {diagnosticConnection.Username}");
+Console.WriteLine(
+    $"DB password configured: {!string.IsNullOrEmpty(diagnosticConnection.Password)}");
+
 // Register data access and the Auth module (hashing, tokens, AuthService)
 //Console.WriteLine($"Environment: {builder.Environment.EnvironmentName}");
 //Console.WriteLine($"Config connection string: {builder.Configuration.GetConnectionString("Default")}");
