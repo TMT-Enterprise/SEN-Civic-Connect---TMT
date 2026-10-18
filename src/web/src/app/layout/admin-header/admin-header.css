@@ -68,6 +68,14 @@
   color: #c2410c;
   font-size: 11px;
   white-space: nowrap;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.admin-mode:hover {
+  border-color: #fdba74;
+  background: #ffedd5;
 }
 
 .admin-mode i {
@@ -91,6 +99,7 @@
     width: auto;
   }
 }
+
 
 @media (max-width: 500px) {
   .header-actions {
