@@ -1,10 +1,21 @@
 <header class="staff-header">
-  <div>
+  <div class="header-title">
     <h1>Staff Dashboard</h1>
-    <p>Manage and monitor service requests.</p>
+    <p>Manage and monitor service requests</p>
   </div>
 
   <div class="header-actions">
+    <div class="search-wrapper">
+      <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+
+      <input
+        type="search"
+        class="form-control staff-search"
+        placeholder="Search ID, Citizen, or Type..."
+        aria-label="Search requests"
+      />
+    </div>
+
     <button
       type="button"
       class="header-icon-button"
@@ -13,9 +24,9 @@
       <i class="fa-regular fa-bell" aria-hidden="true"></i>
     </button>
 
-    <div class="header-profile">
-      <span class="staff-avatar">S</span>
-      <span>Staff Member</span>
+    <div class="staff-mode">
+      <i class="fa-solid fa-user-check" aria-hidden="true"></i>
+      <span>Staff Mode: <strong>Active</strong></span>
     </div>
   </div>
 </header>

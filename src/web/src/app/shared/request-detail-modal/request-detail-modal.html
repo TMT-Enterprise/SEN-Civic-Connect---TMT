@@ -27,15 +27,6 @@
             {{ selectedRequest.id }}
           </span>
 
-          <span
-            class="detail-priority-badge"
-            [class.priority-critical]="selectedRequest.priority === 'Critical'"
-            [class.priority-high]="selectedRequest.priority === 'High'"
-            [class.priority-medium]="selectedRequest.priority === 'Medium'"
-            [class.priority-normal]="selectedRequest.priority === 'Normal'">
-            {{ selectedRequest.priority }} Priority
-          </span>
-
           <h2 id="detail-title">
             {{ selectedRequest.category }}
           </h2>

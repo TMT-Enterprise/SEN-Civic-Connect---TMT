@@ -1,15 +1,16 @@
 <aside class="staff-sidebar">
-  <a class="sidebar-brand" routerLink="/staff">
+  <a class="staff-brand" routerLink="/staff">
     <span class="brand-logo">C</span>
-    <span>
+
+    <span class="brand-copy">
       <strong>CivicConnect</strong>
       <small>Staff Portal</small>
     </span>
   </a>
 
-  <nav class="sidebar-nav" aria-label="Staff navigation">
+  <nav class="staff-nav" aria-label="Staff navigation">
     <a
-      class="sidebar-link"
+      class="staff-nav-link"
       routerLink="/staff"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
@@ -19,20 +20,27 @@
     </a>
 
     <a
-      class="sidebar-link"
+      class="staff-nav-link"
       routerLink="/staff/history"
       routerLinkActive="active"
     >
-      <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
+      <i class="fa-solid fa-box-archive" aria-hidden="true"></i>
       <span>Request History</span>
     </a>
   </nav>
 
-  <div class="sidebar-footer">
-    <span class="staff-avatar">S</span>
-    <span>
+  <div class="staff-profile">
+    <div class="staff-avatar">SM</div>
+
+    <div class="staff-profile-copy">
       <strong>Staff Member</strong>
-      <small>Staff Portal</small>
-    </span>
+      <small>Field Specialist</small>
+    </div>
+
+    <i
+      class="fa-solid fa-circle-check staff-badge"
+      title="Active staff member"
+      aria-hidden="true"
+    ></i>
   </div>
 </aside>

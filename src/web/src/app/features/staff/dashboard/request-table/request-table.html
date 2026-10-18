@@ -1,46 +1,59 @@
-<div class="table-responsive">
-  <table class="table align-middle request-table">
-    <thead>
-      <tr>
-        <th scope="col">Request ID</th>
-        <th scope="col">Requester</th>
-        <th scope="col">Category</th>
-        <th scope="col">Status</th>
-        <th scope="col">Date Submitted</th>
-        <th scope="col">Action</th>
-      </tr>
-    </thead>
+<section class="requests-panel">
+  <div class="panel-heading">
+    <div>
+      <h2>My Assigned Requests</h2>
+      <p>Click any row to open request details and update its status.</p>
+    </div>
 
-    <tbody>
-      <tr>
-        <td>#REQ-001</td>
-        <td>Alex Morgan</td>
-        <td>Maintenance</td>
-        <td>
-          <app-status-badge status="Pending"></app-status-badge>
-        </td>
-        <td>15 Oct 2026</td>
-        <td>
-          <button type="button" class="btn btn-sm btn-outline-secondary">
-            View
-          </button>
-        </td>
-      </tr>
+    <div class="filter-tabs" aria-label="Request status filters">
+      <button type="button" class="filter-tab active">All Active</button>
+      <button type="button" class="filter-tab">Assigned</button>
+      <button type="button" class="filter-tab">In Progress</button>
+      <button type="button" class="filter-tab">Resolved</button>
+    </div>
+  </div>
 
-      <tr>
-        <td>#REQ-002</td>
-        <td>Jamie Smith</td>
-        <td>IT Support</td>
-        <td>
-          <app-status-badge status="In Progress"></app-status-badge>
-        </td>
-        <td>14 Oct 2026</td>
-        <td>
-          <button type="button" class="btn btn-sm btn-outline-secondary">
-            View
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+  <div class="table-responsive">
+    <table class="table staff-table align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Request ID / Requester</th>
+          <th>Category</th>
+          <th>Status</th>
+          <th>Date Submitted</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+
+<tbody>
+  @for (request of requests; track request.id) {
+    <tr>
+      <td>
+        <strong class="request-id">{{ request.id }}</strong>
+        <small>{{ request.citizen }}</small>
+      </td>
+      <td>
+        <strong>{{ request.category }}</strong>
+        <small class="priority-label">{{ request.priority }} Priority</small>
+      </td>
+      <td>
+        <span [class]="'status ' + statusClass(request.status)">{{ request.status }}</span>
+      </td>
+      <td>{{ request.dueDate }}</td>
+      <td class="text-end">
+        <button type="button" class="btn btn-sm action-button" (click)="openDetails(request)">
+          <i class="fa-solid fa-eye me-1"></i>
+          View
+        </button>
+      </td>
+    </tr>
+  }
+</tbody>
+    </table>
+  </div>
+</section>
+<app-request-detail-modal
+  [request]="selectedRequest"
+  [isOpen]="isDetailsOpen"
+  (closed)="closeDetails()">
+</app-request-detail-modal>
