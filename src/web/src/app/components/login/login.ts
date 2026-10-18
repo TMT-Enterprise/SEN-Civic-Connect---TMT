@@ -1,68 +1,17 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService, isUserRole, loginErrorMessage } from '../../core/auth';
-
-@Component({
-  selector: 'app-login',
-  imports: [FormsModule, RouterLink],
-  templateUrl: './login.html',
-  styleUrl: './login.css',
-})
+import { AuthService } from '../../core/services/auth.service';
+@Component({ selector: 'app-login', imports: [FormsModule, RouterLink], templateUrl: './login.html', styleUrl: './login.css' })
 export class Login {
-  private readonly auth = inject(AuthService);
-  private readonly router = inject(Router);
-  //Password toggle
-  showPassword = false;
-  isSubmitting = false;
-
-  togglePassword(): void {
-    this.showPassword = !this.showPassword;
-  }
-
-  //login
-  loginObj = new LoginModel();
-  errorMessage = '';
-
+  private router = inject(Router); private auth = inject(AuthService);
+  showPassword = false; loginObj = { email: '', password: '' }; errorMessage = ''; loading = false;
+  togglePassword(): void { this.showPassword = !this.showPassword; }
   onLogin(): void {
-    if (this.isSubmitting) {
-      return;
-    }
-
-    this.errorMessage = '';
-    this.isSubmitting = true;
-    this.auth.login(this.loginObj.email, this.loginObj.password).subscribe({
-      next: (response) => {
-        if (!isUserRole(response.role)) {
-          this.errorMessage = 'This account has an unsupported role.';
-          this.isSubmitting = false;
-          return;
-        }
-
-        void this.router.navigateByUrl(this.destinationForRole(response.role));
-        this.isSubmitting = false;
-      },
-      error: (error: unknown) => {
-        this.errorMessage = loginErrorMessage(error);
-        this.isSubmitting = false;
-      },
+    if (this.loading) return; this.loading = true; this.errorMessage = '';
+    this.auth.login(this.loginObj.email.trim(), this.loginObj.password).subscribe({
+      next: response => { this.loading = false; void this.router.navigateByUrl(this.auth.destinationFor(response.role)); },
+      error: error => { this.loading = false; this.errorMessage = error?.status === 0 ? 'Cannot connect to Civic Connect. Check that the API is running.' : (error?.error?.detail || 'Invalid email or password.'); }
     });
   }
-
-  private destinationForRole(role: 'Requester' | 'Staff' | 'Admin'): string {
-    switch (role) {
-      case 'Requester':
-        return '/requester';
-      case 'Staff':
-        return '/staff';
-      case 'Admin':
-        return '/admin';
-    }
-  }
-}
-
-
-class LoginModel {
-  email = '';
-  password = '';
 }

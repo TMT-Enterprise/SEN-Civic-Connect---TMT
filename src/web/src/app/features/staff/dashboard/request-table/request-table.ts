@@ -1,51 +1,18 @@
-import { Component } from '@angular/core';
-import { RequestDetailModal } from '../../../../shared/request-detail-modal/request-detail-modal';
-import { ServiceRequest } from '../../../../shared/request-card/request-card';
-
-@Component({
-  selector: 'app-request-table',
-  standalone: true,
-  imports: [RequestDetailModal],
-  templateUrl: './request-table.html',
-  styleUrl: './request-table.css',
-})
-export class RequestTable {
-  requests: ServiceRequest[] = [
-    {
-      id: 'REQ-001',
-      citizen: 'Alex Morgan',
-      category: 'Maintenance',
-      description: 'Maintenance request awaiting action.',
-      priority: 'Normal',
-      status: 'Assigned',
-      dueDate: '15 Oct 2026',
-      contactPhone: '082 345 6789',
-    },
-    {
-      id: 'REQ-002',
-      citizen: 'Jamie Smith',
-      category: 'IT Support',
-      description: 'IT support issue currently being worked on.',
-      priority: 'High',
-      status: 'In Progress',
-      dueDate: '14 Oct 2026',
-    },
-  ];
-
-  selectedRequest: ServiceRequest | null = null;
-  isDetailsOpen = false;
-
-  openDetails(request: ServiceRequest): void {
-    this.selectedRequest = request;
-    this.isDetailsOpen = true;
+import { Component, OnInit, inject } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RequestService } from '../../../../core/services/request.service';
+import { RequestSearchItem } from '../../../../core/models/request.model';
+@Component({ selector: 'app-request-table', standalone: true, imports: [DatePipe, FormsModule], templateUrl: './request-table.html', styleUrl: './request-table.css' })
+export class RequestTable implements OnInit {
+  private service = inject(RequestService); requests: RequestSearchItem[] = []; loading = true; errorMessage = ''; search = '';
+  ngOnInit(): void { this.load(); }
+  load(): void { this.loading = true; this.service.staffRequests(this.search ? { search: this.search } : {}).subscribe({ next: r => { this.requests = r.requests; this.loading = false; }, error: () => { this.errorMessage = 'Could not load your assigned requests.'; this.loading = false; } }); }
+  updateStatus(item: RequestSearchItem, status: string): void {
+    const completionNote = status === 'Closed' ? window.prompt('Enter the completion note required to close this request:') : undefined;
+    if (status === 'Closed' && !completionNote?.trim()) return;
+    this.service.changeStatus(item.requestId, status, completionNote || undefined).subscribe({ next: () => this.load(), error: e => this.errorMessage = e?.error?.error || 'Status update failed.' });
   }
-
-  closeDetails(): void {
-    this.isDetailsOpen = false;
-    this.selectedRequest = null;
-  }
-
-  statusClass(status: string): string {
-    return status.toLowerCase().replace(/\s+/g, '-');
-  }
+  accept(item: RequestSearchItem): void { this.service.decide(item.requestId, 'Accepted').subscribe({ next: () => this.load(), error: e => this.errorMessage = e?.error?.error || 'Unable to accept assignment.' }); }
+  reject(item: RequestSearchItem): void { const comment = window.prompt('Why are you rejecting this assignment?'); if (!comment?.trim()) return; this.service.decide(item.requestId, 'Rejected', comment).subscribe({ next: () => this.load(), error: e => this.errorMessage = e?.error?.error || 'Unable to reject assignment.' }); }
 }

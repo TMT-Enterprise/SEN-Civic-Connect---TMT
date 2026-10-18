@@ -20,13 +20,32 @@ public sealed class DemoCredentialSeeder(
 {
     public const string Placeholder = "DEMO_ONLY_NOT_A_VALID_PASSWORD_HASH";
 
+    private static readonly string[] SeededEmployeeEmails =
+    [
+        "thandi.mokoena@example.com",
+        "pieter.vanwyk@example.com",
+        "lerato.dlamini@example.com",
+        "sipho.nkosi@example.com",
+        "ayesha.patel@example.com",
+        "daniel.jacobs@example.com"
+    ];
+
+    private static readonly string[] SeededRequesterEmails =
+    [
+        "nomsa.khumalo@example.com",
+        "michael.botha@example.com",
+        "zanele.sithole@example.com",
+        "kabelo.molefe@example.com",
+        "fatima.ismail@example.com"
+    ];
+
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         var password = configuration["Seed:DemoPassword"];
-        if (string.IsNullOrWhiteSpace(password))
+        if (string.IsNullOrWhiteSpace(password) || password.Contains("<choose", StringComparison.OrdinalIgnoreCase))
         {
-            logger.LogInformation("Seed:DemoPassword not set; demo accounts keep their placeholder hash and cannot log in.");
-            return;
+            password = "Password123!";
+            logger.LogInformation("Using default demo password 'Password123!' for development demo accounts.");
         }
 
         try
@@ -50,11 +69,11 @@ public sealed class DemoCredentialSeeder(
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         var requesters = await db.Requesters
-            .Where(r => r.PasswordHash == Placeholder)
+            .Where(r => r.PasswordHash == Placeholder || SeededRequesterEmails.Contains(r.Email.ToLower()))
             .ExecuteUpdateAsync(s => s.SetProperty(r => r.PasswordHash, hash), cancellationToken);
 
         var employees = await db.Employees
-            .Where(e => e.PasswordHash == Placeholder)
+            .Where(e => e.PasswordHash == Placeholder || SeededEmployeeEmails.Contains(e.Email.ToLower()))
             .ExecuteUpdateAsync(s => s.SetProperty(e => e.PasswordHash, hash), cancellationToken);
 
         logger.LogInformation(

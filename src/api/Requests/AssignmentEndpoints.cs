@@ -13,8 +13,9 @@ public static class AssignmentEndpoints
     public static IEndpointRouteBuilder MapAssignmentEndpoints(
         this IEndpointRouteBuilder endpoints)
     {
+        var api = endpoints.MapGroup("/api/v1");
         // POST /requests/{id}/assign (FR-008): management only
-        endpoints.MapPost("/requests/{id:long}/assign", async (
+        api.MapPost("/requests/{id:long}/assign", async (
             HttpContext context,
             long id,
             AssignRequestDto dto,
@@ -30,7 +31,7 @@ public static class AssignmentEndpoints
         }).RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
 
         // POST /requests/{id}/decide (FR-010, FR-011): assigned staff only
-        endpoints.MapPost("/requests/{id:long}/decide", async (
+        api.MapPost("/requests/{id:long}/decide", async (
             HttpContext context,
             long id,
             DecideRequestDto dto,
@@ -56,7 +57,7 @@ public static class AssignmentEndpoints
         }).RequireAuthorization(policy => policy.RequireRole(Roles.Staff));
 
         // PATCH /requests/{id}/status (FR-011, FR-013): assigned staff only
-        endpoints.MapPatch("/requests/{id:long}/status", async (
+        api.MapPatch("/requests/{id:long}/status", async (
             HttpContext context,
             long id,
             UpdateStatusDto dto,
@@ -85,7 +86,7 @@ public static class AssignmentEndpoints
         }).RequireAuthorization(policy => policy.RequireRole(Roles.Staff));
 
         // GET /requests/{id}/history: read-only. There is deliberately no PUT/PATCH/DELETE.
-        endpoints.MapGet("/requests/{id:long}/history", async (
+        api.MapGet("/requests/{id:long}/history", async (
             long id,
             AssignmentService service,
             CancellationToken ct) =>
@@ -96,10 +97,14 @@ public static class AssignmentEndpoints
     }
 
     // Assigned and Submitted are only ever set through assign and reject.
-    private static bool TryParseTarget(string? value, out RequestStatus status) =>
-        Enum.TryParse(value, ignoreCase: true, out status)
-        && Enum.IsDefined(status)
-        && status is not (RequestStatus.Submitted or RequestStatus.Assigned);
+    private static bool TryParseTarget(string? value, out RequestStatus status)
+    {
+        var normalized = string.Equals(value, "In Progress", StringComparison.OrdinalIgnoreCase)
+            ? nameof(RequestStatus.InProgress) : value;
+        return Enum.TryParse(normalized, ignoreCase: true, out status)
+            && Enum.IsDefined(status)
+            && status is not (RequestStatus.Submitted or RequestStatus.Assigned);
+    }
 
     private static IResult ToHttp<T>(Result<T> result) =>
         result.Outcome switch

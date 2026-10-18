@@ -109,7 +109,7 @@ public class AssignmentTests : IDisposable
         // Admin id that does not exist: the assignment/history foreign keys fail inside the transaction.
         using var ghostAdmin = ClientFor(999_999, Roles.Admin);
         var response = await ghostAdmin.PostAsJsonAsync(
-            $"/requests/{requestId}/assign",
+            $"/api/v1/requests/{requestId}/assign",
             new { employeeId = staffId, dueAt = Now.AddDays(2) });
 
         Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
@@ -179,7 +179,7 @@ public class AssignmentTests : IDisposable
 
         using var client = ClientFor(staffId, role);
         var response = await client.PostAsJsonAsync(
-            $"/requests/{requestId}/assign",
+            $"/api/v1/requests/{requestId}/assign",
             new { employeeId = staffId, dueAt = Now.AddDays(2) });
 
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
@@ -195,8 +195,8 @@ public class AssignmentTests : IDisposable
         var staffId = await EmployeeIdAsync(StaffEmail);
         await AssignAsync(requestId, staffId);
 
-        var decide = await PostAsAsync(staffId, role, $"/requests/{requestId}/decide", new { decision = "Accepted" });
-        var status = await PatchAsAsync(staffId, role, $"/requests/{requestId}/status", new { status = "InProgress" });
+        var decide = await PostAsAsync(staffId, role, $"/api/v1/requests/{requestId}/decide", new { decision = "Accepted" });
+        var status = await PatchAsAsync(staffId, role, $"/api/v1/requests/{requestId}/status", new { status = "InProgress" });
 
         Assert.Equal(HttpStatusCode.Forbidden, decide.StatusCode);
         Assert.Equal(HttpStatusCode.Forbidden, status.StatusCode);
@@ -208,15 +208,15 @@ public class AssignmentTests : IDisposable
     {
         using var anonymous = _factory.CreateClient();
 
-        foreach (var url in new[] { "/requests/1/assign", "/requests/1/decide" })
+        foreach (var url in new[] { "/api/v1/requests/1/assign", "/api/v1/requests/1/decide" })
         {
             var response = await anonymous.PostAsJsonAsync(url, new { });
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
 
-        var patch = await anonymous.PatchAsync("/requests/1/status", JsonContent.Create(new { }));
+        var patch = await anonymous.PatchAsync("/api/v1/requests/1/status", JsonContent.Create(new { }));
         Assert.Equal(HttpStatusCode.Unauthorized, patch.StatusCode);
-        Assert.Equal(HttpStatusCode.Unauthorized, (await anonymous.GetAsync("/requests/1/history")).StatusCode);
+        Assert.Equal(HttpStatusCode.Unauthorized, (await anonymous.GetAsync("/api/v1/requests/1/history")).StatusCode);
     }
 
     // ---------- FR-010: accept ----------
@@ -342,7 +342,7 @@ public class AssignmentTests : IDisposable
 
     // ---------- FR-013: status changes ----------
 
-    [Fact(DisplayName = "FR-013: assignee moves a request to In Progress and closes it with a completion note")]
+    [Fact(DisplayName = "FR-013: assignee moves a request through Resolved and closes it with a completion note")]
     public async Task StatusChange_FullLifecycle_WritesHistoryAtEachStep()
     {
         var requestId = await SubmitRequestAsync();
@@ -354,9 +354,13 @@ public class AssignmentTests : IDisposable
         Assert.Equal(HttpStatusCode.OK, inProgress.StatusCode);
         Assert.Equal("In Progress", await StatusOfAsync(requestId));
 
+        var resolved = await UpdateStatusAsync(staffId, requestId, new { status = "Resolved" });
+        Assert.Equal(HttpStatusCode.OK, resolved.StatusCode);
+        Assert.Equal("Resolved", await StatusOfAsync(requestId));
+
         var closeWithoutNote = await UpdateStatusAsync(staffId, requestId, new { status = "Closed" });
         Assert.Equal(HttpStatusCode.UnprocessableEntity, closeWithoutNote.StatusCode);
-        Assert.Equal("In Progress", await StatusOfAsync(requestId));
+        Assert.Equal("Resolved", await StatusOfAsync(requestId));
 
         var closed = await UpdateStatusAsync(
             staffId,
@@ -372,6 +376,7 @@ public class AssignmentTests : IDisposable
 
         Assert.Equal(1L, await HistoryCountAsync(requestId, "Assigned"));
         Assert.Equal(1L, await HistoryCountAsync(requestId, "In Progress"));
+        Assert.Equal(1L, await HistoryCountAsync(requestId, "Resolved"));
         Assert.Equal(1L, await HistoryCountAsync(requestId, "Closed"));
     }
 
@@ -433,7 +438,7 @@ public class AssignmentTests : IDisposable
         await AssignAsync(requestId, staffId);
 
         using var staff = ClientFor(staffId, Roles.Staff);
-        var response = await staff.GetAsync($"/requests/{requestId}/history");
+        var response = await staff.GetAsync($"/api/v1/requests/{requestId}/history");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         using var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
@@ -442,7 +447,7 @@ public class AssignmentTests : IDisposable
         Assert.Equal("Assigned", entries[0].GetProperty("status").GetString());
 
         using var requester = ClientFor(1, Roles.Requester);
-        Assert.Equal(HttpStatusCode.Forbidden, (await requester.GetAsync($"/requests/{requestId}/history")).StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, (await requester.GetAsync($"/api/v1/requests/{requestId}/history")).StatusCode);
     }
 
     [Fact(DisplayName = "FR-013: the database refuses to update or delete history rows")]
@@ -509,17 +514,17 @@ public class AssignmentTests : IDisposable
     }
 
     private Task<HttpResponseMessage> DecideAsync(long staffId, long requestId, object body) =>
-        PostAsAsync(staffId, Roles.Staff, $"/requests/{requestId}/decide", body);
+        PostAsAsync(staffId, Roles.Staff, $"/api/v1/requests/{requestId}/decide", body);
 
     private Task<HttpResponseMessage> UpdateStatusAsync(long staffId, long requestId, object body) =>
-        PatchAsAsync(staffId, Roles.Staff, $"/requests/{requestId}/status", body);
+        PatchAsAsync(staffId, Roles.Staff, $"/api/v1/requests/{requestId}/status", body);
 
     private async Task<HttpResponseMessage> AssignAsync(long requestId, long employeeId, DateTimeOffset? dueAt = null)
     {
         var adminId = await EmployeeIdAsync(AdminEmail);
         using var admin = ClientFor(adminId, Roles.Admin);
         return await admin.PostAsJsonAsync(
-            $"/requests/{requestId}/assign",
+            $"/api/v1/requests/{requestId}/assign",
             new { employeeId, dueAt = dueAt ?? Now.AddDays(2) });
     }
 
@@ -527,7 +532,7 @@ public class AssignmentTests : IDisposable
     {
         using var requester = ClientFor(1, Roles.Requester);
         var response = await requester.PostAsJsonAsync(
-            "/requests",
+            "/api/v1/requests",
             new { categoryId = 1, description = $"S2-07 test {Guid.NewGuid()}" });
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 

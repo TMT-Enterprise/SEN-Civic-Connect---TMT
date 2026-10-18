@@ -1,43 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { RequestCard, ServiceRequest } from '../../../shared/request-card/request-card';
-import { RequestDetailModal } from '../../../shared/request-detail-modal/request-detail-modal';
-
-@Component({
-  selector: 'app-requester-home',
-  standalone: true,
-  imports: [
-    RouterLink,
-    RequestCard,
-    RequestDetailModal
-  ],
-  templateUrl: './requester-home.html',
-  styleUrl: './requester-home.css',
-})
-export class RequesterHome {
-  requests: ServiceRequest[] = [
-    // Example mock data to test the grid
-    {
-      id: 'REQ-001',
-      citizen: 'Jane Doe',
-      category: 'Pothole Repair',
-      description: 'Large pothole on Main Street causing traffic hazards.',
-      priority: 'High',
-      status: 'In Progress',
-      dueDate: '2026-10-25'
-    }
-  ];
-
-  selectedRequest: ServiceRequest | null = null;
-  isDetailsOpen = false;
-
-  openDetails(request: ServiceRequest): void {
-    this.selectedRequest = request;
-    this.isDetailsOpen = true;
-  }
-
-  closeDetails(): void {
-    this.isDetailsOpen = false;
-    this.selectedRequest = null;
-  }
+import { RequestService } from '../../../core/services/request.service';
+import { RequestItem } from '../../../core/models/request.model';
+@Component({ selector: 'app-requester-home', standalone: true, imports: [RouterLink, RequestCard], templateUrl: './requester-home.html', styleUrl: './requester-home.css' })
+export class RequesterHome implements OnInit {
+  private service = inject(RequestService); requests: ServiceRequest[] = []; loading = true; errorMessage = '';
+  ngOnInit(): void { this.service.requesterRequests().subscribe({ next: items => { this.requests = items.slice(0, 3).map(r => this.map(r)); this.loading = false; }, error: () => { this.errorMessage = 'Could not load your requests.'; this.loading = false; } }); }
+  private map(r: RequestItem): ServiceRequest { return { id: `REQ-${r.requestId}`, citizen: '', category: r.category || `Category ${r.categoryId}`, description: r.description, priority: 'Normal', status: r.status as ServiceRequest['status'], dueDate: r.dueAt || '' }; }
 }

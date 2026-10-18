@@ -1,34 +1,36 @@
+
 <div class="dashboard-page">
+
   <section class="metrics-grid" aria-label="Request summary">
+
     <app-metric-card
-      label="My Active Queue"
-      value="6"
-      detail="Marcus Vance"
-      icon="fa-inbox"
-      tone="secondary">
+      label="Active Queue"
+      value="{{ count() }}"
+      icon="fa-clipboard-list">
     </app-metric-card>
 
     <app-metric-card
       label="Pending Action"
-      value="3"
-      icon="fa-regular fa-clock"
-      tone="warning">
+      value="{{ count('Assigned') }}"
+      icon="fa-clock-rotate-left">
     </app-metric-card>
 
     <app-metric-card
       label="In Progress"
-      value="2"
-      icon="fa-spinner"
-      tone="primary">
+      value="{{ count('In Progress') }}"
+      icon="fa-spinner">
     </app-metric-card>
 
     <app-metric-card
       label="Resolved"
-      value="1"
-      icon="fa-circle-check"
-      tone="purple">
+      value="{{ count('Resolved') }}"
+      icon="fa-circle-check">
     </app-metric-card>
+
   </section>
 
   <app-request-table></app-request-table>
+
 </div>
+
+

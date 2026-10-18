@@ -1,15 +1,13 @@
 namespace CivicConnect.Auth;
 
 // Request records have no Role property on purpose: the client can never choose its own role.
-public sealed record RegisterRequest(string? Name, string? Email, string? Password, string? PhoneNumber = null);
+public sealed record RegisterRequest(string? Name, string? Email, string? Password);
 
 public sealed record LoginRequest(string? Email, string? Password);
 
 public sealed record RegisteredAccount(long Id, string Name, string Email, string Role);
 
-
-public sealed record LoginSuccess(string AccessToken, string TokenType, DateTimeOffset ExpiresAt, string Role, string Name);
-
+public sealed record LoginSuccess(string AccessToken, string TokenType, DateTimeOffset ExpiresAt, string Role);
 
 public enum RegisterStatus
 {

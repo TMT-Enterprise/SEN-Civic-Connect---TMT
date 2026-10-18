@@ -1,111 +1,16 @@
-import { Component } from '@angular/core';
-import { RequestDetailModal } from '../../../shared/request-detail-modal/request-detail-modal';
-import { ServiceRequest } from '../../../shared/request-card/request-card';
-import { AssignStaffModal } from '../assign-staff-modal/assign-staff-modal';
-
-interface OverviewRow {
-  request: ServiceRequest;
-  assignedTo?: string;     // shown in the table only
-  displayStatus?: string;  // overrides the status label
-}
-
-@Component({
-  selector: 'app-request-overview',
-  standalone: true,
-  imports: [RequestDetailModal, AssignStaffModal],
-  templateUrl: './requests-overview.html',
-  styleUrl: './requests-overview.css',
-})
-export class RequestsOverview {
-  staffMembers: string[] = ['Marcus Vance', 'James Wilson', 'Elena Rostova'];
-
-  rows: OverviewRow[] = [
-    {
-      displayStatus: 'Submitted',
-      request: {
-        id: 'REQ-9101', citizen: 'Sarah Connor', category: 'Electrical',
-        description: 'Electrical fault reported, awaiting assignment.',
-        priority: 'High', status: 'Assigned', dueDate: '25 Oct 2026, 16:00',
-        contactPhone: '082 123 4567',
-      },
-    },
-    {
-      assignedTo: 'Marcus Vance',
-      request: {
-        id: 'REQ-9012', citizen: 'Eleanor Vance', category: 'Plumbing',
-        description: 'Plumbing issue assigned to a specialist.',
-        priority: 'High', status: 'Assigned', dueDate: '28 Oct 2026, 14:00',
-        contactPhone: '082 234 5678',
-      },
-    },
-    {
-      assignedTo: 'Marcus Vance',
-      request: {
-        id: 'REQ-8492', citizen: 'Alex Morgan', category: 'Plumbing',
-        description: 'Plumbing repair currently in progress.',
-        priority: 'Normal', status: 'In Progress', dueDate: '27 Oct 2026, 17:00',
-        contactPhone: '082 345 6789',
-      },
-    },
-    {
-      assignedTo: 'James Wilson',
-      request: {
-        id: 'REQ-8102', citizen: 'Carlos Rivera', category: 'Maintenance',
-        description: 'Maintenance work completed and awaiting closure.',
-        priority: 'High', status: 'Resolved', dueDate: '28 Oct 2026, 10:00',
-        contactPhone: '082 456 7890',
-      },
-    },
-  ];
-
-  // Details modal
-  selectedRequest: ServiceRequest | null = null;
-  isDetailsOpen = false;
-
-  // Assign modal
-  assigningRow: OverviewRow | null = null;
-  isAssignOpen = false;
-
-  openDetails(request: ServiceRequest): void {
-    this.selectedRequest = request;
-    this.isDetailsOpen = true;
-  }
-
-  closeDetails(): void {
-    this.isDetailsOpen = false;
-    this.selectedRequest = null;
-  }
-
-  openAssign(row: OverviewRow): void {
-    this.assigningRow = row;
-    this.isAssignOpen = true;
-  }
-
-  closeAssign(): void {
-    this.isAssignOpen = false;
-    this.assigningRow = null;
-  }
-
-  assignStaff(name: string): void {
-    const target = this.assigningRow;
-    if (!target) {
-      return;
-    }
-
-    this.rows = this.rows.map(row =>
-      row === target
-        ? { ...row, assignedTo: name, displayStatus: undefined }
-        : row
-    );
-
-    this.closeAssign();
-  }
-
-  statusLabel(row: OverviewRow): string {
-    return row.displayStatus ?? row.request.status;
-  }
-
-  statusClass(row: OverviewRow): string {
-    return this.statusLabel(row).toLowerCase().replace(/\s+/g, '-');
-  }
+import { Component, OnInit, inject } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RequestService } from '../../../core/services/request.service';
+import { RequestSearchItem, StaffMember } from '../../../core/models/request.model';
+@Component({ selector: 'app-requests-overview', standalone: true, imports: [DatePipe, FormsModule], templateUrl: './requests-overview.html', styleUrl: './requests-overview.css' })
+export class RequestsOverview implements OnInit {
+  private service = inject(RequestService); requests: RequestSearchItem[] = []; staff: StaffMember[] = []; loading = true; errorMessage = ''; search = ''; status = '';
+  assignments: Record<number, { employeeId: string; dueAt: string }> = {};
+  ngOnInit(): void { this.service.staffDirectory().subscribe({ next: s => this.staff = s, error: () => this.errorMessage = 'Unable to load staff directory.' }); this.load(); }
+  load(): void { this.loading = true; const filters: Record<string, string> = {}; if (this.search) filters['search'] = this.search; if (this.status) filters['status'] = this.status; this.service.adminRequests(filters).subscribe({ next: r => { this.requests = r.requests; this.loading = false; }, error: e => { this.errorMessage = e?.error?.detail || 'Unable to load management queue.'; this.loading = false; } }); }
+  get unassignedCount(): number { return this.requests.filter(r => !r.assignedEmployeeId && r.status !== 'Closed').length; }
+  activeCount(status?: string): number { return this.requests.filter(r => !['Closed'].includes(r.status) && (!status || r.status === status)).length; }
+  assign(item: RequestSearchItem): void { const value = this.assignments[item.requestId]; if (!value?.employeeId || !value.dueAt) { this.errorMessage = 'Choose a staff member and due date before assigning.'; return; } this.service.assign(item.requestId, Number(value.employeeId), new Date(value.dueAt).toISOString()).subscribe({ next: () => { this.errorMessage = ''; this.load(); }, error: e => this.errorMessage = e?.error?.error || 'Assignment failed.' }); }
+  assignment(item: RequestSearchItem): { employeeId: string; dueAt: string } { return this.assignments[item.requestId] ?? (this.assignments[item.requestId] = { employeeId: '', dueAt: '' }); }
 }

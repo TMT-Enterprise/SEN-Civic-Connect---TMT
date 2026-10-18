@@ -18,7 +18,7 @@ public sealed class OverdueRepository(AppDbContext db) : IOverdueRepository
             FROM service_request sr
             JOIN request_status rs ON rs.status_id = sr.current_status_id
             WHERE sr.overdue_at IS NULL
-              AND rs.name NOT IN ('Closed', 'Resolved')
+              AND rs.name NOT IN ('Resolved', 'Closed')
               AND sr.due_at < {now}
               AND sr.request_id > {afterRequestId}
             ORDER BY sr.request_id
@@ -36,11 +36,7 @@ public sealed class OverdueRepository(AppDbContext db) : IOverdueRepository
             WHERE request_id = {requestId}
               AND overdue_at IS NULL
               AND due_at < {now}
-              AND current_status_id NOT IN (
-                SELECT status_id
-                FROM request_status
-                WHERE name IN ('Closed', 'Resolved')
-            )
+              AND current_status_id NOT IN (SELECT status_id FROM request_status WHERE name IN ('Resolved', 'Closed'))
             """, cancellationToken);
 
         return affected == 1;

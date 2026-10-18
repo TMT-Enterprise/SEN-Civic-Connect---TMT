@@ -10,7 +10,8 @@ namespace CivicConnect.Requests;
 public sealed class AssignmentService(
     AppDbContext db,
     RequestStatusTransitionValidator validator,
-    TimeProvider clock)
+    TimeProvider clock,
+    StatusChangeNotifier statusNotifier)
 {
     // ---------- ASSIGN (FR-008) ----------
     public async Task<Result<AssignmentDto>> AssignAsync(
@@ -98,6 +99,7 @@ public sealed class AssignmentService(
             return Result<AssignmentDto>.Fail(Outcome.Invalid, "Employee reference is invalid.");
         }
 
+        await NotifyAfterCommitAsync(requestId, current.ToString(), "Assigned", ct);
         return Result<AssignmentDto>.Ok(ToDto(assignment, request, RequestStatus.Assigned));
     }
 
@@ -208,6 +210,7 @@ public sealed class AssignmentService(
         await db.SaveChangesAsync(ct);
         await tx.CommitAsync(ct);
 
+        await NotifyAfterCommitAsync(requestId, current.ToString(), "Submitted", ct);
         return Result<AssignmentDto>.Ok(ToDto(assignment, request, RequestStatus.Submitted));
     }
 
@@ -275,7 +278,23 @@ public sealed class AssignmentService(
         await db.SaveChangesAsync(ct);
         await tx.CommitAsync(ct);
 
+        await NotifyAfterCommitAsync(requestId, current.ToString(), target.ToString(), ct);
         return Result<StatusChangeDto>.Ok(new StatusChangeDto(requestId, target));
+    }
+
+    private async Task NotifyAfterCommitAsync(long requestId, string previousStatus, string newStatus, CancellationToken ct)
+    {
+        try
+        {
+            var staged = statusNotifier.Stage(requestId, previousStatus, newStatus);
+            if (staged is null) return;
+            await db.SaveChangesAsync(ct);
+            await statusNotifier.DispatchAsync(staged, ct);
+        }
+        catch (Exception)
+        {
+            // Notifications are best-effort and must never roll back a committed request lifecycle change.
+        }
     }
 
     // ---------- HISTORY (read-only) ----------

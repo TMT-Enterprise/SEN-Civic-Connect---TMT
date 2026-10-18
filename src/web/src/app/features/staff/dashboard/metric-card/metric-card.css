@@ -1,63 +1,45 @@
+
 .metric-card {
-  display: block;
-  min-width: 0;
-  height: 100%;
-  padding: 16px;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  background: white;
-  text-align: left;
-  box-shadow: 0 2px 5px rgb(0 0 0 / 3%);
-  transition: border-color 0.2s;
+  border: 1px solid var(--cc-border);
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 4%);
 }
 
-.metric-card:hover {
-  border-color: #ff6b00;
+.metric-card .card-body {
+  padding: 1rem;
 }
 
 .metric-label {
-  display: block;
   color: #9ca3af;
-  font-size: 10px;
+  font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
-.metric-value {
+.metric-bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  margin-top: 8px;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
 }
 
-.metric-value strong {
-  font-size: 27px;
+.metric-bottom h3 {
+  margin: 0;
+  font-size: 1.75rem;
   font-weight: 800;
 }
 
-.metric-value i {
-  font-size: 14px;
-}
-
 .metric-detail {
-  margin-right: auto;
-  padding: 3px 8px;
-  border-radius: 6px;
-  background: #fff7ed;
-  color: #c2410c;
-  font-size: 10px;
-  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  background: var(--cc-orange-light);
+  color: var(--cc-orange-hover);
+  font-size: 0.7rem;
 }
 
-/* Tones */
-.tone-secondary .metric-value i { color: #6b7280; }
-.tone-info .metric-label,
-.tone-info .metric-value i { color: #0284c7; }
-.tone-warning .metric-label,
-.tone-warning .metric-value i { color: #d97706; }
-.tone-primary .metric-label,
-.tone-primary .metric-value i { color: #2563eb; }
-.tone-purple .metric-label,
-.tone-purple .metric-value i { color: #a855f7; }
+.metric-icon {
+  color: var(--cc-orange);
+  font-size: 1rem;
+}

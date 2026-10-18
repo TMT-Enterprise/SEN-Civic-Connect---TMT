@@ -1,16 +1,15 @@
 <aside class="staff-sidebar">
-  <a class="staff-brand" routerLink="/staff">
+  <a class="sidebar-brand" routerLink="/staff">
     <span class="brand-logo">C</span>
-
-    <span class="brand-copy">
+    <span>
       <strong>CivicConnect</strong>
       <small>Staff Portal</small>
     </span>
   </a>
 
-  <nav class="staff-nav" aria-label="Staff navigation">
+  <nav class="sidebar-nav" aria-label="Staff navigation">
     <a
-      class="staff-nav-link"
+      class="sidebar-link"
       routerLink="/staff"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
@@ -20,35 +19,20 @@
     </a>
 
     <a
-      class="staff-nav-link"
+      class="sidebar-link"
       routerLink="/staff/history"
       routerLinkActive="active"
     >
-      <i class="fa-solid fa-box-archive" aria-hidden="true"></i>
+      <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
       <span>Request History</span>
     </a>
   </nav>
 
-  <button
-  type="button"
-  class="staff-profile"
-  aria-label="Account menu. Click to log out"
-  (click)="openLogout()">
-  <div class="staff-avatar">SM</div>
-
-  <div class="staff-profile-copy">
-    <strong>Staff Member</strong>
-    <small>Field Specialist</small>
+  <div class="sidebar-footer">
+    <span class="staff-avatar">S</span>
+    <span>
+      <strong>Staff Member</strong>
+      <small>Staff Portal</small>
+    </span>
   </div>
-
-  <i
-    class="fa-solid fa-circle-check staff-badge"
-    title="Active staff member"
-    aria-hidden="true"
-  ></i>
-</button>
 </aside>
-<app-logout-modal
-  [isOpen]="isLogoutOpen"
-  (closed)="closeLogout()">
-</app-logout-modal>

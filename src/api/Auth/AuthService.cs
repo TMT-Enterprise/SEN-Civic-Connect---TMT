@@ -35,8 +35,7 @@ public sealed class AuthService(IAccountRepository accounts, IPasswordHasher has
 
         try
         {
-            var phoneNumber = string.IsNullOrWhiteSpace(request.PhoneNumber) ? null : request.PhoneNumber.Trim();
-            var account = await accounts.CreateRequesterAsync(name, email, hash, phoneNumber, cancellationToken);
+            var account = await accounts.CreateRequesterAsync(name, email, hash, cancellationToken);
             return new RegisterResult(
                 RegisterStatus.Created,
                 new RegisteredAccount(account.Id, account.Name, account.Email, account.Role));
@@ -71,17 +70,8 @@ public sealed class AuthService(IAccountRepository accounts, IPasswordHasher has
             return null;
         }
 
-        await accounts.UpdateLastLoginAsync(account, cancellationToken);
-
         var token = tokens.Create(account);
-
-        return new LoginSuccess(
-            token.Token,
-            "Bearer",
-            token.ExpiresAt,
-            account.Role,
-            account.Name
-        );
+        return new LoginSuccess(token.Token, "Bearer", token.ExpiresAt, account.Role);
     }
 
     public static string NormaliseEmail(string email) => email.Trim().ToLower(CultureInfo.InvariantCulture);
@@ -113,11 +103,6 @@ public sealed class AuthService(IAccountRepository accounts, IPasswordHasher has
         else if (Encoding.UTF8.GetByteCount(request.Password) > MaxPasswordBytes)
         {
             errors["password"] = [$"Password must be at most {MaxPasswordBytes} bytes."];
-        }
-
-        if (request.PhoneNumber?.Trim().Length > 30)
-        {
-            errors["phoneNumber"] = ["Phone number must be at most 30 characters."];
         }
 
         return errors;

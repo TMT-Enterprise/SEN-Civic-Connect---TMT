@@ -48,9 +48,9 @@ public sealed class RequestStatusTransitionValidator
             return Reject("The current status is invalid.");
         }
 
-        if (current == RequestStatus.Closed)
+        if (current is RequestStatus.Resolved or RequestStatus.Closed)
         {
-            return Reject("A closed request cannot become overdue.");
+            return Reject("A resolved or closed request cannot become overdue.");
         }
 
         if (alreadyFlagged)

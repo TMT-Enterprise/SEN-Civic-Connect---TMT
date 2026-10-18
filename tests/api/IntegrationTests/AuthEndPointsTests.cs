@@ -38,13 +38,7 @@ public sealed class AuthEndpointsTests(ApiFactory factory)
     {
         var email = NewEmail();
 
-        var response = await RegisterAsync(email, extra: new
-        {
-            name = "Test User",
-            email,
-            password = Password,
-            phoneNumber = "+27123456789"
-        });
+        var response = await RegisterAsync(email);
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         Assert.Equal("Requester", (await ReadJsonAsync(response)).GetProperty("role").GetString());
@@ -55,8 +49,6 @@ public sealed class AuthEndpointsTests(ApiFactory factory)
         Assert.NotEqual(Password, stored);
         Assert.StartsWith("$2", stored, StringComparison.Ordinal);
         Assert.Equal(60, stored.Length);
-        Assert.Equal("+27123456789", await factory.ScalarAsync<string>(
-            "select phone_number from requester where lower(email) = @e", ("e", email)));
     }
 
     [Fact]
@@ -137,21 +129,6 @@ public sealed class AuthEndpointsTests(ApiFactory factory)
     }
 
     [Fact]
-    public async Task Successful_requester_login_updates_last_login_in_the_database()
-    {
-        var email = NewEmail();
-        await RegisterAsync(email);
-
-        Assert.Equal(0, await factory.ScalarAsync<long>(
-            "select count(*) from requester where lower(email) = @e and last_login_at is not null", ("e", email)));
-
-        Assert.Equal(HttpStatusCode.OK, (await LoginAsync(email, Password)).StatusCode);
-
-        Assert.Equal(1, await factory.ScalarAsync<long>(
-            "select count(*) from requester where lower(email) = @e and last_login_at is not null", ("e", email)));
-    }
-
-    [Fact]
     public async Task Wrong_password_and_unknown_email_both_fail_with_the_same_401_response()
     {
         var email = NewEmail();
@@ -167,8 +144,6 @@ public sealed class AuthEndpointsTests(ApiFactory factory)
         var b = await ReadJsonAsync(unknownEmail);
         Assert.Equal(a.GetProperty("title").GetString(), b.GetProperty("title").GetString());
         Assert.Equal(a.GetProperty("status").GetInt32(), b.GetProperty("status").GetInt32());
-        Assert.Equal(0, await factory.ScalarAsync<long>(
-            "select count(*) from requester where lower(email) = @e and last_login_at is not null", ("e", email)));
     }
 
     [Fact]
@@ -203,8 +178,6 @@ public sealed class AuthEndpointsTests(ApiFactory factory)
 
         Assert.Equal(expectedRole, token.GetClaim("role").Value);
         Assert.Equal("employee", token.GetClaim("acct").Value);
-        Assert.Equal(1, await factory.ScalarAsync<long>(
-            "select count(*) from employee where lower(email) = lower(@e) and last_login_at is not null", ("e", email)));
     }
 
     [Fact]

@@ -1,3 +1,5 @@
+import { RequestService } from '../../../core/services/request.service';
+import { mockRequestService } from '../../../../testing/mock-request-service';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RequesterHome } from './requester-home';
@@ -10,7 +12,7 @@ describe('RequesterHome', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RequesterHome],
-      providers: [provideRouter([])]
+      providers: [{ provide: RequestService, useValue: mockRequestService }, provideRouter([])]
     }).compileComponents();
 
     fixture = TestBed.createComponent(RequesterHome);

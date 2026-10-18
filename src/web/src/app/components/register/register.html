@@ -11,27 +11,19 @@
         <!-- Form Card Container -->
         <div class="card border border-light-subtle shadow-sm bg-white rounded-4 p-4">
             <form (ngSubmit)="onRegister()">
+                @if (errorMessage) { <div class="text-danger small mb-3" role="alert">{{ errorMessage }}</div> }
                 <!-- Name and Surname Row -->
                 <div class="row g-2 mb-3">
                     <div class="col-6">
                         <label for="fName" class="form-label small fw-semibold text-secondary">Name <span class="text-orange">*</span></label>
                         <div class="input-group custom-input-group">
                             <span class="input-group-text"><i class="fas fa-user"></i></span>
-                            <input id="fName" [(ngModel)]="registration.firstName" name="firstName" type="text" class="form-control py-2.5" placeholder="Sipho" required>
+                            <input [(ngModel)]="model.name" name="name" type="text" class="form-control py-2.5" placeholder="Sipho" required>
                         </div>
                     </div>
                     <div class="col-6">
                         <label for="surname" class="form-label small fw-semibold text-secondary">Surname <span class="text-orange">*</span></label>
-                        <input id="surname" [(ngModel)]="registration.surname" name="surname" type="text" class="form-control form-control-standalone py-2.5 px-3" placeholder="Dlamini" required>
-                    </div>
-                </div>
-
-                <!-- Phone Number Field -->
-                <div class="mb-3">
-                    <label for="phoneNumber" class="form-label small fw-semibold text-secondary">Phone Number <span class="text-orange">*</span></label>
-                    <div class="input-group custom-input-group">
-                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                        <input id="phoneNumber" [(ngModel)]="registration.phoneNumber" name="phoneNumber" type="tel" maxlength="30" class="form-control py-2.5" placeholder="+27 (555) 000-0000" required>
+                        <input [(ngModel)]="model.surname" name="surname" type="text" class="form-control form-control-standalone py-2.5 px-3" placeholder="Dlamini" required>
                     </div>
                 </div>
 
@@ -40,7 +32,7 @@
                     <label for="email" class="form-label small fw-semibold text-secondary">Email Address <span class="text-orange">*</span></label>
                     <div class="input-group custom-input-group">
                         <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                        <input id="email" [(ngModel)]="registration.email" name="email" type="email" class="form-control py-2.5" placeholder="john@example.com" required>
+                        <input [(ngModel)]="model.email" name="email" type="email" class="form-control py-2.5" placeholder="john@example.com" required>
                     </div>
                 </div>
 
@@ -49,8 +41,8 @@
                     <label for="password" class="form-label small fw-semibold text-secondary">Password <span class="text-orange">*</span></label>
                     <div class="input-group custom-input-group">
                         <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                        <input name="password" [(ngModel)]="registration.password" [type]="showPassword ? 'text' : 'password'" id="passwordInput" minlength="8" class="form-control py-2.5 border-start-0 border-end-0" placeholder="Create a password (at least 8 characters)" required>
-                        <button
+                        <input [(ngModel)]="model.password" name="password" [type]="showPassword ? 'text' : 'password'" id="passwordInput" class="form-control py-2.5 border-start-0 border-end-0" placeholder="Create a password" required>
+                        <button 
                         class="btn password-toggle-btn px-3" 
                         type="button" 
                         id="togglePasswordBtn"
@@ -62,12 +54,9 @@
                     </div>
                 </div>
 
-                @if (errorMessage) {
-                    <div class="text-danger small mb-3" role="alert">{{ errorMessage }}</div>
-                }
-
-                <button type="submit" [disabled]="isSubmitting" class="btn btn-orange w-100 py-2.5 rounded-3 fw-semibold small shadow-sm">
-                    {{ isSubmitting ? 'Creating account...' : 'Register & Sign In' }}
+                <!-- Submit Button -->
+                <button type="submit" [disabled]="loading" class="btn btn-orange w-100 py-2.5 rounded-3 fw-semibold small shadow-sm">
+                    Register & Sign In
                 </button>
             </form>
 
@@ -81,3 +70,4 @@
 
     </div>
 </div>
+

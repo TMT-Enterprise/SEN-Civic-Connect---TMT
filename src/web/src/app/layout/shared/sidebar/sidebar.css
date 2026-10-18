@@ -1,205 +1,108 @@
 :host {
   display: block;
-  flex: 0 0 256px;
-  min-width: 0;
-  z-index: 20;
+  flex: 0 0 250px;
 }
 
 .staff-sidebar {
+  position: sticky;
+  top: 0;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  padding: 24px 16px;
+  background: white;
   border-right: 1px solid #e5e7eb;
 }
 
-.staff-brand {
+.sidebar-brand {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 20px;
-  border-bottom: 1px solid #f3f4f6;
-  text-decoration: none;
+  margin-bottom: 32px;
   color: #1a1a1a;
+  text-decoration: none;
 }
 
 .brand-logo {
-  width: 36px;
-  height: 36px;
-  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
   display: grid;
   place-items: center;
   border-radius: 12px;
   background: #ff6b00;
   color: white;
-  font-size: 19px;
   font-weight: 700;
-  box-shadow: 0 4px 10px rgb(255 107 0 / 20%);
+  font-size: 19px;
 }
 
-.brand-copy strong,
-.brand-copy small {
+.sidebar-brand strong,
+.sidebar-brand small,
+.sidebar-footer strong,
+.sidebar-footer small {
   display: block;
 }
 
-.brand-copy strong {
-  font-size: 15px;
-  line-height: 1.3;
+.sidebar-brand strong,
+.sidebar-footer strong {
+  font-size: 13px;
 }
 
-.brand-copy small {
-  margin-top: 4px;
-  color: #ea580c;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+.sidebar-brand small,
+.sidebar-footer small {
+  margin-top: 3px;
+  color: #71717a;
+  font-size: 11px;
 }
 
-.staff-nav {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.staff-nav-link {
+.sidebar-link {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 6px;
-  padding: 11px 14px;
-  border-radius: 12px;
+  padding: 12px;
+  border-radius: 10px;
   color: #4a4a4a;
   text-decoration: none;
-  font-size: 12px;
-  font-weight: 500;
-  transition: background 0.2s, color 0.2s;
+  font-size: 13px;
 }
 
-.staff-nav-link i {
-  width: 16px;
-  text-align: center;
+.sidebar-link:hover,
+.sidebar-link.active {
+  background: #fff7ed;
+  color: #ea580c;
 }
 
-.staff-nav-link:hover {
-  background: #f9fafb;
-  color: #1a1a1a;
-}
-
-.staff-nav-link.active {
-  background: #ff6b00;
-  color: #fff;
-  font-weight: 600;
-  box-shadow: 0 4px 10px rgb(255 107 0 / 18%);
-}
-
-.staff-profile {
+.sidebar-footer {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 16px;
-  border-top: 1px solid #f3f4f6;
-  background: #f9fafb;
-  width: 100%;
-  border: 0;
-  border-top: 1px solid #f3f4f6;
-  font-family: inherit;
-  text-align: left;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.staff-profile:hover {
-  background: #f3f4f6;
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid #e5e7eb;
 }
 
 .staff-avatar {
   width: 36px;
   height: 36px;
-  flex-shrink: 0;
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: #1a1a1a;
-  color: #fff;
-  font-size: 11px;
+  background: #ffedd5;
+  color: #c2410c;
   font-weight: 700;
 }
 
-.staff-profile-copy {
-  flex: 1;
-  min-width: 0;
-}
-
-.staff-profile-copy strong,
-.staff-profile-copy small {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.staff-profile-copy strong {
-  font-size: 11px;
-}
-
-.staff-profile-copy small {
-  margin-top: 3px;
-  color: #ea580c;
-  font-size: 10px;
-  font-weight: 600;
-}
-
-.staff-badge {
-  color: #10b981;
-  font-size: 13px;
-}
-
-@media (max-width: 850px) {
+@media (max-width: 768px) {
   :host {
-    flex-basis: 210px;
+    flex-basis: 190px;
   }
 
-  .staff-brand {
-    padding: 16px 12px;
-  }
-
-  .staff-nav {
-    padding: 12px 8px;
-  }
-
-  .staff-profile {
-    padding: 12px 8px;
-  }
-}
-
-@media (max-width: 600px) {
-  :host {
-    flex-basis: 64px;
-  }
-
-  .staff-brand {
-    justify-content: center;
-    padding: 14px 6px;
-  }
-
-  .brand-copy,
-  .staff-nav-link span,
-  .staff-profile-copy,
-  .staff-badge {
-    display: none;
-  }
-
-  .staff-nav-link {
-    justify-content: center;
-    padding: 12px 6px;
-  }
-
-  .staff-nav-link i {
-    width: auto;
-  }
-
-  .staff-profile {
-    justify-content: center;
+  .staff-sidebar {
+    padding: 16px 10px;
   }
 }
