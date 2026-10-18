@@ -103,17 +103,22 @@ For end-to-end testing, Cypress was selected instead of Playwright because it pr
 | Database platform | Supabase | Provide managed PostgreSQL hosting and database |
 
 ## Version and compatibility baseline
-| Technology | Version |
-|---|---|
-| Angular | TBD |
-| TypeScript | TBD |
-| Node.js | TBD |
-| npm | TBD |
-| C# | TBD |
-| .NET / ASP.NET Core | TBD |
-| PostgreSQL | Supabase-managed |
-| xUnit | TBD |
-| Cypress | TBD |
+| Technology | Version | Justification |
+|---|---|---|
+| Angular | 21.x | Chosen frontend framework |
+| TypeScript | 5.9x | Angular 21 requires >=5.9.0 <6.0.0 |
+| Node.js | 24.x LTS | Angular 21 supports Node 24; LTS gives a stable development environment. |
+| npm | 11.x | Bundled with Node |
+| C# | 14 | Paored with .Net 10 |
+| .NET | 10.x | Builds/runs the backend and provides C# 14 |
+| ASP.NET Core | 10.x | Backend REST API; matches .NET 10 |
+| PostgreSQL | Supabase-managed | Supabase manages actual DB version |
+| xUnit | 3.x | Backend testing |
+| Cypress | 16.x | End-to-end testing |
+| Docker Engine | 29.8.1 | API architectural style, implemented over HTTP/HTTPS |
+| OpenAPI | 3.x | Define API contracts |
+| Swagger UI | Compatible with OpenAPI setup | Interactive API documentation/testing |
+| GitHub | Current supported | Source/version control |
 
 Compatibility assumptions: Angular, TypeScript, Node.js and npm versions must be compatible with one another. The selected .NET version must be compatible with ASP.NET Core and the PostgreSQL provider used by the backend. Cypress must support the selected browser environment and Angular application. Version changes will be recorded to prevent unexpected compatibility issues.
 
