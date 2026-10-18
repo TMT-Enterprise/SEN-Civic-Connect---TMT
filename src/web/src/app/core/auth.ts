@@ -9,6 +9,7 @@ export interface LoginResponse {
   tokenType: string;
   expiresAt: string;
   role: string;
+  name: string;
 }
 
 export interface RegisterRequest {
@@ -36,13 +37,21 @@ export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly tokenStorageKey = 'civic-connect.access-token';
   private readonly roleStorageKey = 'civic-connect.role';
+  private readonly nameStorageKey = 'civic-connect.user-name';
 
   get accessToken(): string | null {
     return localStorage.getItem(this.tokenStorageKey);
   }
 
+  get userName(): string | null {
+    return localStorage.getItem(this.nameStorageKey);
+  }
+
   register(request: RegisterRequest): Observable<RegisteredAccount> {
-    return this.http.post<RegisteredAccount>('/api/v1/auth/register', request);
+    return this.http.post<RegisteredAccount>(
+      '/api/v1/auth/register',
+      request
+    );
   }
 
   login(email: string, password: string): Observable<LoginResponse> {
@@ -52,12 +61,17 @@ export class AuthService {
   }
 
   private storeLogin(response: LoginResponse): void {
-    if (!response.accessToken || !isUserRole(response.role)) {
+    if (
+      !response.accessToken ||
+      !isUserRole(response.role) ||
+      !response.name?.trim()
+    ) {
       throw new Error('The sign-in response contains invalid account details.');
     }
 
     localStorage.setItem(this.tokenStorageKey, response.accessToken);
     localStorage.setItem(this.roleStorageKey, response.role);
+    localStorage.setItem(this.nameStorageKey, response.name.trim());
   }
 }
 

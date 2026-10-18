@@ -59,6 +59,37 @@ public class AssignmentTests : IDisposable
 
     // ---------- FR-008: assignment ----------
 
+    [Fact(DisplayName = "FR-008: admin can list active staff members for request assignment")]
+    public async Task GetAssignableEmployees_Admin_ReturnsActiveStaffOnly()
+    {
+        var adminId = await EmployeeIdAsync(AdminEmail);
+        var staffId = await EmployeeIdAsync(StaffEmail);
+        using var admin = ClientFor(adminId, Roles.Admin);
+
+        var response = await admin.GetAsync("/admin/assignable-employees");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        using var document = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        var employees = document.RootElement.EnumerateArray().ToList();
+        Assert.Contains(
+            employees,
+            employee => employee.GetProperty("employeeId").GetInt64() == staffId);
+        Assert.DoesNotContain(
+            employees,
+            employee => employee.GetProperty("employeeId").GetInt64() == adminId);
+    }
+
+    [Fact(DisplayName = "NF-002: only admins can list assignable staff")]
+    public async Task GetAssignableEmployees_NonAdmin_Returns403()
+    {
+        var staffId = await EmployeeIdAsync(StaffEmail);
+        using var staff = ClientFor(staffId, Roles.Staff);
+
+        var response = await staff.GetAsync("/admin/assignable-employees");
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
+
     [Theory(DisplayName = "FR-008: due date under 24h is rejected, exactly 24h is accepted")]
     [InlineData(-1L, HttpStatusCode.UnprocessableEntity)]
     [InlineData(-TimeSpan.TicksPerSecond, HttpStatusCode.UnprocessableEntity)]
@@ -214,6 +245,9 @@ public class AssignmentTests : IDisposable
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
 
+        Assert.Equal(
+            HttpStatusCode.Unauthorized,
+            (await anonymous.GetAsync("/admin/assignable-employees")).StatusCode);
         var patch = await anonymous.PatchAsync("/requests/1/status", JsonContent.Create(new { }));
         Assert.Equal(HttpStatusCode.Unauthorized, patch.StatusCode);
         Assert.Equal(HttpStatusCode.Unauthorized, (await anonymous.GetAsync("/requests/1/history")).StatusCode);

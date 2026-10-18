@@ -1,14 +1,23 @@
 import { Component, Input } from '@angular/core';
 
+
 export interface ServiceRequest {
   id: string;
   citizen: string;
   category: string;
   description: string;
-  priority: 'Critical' | 'High' | 'Medium' | 'Normal';
-  status: 'Assigned' | 'In Progress' | 'Resolved' | 'Closed' | 'Overdue' | 'Rejected';
+  priority: 'Critical' | 'High' | 'Medium' | 'Normal' | null;
+  status:
+    | 'Submitted'
+    | 'Assigned'
+    | 'In Progress'
+    | 'Resolved'
+    | 'Closed'
+    | 'Overdue'
+    | 'Rejected';
   dueDate: string;
 }
+
 
 @Component({
   selector: 'app-request-card',

@@ -1,163 +1,212 @@
 <section class="requests-overview">
-  <!-- Five metric cards -->
   <div class="metrics-grid">
-    <button type="button" class="metric-card">
+    <div class="metric-card">
       <span class="metric-label">Total Active Queue</span>
       <div class="metric-value">
-        <strong>8</strong>
+        <strong>{{ activeCount() }}</strong>
         <i class="fa-solid fa-inbox text-secondary"></i>
       </div>
-    </button>
+    </div>
 
-    <button type="button" class="metric-card">
+    <div class="metric-card">
       <span class="metric-label text-info">Unassigned</span>
       <div class="metric-value">
-        <strong>2</strong>
+        <strong>{{ unassignedCount() }}</strong>
         <i class="fa-solid fa-user-plus text-info"></i>
       </div>
-    </button>
+    </div>
 
-    <button type="button" class="metric-card">
-      <span class="metric-label text-warning">Pending Action</span>
+    <div class="metric-card">
+      <span class="metric-label text-warning">Assigned</span>
       <div class="metric-value">
-        <strong>3</strong>
+        <strong>{{ assignedCount() }}</strong>
         <i class="fa-regular fa-clock text-warning"></i>
       </div>
-    </button>
+    </div>
 
-    <button type="button" class="metric-card">
+    <div class="metric-card">
       <span class="metric-label text-primary">In Progress</span>
       <div class="metric-value">
-        <strong>2</strong>
+        <strong>{{ inProgressCount() }}</strong>
         <i class="fa-solid fa-spinner text-primary"></i>
       </div>
-    </button>
+    </div>
 
-    <button type="button" class="metric-card">
+    <div class="metric-card">
       <span class="metric-label text-purple">Resolved</span>
       <div class="metric-value">
-        <strong>1</strong>
+        <strong>{{ resolvedCount() }}</strong>
         <i class="fa-solid fa-circle-check text-purple"></i>
       </div>
-    </button>
+    </div>
   </div>
 
-  <!-- Active requests table -->
   <section class="requests-panel">
     <div class="panel-heading">
       <div>
         <h2>Active Service Requests</h2>
-        <p>
-          Click any row to open detailed request information and transition
-          lifecycle.
-        </p>
+        <p>Assign submitted requests to an active staff member.</p>
       </div>
 
       <div class="filter-tabs" aria-label="Request status filters">
-        <button type="button" class="filter-tab active">All Active</button>
-        <button type="button" class="filter-tab">Unassigned</button>
-        <button type="button" class="filter-tab">Assigned</button>
-        <button type="button" class="filter-tab">In Progress</button>
-        <button type="button" class="filter-tab">Resolved</button>
+        @for (option of filters; track option) {
+          <button
+            type="button"
+            class="filter-tab"
+            [class.active]="filter() === option"
+            (click)="selectFilter(option)">
+            {{ option }}
+          </button>
+        }
       </div>
     </div>
 
-    <div class="table-responsive">
-      <table class="table admin-table align-middle mb-0">
-        <thead>
-          <tr>
-            <th>Request ID / Citizen</th>
-            <th>Category &amp; Priority</th>
-            <th>Assigned Specialist</th>
-            <th>Status</th>
-            <th>Target Due Date</th>
-            <th class="text-end">Dispatch Actions</th>
-          </tr>
-        </thead>
+    @if (successMessage()) {
+      <p class="queue-message success-message" role="status">{{ successMessage() }}</p>
+    }
 
-        <tbody>
-          <tr>
-            <td>
-              <strong class="request-id">REQ-9101</strong>
-              <small>Sarah Connor · 082 123 4567</small>
-            </td>
-            <td>
-              <strong>Electrical</strong>
-              <small class="priority-label">High Priority</small>
-            </td>
-            <td>
-              <span class="unassigned">Unassigned</span>
-            </td>
-            <td><span class="status submitted">Submitted</span></td>
-            <td>25 Oct 2026, 16:00</td>
-            <td class="text-end">
-              <button type="button" class="btn btn-sm assign-button">
-                <i class="fa-solid fa-user-gear me-1"></i>
-                Assign Staff
-              </button>
-            </td>
-          </tr>
+    @if (isLoading()) {
+      <p class="queue-message" role="status">Loading requests...</p>
+    } @else if (errorMessage()) {
+      <div class="queue-message error-message" role="alert">
+        <span>{{ errorMessage() }}</span>
+        <button type="button" class="btn btn-sm assign-button" (click)="loadRequests()">
+          Try Again
+        </button>
+      </div>
+    } @else if (filteredRequests().length === 0) {
+      <p class="queue-message">No requests in this view.</p>
+    } @else {
+      <div class="table-responsive">
+        <table class="table admin-table align-middle mb-0">
+          <thead>
+            <tr>
+              <th>Request</th>
+              <th>Category &amp; Description</th>
+              <th>Assigned Specialist</th>
+              <th>Status</th>
+              <th>Target Due Date</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
 
-          <tr>
-            <td>
-              <strong class="request-id">REQ-9012</strong>
-              <small>Eleanor Vance · 082 234 5678</small>
-            </td>
-            <td>
-              <strong>Plumbing</strong>
-              <small class="priority-label">High Priority</small>
-            </td>
-            <td>Marcus Vance</td>
-            <td><span class="status assigned">Assigned</span></td>
-            <td>28 Oct 2026, 14:00</td>
-            <td class="text-end">
-              <button type="button" class="btn btn-sm assign-button">
-                <i class="fa-solid fa-user-gear me-1"></i>
-                Reassign
-              </button>
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <strong class="request-id">REQ-8492</strong>
-              <small>Alex Morgan · 082 345 6789</small>
-            </td>
-            <td>
-              <strong>Plumbing</strong>
-              <small class="priority-label">Normal Priority</small>
-            </td>
-            <td>Marcus Vance</td>
-            <td><span class="status in-progress">In Progress</span></td>
-            <td>27 Oct 2026, 17:00</td>
-            <td class="text-end">
-              <button type="button" class="btn btn-sm assign-button">
-                <i class="fa-solid fa-user-gear me-1"></i>
-                Reassign
-              </button>
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <strong class="request-id">REQ-8102</strong>
-              <small>Carlos Rivera · 082 456 7890</small>
-            </td>
-            <td>
-              <strong>Maintenance</strong>
-              <small class="priority-label">High Priority</small>
-            </td>
-            <td>James Wilson</td>
-            <td><span class="status resolved">Resolved</span></td>
-            <td>28 Oct 2026, 10:00</td>
-            <td class="text-end">
-              <button type="button" class="btn btn-sm assign-button">
-                View Details
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+          <tbody>
+            @for (request of filteredRequests(); track request.requestId) {
+              <tr>
+                <td>
+                  <strong class="request-id">{{ requestLabel(request.requestId) }}</strong>
+                  <small>{{ formatDate(request.submittedAt) }}</small>
+                </td>
+                <td>
+                  <strong>{{ request.category }}</strong>
+                  <small class="description-cell">{{ request.description }}</small>
+                </td>
+                <td>
+                  @if (request.assignee) {
+                    {{ request.assignee }}
+                  } @else {
+                    <span class="unassigned">Unassigned</span>
+                  }
+                </td>
+                <td>
+                  <span
+                    class="status"
+                    [class.submitted]="request.status === 'Submitted'"
+                    [class.assigned]="request.status === 'Assigned'"
+                    [class.in-progress]="request.status === 'In Progress'"
+                    [class.resolved]="request.status === 'Resolved'">
+                    {{ request.status }}
+                  </span>
+                </td>
+                <td>{{ formatDate(request.dueAt) }}</td>
+                <td class="text-end">
+                  @if (request.status === 'Submitted') {
+                    <button
+                      type="button"
+                      class="btn btn-sm assign-button"
+                      (click)="openAssignment(request)">
+                      <i class="fa-solid fa-user-gear me-1"></i>
+                      Assign Staff
+                    </button>
+                  } @else {
+                    <span class="text-muted">—</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
   </section>
+
+  @if (assignmentRequest(); as request) {
+    <div class="assignment-backdrop" (click)="closeAssignment()">
+      <section
+        class="assignment-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="assignment-title"
+        (click)="$event.stopPropagation()">
+        <div class="assignment-heading">
+          <div>
+            <h2 id="assignment-title">Assign {{ requestLabel(request.requestId) }}</h2>
+            <p>{{ request.category }}</p>
+          </div>
+          <button type="button" class="dialog-close" aria-label="Close" (click)="closeAssignment()">×</button>
+        </div>
+
+        @if (assignmentError()) {
+          <p class="error-message" role="alert">{{ assignmentError() }}</p>
+        }
+
+        @if (isLoadingEmployees()) {
+          <p role="status">Loading active staff...</p>
+        } @else {
+          @if (employees().length === 0 && !assignmentError()) {
+            <p class="error-message" role="alert">No active staff members are available to assign.</p>
+          }
+
+          <form (ngSubmit)="submitAssignment()">
+            <label for="assign-employee">Staff member</label>
+            <select
+              id="assign-employee"
+              class="form-select"
+              [ngModel]="selectedEmployeeId()"
+              (ngModelChange)="selectedEmployeeId.set($event === null ? null : +$event)"
+              name="employeeId"
+              required>
+              <option [ngValue]="null" disabled>Select active staff...</option>
+              @for (employee of employees(); track employee.employeeId) {
+                <option [ngValue]="employee.employeeId">{{ employee.name }}</option>
+              }
+            </select>
+
+            <label for="assign-due-at">Target due date and time</label>
+            <input
+              id="assign-due-at"
+              class="form-control"
+              type="datetime-local"
+              [ngModel]="dueAt()"
+              (ngModelChange)="dueAt.set($event)"
+              name="dueAt"
+              required>
+            <p class="assignment-hint">Due date must be at least 24 hours from now.</p>
+
+            <div class="assignment-actions">
+              <button type="button" class="btn btn-outline-secondary" [disabled]="isAssigning()" (click)="closeAssignment()">
+                Cancel
+              </button>
+              <button
+                type="submit"
+                class="btn assign-button"
+                [disabled]="isAssigning() || isLoadingEmployees() || employees().length === 0">
+                {{ isAssigning() ? 'Assigning...' : 'Confirm Assignment' }}
+              </button>
+            </div>
+          </form>
+        }
+      </section>
+    </div>
+  }
 </section>

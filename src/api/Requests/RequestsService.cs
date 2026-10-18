@@ -52,33 +52,79 @@ public class RequestsService
             request.SubmittedAt);
     }
 
+    
     public async Task<List<ServiceRequestDto>> GetRequesterHistoryAsync(
         long requesterId,
         CancellationToken cancellationToken = default)
     {
-        var requests = await _db.ServiceRequests
-            .Include(r => r.CurrentStatus)
-            .Where(r => r.RequesterId == requesterId)
-            .OrderByDescending(r => r.SubmittedAt)
+        var requests = await (
+            from request in _db.ServiceRequests
+            join category in _db.ServiceCategories
+                on request.CategoryId equals category.CategoryId
+            join status in _db.RequestStatuses
+                on request.CurrentStatusId equals status.StatusId
+            where request.RequesterId == requesterId
+            orderby request.SubmittedAt descending
+            select new
+            {
+                Request = request,
+                Category = category.Type,
+                Status = status.Name
+            })
             .ToListAsync(cancellationToken);
 
         var now = _timeProvider.GetUtcNow();
-        return requests.Select(r => ToDto(r, now)).ToList();
+
+        return requests.Select(item =>
+        {
+            var request = item.Request;
+
+            var status = request.DueAt.HasValue
+                && request.DueAt.Value < now
+                && item.Status != "Closed"
+                && item.Status != "Resolved"
+                    ? "Overdue"
+                    : item.Status;
+
+            return new ServiceRequestDto(
+                request.RequestId,
+                request.RequesterId,
+                request.CategoryId,
+                item.Category,
+                status,
+                request.Description,
+                request.SubmittedAt,
+                request.DueAt,
+                request.UpdatedAt,
+                request.ClosedAt);
+        }).ToList();
     }
 
+
+    
     public async Task<ServiceRequestDto?> GetByIdAsync(
         long requestId,
         long requesterId,
         CancellationToken cancellationToken = default)
     {
-        var request = await _db.ServiceRequests
-            .Include(r => r.CurrentStatus)
-            .FirstOrDefaultAsync(
-                r => r.RequestId == requestId && r.RequesterId == requesterId,
-                cancellationToken);
+        var result = await (
+            from request in _db.ServiceRequests
+            join category in _db.ServiceCategories
+                on request.CategoryId equals category.CategoryId
+            where request.RequestId == requestId
+                && request.RequesterId == requesterId
+            select new
+            {
+                Request = request,
+                Category = category.Type
+            })
+            .FirstOrDefaultAsync(cancellationToken);
 
-        return request is null ? null : ToDto(request, _timeProvider.GetUtcNow());
+        return result is null
+            ? null
+            : ToDto(result.Request, _timeProvider.GetUtcNow(), result.Category);
     }
+
 
     public Task<RequestSearchResponse> SearchStaffAsync(
         long employeeId,
@@ -258,20 +304,25 @@ public class RequestsService
     private static string ToLikePattern(string value) =>
         $"%{value.Trim().Replace("\\", "\\\\").Replace("%", "\\%").Replace("_", "\\_")}%";
 
-    private static ServiceRequestDto ToDto(ServiceRequest r, DateTimeOffset now)
-    {
-        var status = DeriveStatus(r, now);
-        return new ServiceRequestDto(
-            r.RequestId,
-            r.RequesterId,
-            r.CategoryId,
-            status,
-            r.Description,
-            r.SubmittedAt,
-            r.DueAt,
-            r.UpdatedAt,
-            r.ClosedAt);
-    }
+    private static ServiceRequestDto ToDto(
+    ServiceRequest r,
+    DateTimeOffset now,
+    string category)
+{
+    var status = DeriveStatus(r, now);
+
+    return new ServiceRequestDto(
+        r.RequestId,
+        r.RequesterId,
+        r.CategoryId,
+        category,
+        status,
+        r.Description,
+        r.SubmittedAt,
+        r.DueAt,
+        r.UpdatedAt,
+        r.ClosedAt);
+}
 
     private static string DeriveStatus(ServiceRequest r, DateTimeOffset now)
     {

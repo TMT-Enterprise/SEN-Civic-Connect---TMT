@@ -10,16 +10,23 @@
       </p>
     </div>
 
-    <span
-      class="request-status"
-      [class.status-assigned]="request.status === 'Assigned'"
-      [class.status-progress]="request.status === 'In Progress'"
-      [class.status-resolved]="request.status === 'Resolved'"
-      [class.status-closed]="request.status === 'Closed'"
-      [class.status-overdue]="request.status === 'Overdue'"
-      [class.status-rejected]="request.status === 'Rejected'">
-      {{ statusLabel }}
-    </span>
+    
+@if (request.priority) {
+  <span
+    class="request-priority"
+    [class.priority-critical]="request.priority === 'Critical'"
+    [class.priority-high]="request.priority === 'High'"
+    [class.priority-medium]="request.priority === 'Medium'"
+    [class.priority-normal]="request.priority === 'Normal'"
+    [class.status-submitted]="request.status === 'Submitted'">
+    {{ request.priority }} Priority
+  </span>
+} @else {
+  <span class="request-priority">
+    Priority not assigned
+  </span>
+}
+
   </div>
 
   <p class="request-description">

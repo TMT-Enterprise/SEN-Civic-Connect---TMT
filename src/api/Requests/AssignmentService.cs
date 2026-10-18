@@ -12,6 +12,17 @@ public sealed class AssignmentService(
     RequestStatusTransitionValidator validator,
     TimeProvider clock)
 {
+    public Task<List<AssignableEmployeeDto>> GetAssignableEmployeesAsync(
+        CancellationToken ct) =>
+        db.Employees
+            .AsNoTracking()
+            .Where(employee => employee.IsActive && employee.Role.Name == Roles.Staff)
+            .OrderBy(employee => employee.Name)
+            .Select(employee => new AssignableEmployeeDto(
+                employee.EmployeeId,
+                employee.Name))
+            .ToListAsync(ct);
+
     // ---------- ASSIGN (FR-008) ----------
     public async Task<Result<AssignmentDto>> AssignAsync(
         long requestId,

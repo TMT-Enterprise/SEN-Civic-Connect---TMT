@@ -1,61 +1,36 @@
-<section class="home-page">
-  <div class="welcome-section">
-    <p class="eyebrow">Overview</p>
 
-    <h2>
-      Welcome <span class="welcome-name">Alex</span>
-      <span aria-hidden="true">👋</span>
-    </h2>
-
-    <p class="welcome-description">
-      What service can we help you with today?
-    </p>
-  </div>
-
-  <div class="quick-actions">
-    <a
-      class="action-card action-primary"
-      routerLink="/requester/new-request"
-    >
-      <span class="action-icon">
-        <i class="fa-solid fa-plus" aria-hidden="true"></i>
-      </span>
-
-      <span>
-        <strong>New Request</strong>
-        <small>Submit an issue fast</small>
-      </span>
-    </a>
-
-    <a
-      class="action-card action-secondary"
-      routerLink="/requester/history"
-    >
-      <span class="action-icon">
-        <i
-          class="fa-solid fa-clock-rotate-left"
-          aria-hidden="true"
-        ></i>
-      </span>
-
-      <span>
-        <strong>Past Requests</strong>
-        <small>View status and history</small>
-      </span>
-    </a>
-  </div>
-
-  <section class="recent-section">
-    <div class="section-heading">
-      <h3>Recent Request</h3>
-
+<section class="recent-section">
+  <div class="section-heading">
+    <h3>Recent Requests</h3>
+    <div class="section-actions">
+      <a
+        class="new-request-button"
+        routerLink="/requester/new-request">
+        Submit Request
+      </a>
       <a routerLink="/requester/history">See All</a>
     </div>
+  </div>
 
-        <div class="request-card-grid">
-      @for (request of requests; track request.id) {
-        <app-request-card [request]="request"></app-request-card>
+  @if (isLoading()) {
+    <p role="status">Loading your requests...</p>
+  } @else if (errorMessage()) {
+    <p role="alert">{{ errorMessage() }}</p>
+    <button type="button" (click)="reloadRequests()">
+      Try Again
+    </button>
+  } @else if (requests().length === 0) {
+    <div class="empty-state">
+      <h4>No requests yet</h4>
+      <p>
+        Your submitted requests will appear here.
+      </p>
+    </div>
+  } @else {
+    <div class="request-card-grid">
+      @for (request of requests().slice(0, 3); track request.id) {
+        <app-request-card [request]="request" />
       }
     </div>
-  </section>
+  }
 </section>

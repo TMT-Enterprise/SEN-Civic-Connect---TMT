@@ -4,6 +4,95 @@
   gap: 24px;
 }
 
+.queue-message {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  padding: 18px 24px;
+}
+
+.success-message {
+  color: #166534;
+  background: #f0fdf4;
+}
+
+.error-message {
+  color: #b91c1c;
+  background: #fef2f2;
+}
+
+.description-cell {
+  max-width: 360px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.assignment-backdrop {
+  position: fixed;
+  z-index: 1050;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgb(17 24 39 / 55%);
+}
+
+.assignment-dialog {
+  width: min(100%, 480px);
+  padding: 24px;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 20px 50px rgb(0 0 0 / 20%);
+}
+
+.assignment-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.assignment-heading h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.assignment-heading p {
+  margin: 6px 0 0;
+  color: #71717a;
+}
+
+.dialog-close {
+  border: 0;
+  background: transparent;
+  color: #71717a;
+  font-size: 26px;
+  line-height: 1;
+}
+
+.assignment-dialog label {
+  display: block;
+  margin: 16px 0 7px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.assignment-hint {
+  margin: 7px 0 0;
+  color: #71717a;
+  font-size: 12px;
+}
+
+.assignment-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -149,17 +238,6 @@
   margin-top: 4px;
   color: #71717a;
   font-size: 10px;
-}
-
-.priority-label {
-  display: inline-block !important;
-  width: fit-content;
-  margin-top: 5px !important;
-  padding: 3px 6px;
-  border-radius: 4px;
-  background: #fff7ed;
-  color: #c2410c !important;
-  font-weight: 700;
 }
 
 .unassigned {
