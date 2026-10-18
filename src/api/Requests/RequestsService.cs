@@ -151,8 +151,6 @@ public class RequestsService
         }).ToList();
     }
 
-
-    
     public async Task<ServiceRequestDto?> GetByIdAsync(
         long requestId,
         long requesterId,
@@ -175,7 +173,6 @@ public class RequestsService
             ? null
             : ToDto(result.Request, _timeProvider.GetUtcNow(), result.Category);
     }
-
 
     public Task<RequestSearchResponse> SearchStaffAsync(
         long employeeId,
@@ -358,24 +355,24 @@ public class RequestsService
         $"%{value.Trim().Replace("\\", "\\\\").Replace("%", "\\%").Replace("_", "\\_")}%";
 
     private static ServiceRequestDto ToDto(
-    ServiceRequest r,
-    DateTimeOffset now,
-    string category)
-{
-    var status = DeriveStatus(r, now);
+        ServiceRequest r,
+        DateTimeOffset now,
+        string category)
+    {
+        var status = DeriveStatus(r, now);
 
-    return new ServiceRequestDto(
-        r.RequestId,
-        r.RequesterId,
-        r.CategoryId,
-        category,
-        status,
-        r.Description,
-        r.SubmittedAt,
-        r.DueAt,
-        r.UpdatedAt,
-        r.ClosedAt);
-}
+        return new ServiceRequestDto(
+            r.RequestId,
+            r.RequesterId,
+            r.CategoryId,
+            category,
+            status,
+            r.Description,
+            r.SubmittedAt,
+            r.DueAt,
+            r.UpdatedAt,
+            r.ClosedAt);
+    }
 
     private static string DeriveStatus(ServiceRequest r, DateTimeOffset now)
     {
