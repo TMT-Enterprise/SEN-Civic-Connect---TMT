@@ -52,10 +52,19 @@
       <a routerLink="/requester/history">See All</a>
     </div>
 
-        <div class="request-card-grid">
-      @for (request of requests; track request.id) {
-        <app-request-card [request]="request"></app-request-card>
-      }
-    </div>
+@if (requests.length > 0) {
+  <app-request-card
+    [request]="requests[0]"
+    (viewDetails)="openDetails($event)">
+  </app-request-card>
+} @else {
+  <p>No recent requests yet.</p>
+}
+
+<app-request-detail-modal
+  [request]="selectedRequest"
+  [isOpen]="isDetailsOpen"
+  (closed)="closeDetails()">
+</app-request-detail-modal>
   </section>
 </section>
