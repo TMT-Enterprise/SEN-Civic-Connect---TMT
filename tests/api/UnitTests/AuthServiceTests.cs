@@ -94,17 +94,6 @@ public sealed class AuthServiceTests
     }
 
     [Fact]
-    public async Task Register_rejects_a_phone_number_longer_than_the_database_column()
-    {
-        var result = await _service.RegisterAsync(
-            new RegisterRequest("Ada", "ada@example.com", Password, new string('1', 31)), default);
-
-        Assert.Equal(RegisterStatus.Invalid, result.Status);
-        Assert.Contains("phoneNumber", result.Errors!.Keys);
-        Assert.Empty(_accounts.Accounts);
-    }
-
-    [Fact]
     public async Task Login_returns_a_bearer_token_for_valid_credentials()
     {
         await _service.RegisterAsync(new RegisterRequest("Ada", "ada@example.com", Password), default);
@@ -115,7 +104,6 @@ public sealed class AuthServiceTests
         Assert.Equal("Bearer", login.TokenType);
         Assert.Equal(Roles.Requester, login.Role);
         Assert.False(string.IsNullOrWhiteSpace(login.AccessToken));
-        Assert.Single(_accounts.SuccessfulLogins);
     }
 
     [Fact]
@@ -129,7 +117,6 @@ public sealed class AuthServiceTests
         Assert.Null(await _service.LoginAsync(new LoginRequest("nobody@example.com", Password), default));
         Assert.Null(await _service.LoginAsync(new LoginRequest("inactive@example.com", Password), default));
         Assert.Null(await _service.LoginAsync(new LoginRequest(null, null), default));
-        Assert.Empty(_accounts.SuccessfulLogins);
     }
 
     [Fact]

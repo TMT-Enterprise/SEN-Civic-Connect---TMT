@@ -80,6 +80,20 @@ public class RequestsService
         return request is null ? null : ToDto(request, _timeProvider.GetUtcNow());
     }
 
+    public async Task<ServiceRequestDto?> GetForStaffAsync(long requestId, long employeeId, CancellationToken ct = default)
+    {
+        var request = await _db.ServiceRequests.Include(r => r.CurrentStatus)
+            .FirstOrDefaultAsync(r => r.RequestId == requestId && r.AssignedEmployeeId == employeeId, ct);
+        return request is null ? null : ToDto(request, _timeProvider.GetUtcNow());
+    }
+
+    public async Task<ServiceRequestDto?> GetForAdminAsync(long requestId, CancellationToken ct = default)
+    {
+        var request = await _db.ServiceRequests.Include(r => r.CurrentStatus)
+            .FirstOrDefaultAsync(r => r.RequestId == requestId, ct);
+        return request is null ? null : ToDto(request, _timeProvider.GetUtcNow());
+    }
+
     public Task<RequestSearchResponse> SearchStaffAsync(
         long employeeId,
         RequestSearchFilters filters,
@@ -227,7 +241,9 @@ public class RequestsService
                 request.SubmittedAt,
                 request.DueAt,
                 request.UpdatedAt,
-                request.ClosedAt))
+                request.ClosedAt,
+                _db.RequestAssignments.Where(a => a.RequestId == request.RequestId && (a.Decision == AssignmentDecision.Pending || a.Decision == AssignmentDecision.Accepted))
+                    .Select(a => a.Decision).FirstOrDefault()))
             .ToListAsync(cancellationToken);
 
         var results = requests
@@ -242,7 +258,9 @@ public class RequestsService
                 r.SubmittedAt,
                 r.DueAt,
                 r.UpdatedAt,
-                r.ClosedAt))
+                r.ClosedAt,
+                r.Status,
+                r.AssignmentDecision))
             .ToList();
 
         return new RequestSearchResponse(
@@ -298,5 +316,6 @@ public class RequestsService
         DateTimeOffset SubmittedAt,
         DateTimeOffset? DueAt,
         DateTimeOffset UpdatedAt,
-        DateTimeOffset? ClosedAt);
+        DateTimeOffset? ClosedAt,
+        string? AssignmentDecision);
 }

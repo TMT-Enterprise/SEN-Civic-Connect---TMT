@@ -1,83 +1,19 @@
 <section class="new-request-page">
   <div class="form-card">
-    <div class="form-heading">
-      <h2>Create Service Request</h2>
-      <p>
-        Please provide accurate details to help us assist you faster.
-      </p>
-    </div>
-
-    <form>
-      <div class="mb-3">
-        <label for="fullName" class="form-label">
-          Full Name <span>*</span>
-        </label>
-        <input
-          id="fullName"
-          type="text"
-          class="form-control"
-          placeholder="John Doe"
-          required
-        />
-      </div>
-
-      <div class="mb-3">
-        <label for="phoneNumber" class="form-label">
-          Phone Number <span>*</span>
-        </label>
-        <input
-          id="phoneNumber"
-          type="tel"
-          class="form-control"
-          placeholder="e.g. 082 123 4567"
-          required
-        />
-      </div>
-
-      <div class="mb-3">
-        <label for="emailAddress" class="form-label">
-          Email Address <span>*</span>
-        </label>
-        <input
-          id="emailAddress"
-          type="email"
-          class="form-control"
-          placeholder="john@example.com"
-          required
-        />
-      </div>
-
-      <div class="mb-3">
-        <label for="requestType" class="form-label">
-          Request Category <span>*</span>
-        </label>
-        <select id="requestType" class="form-select" required>
-          <option value="" selected disabled>Select category...</option>
-          <option value="maintenance">Maintenance</option>
-          <option value="plumbing">Plumbing</option>
-          <option value="electrical">Electrical</option>
-          <option value="it-support">IT Support</option>
-          <option value="general-inquiry">General Inquiry</option>
+    <div class="form-heading"><h2>Create Service Request</h2><p>Please provide accurate details to help us assist you faster.</p></div>
+    <form (ngSubmit)="submit()">
+      @if (errorMessage) { <div class="alert alert-danger" role="alert">{{ errorMessage }}</div> }
+      <div class="mb-3"><label for="requestType" class="form-label">Request Category <span>*</span></label>
+        <select id="requestType" name="categoryId" class="form-select" [(ngModel)]="model.categoryId" required [disabled]="loadingCategories || submitting">
+          <option value="" disabled>Select category...</option>
+          @for (category of categories; track category.categoryId) { <option [value]="category.categoryId">{{ category.type }}</option> }
         </select>
+        @if (!loadingCategories && categories.length === 0) { <small class="text-muted">No active categories are available.</small> }
       </div>
-
-      <div class="mb-3">
-        <label for="description" class="form-label">
-          Issue Description <span>*</span>
-        </label>
-        <textarea
-          id="description"
-          class="form-control"
-          rows="4"
-          placeholder="Describe the problem or service needed..."
-          required
-        ></textarea>
+      <div class="mb-3"><label for="description" class="form-label">Issue Description <span>*</span></label>
+        <textarea id="description" name="description" class="form-control" rows="5" [(ngModel)]="model.description" placeholder="Describe the problem or service needed..." required maxlength="4000"></textarea>
       </div>
-
-      <button type="submit" class="btn submit-button w-100">
-        Submit Request
-        <i class="fa-solid fa-paper-plane ms-2" aria-hidden="true"></i>
-      </button>
+      <button type="submit" class="btn submit-button w-100" [disabled]="submitting || loadingCategories || categories.length === 0">{{ submitting ? 'Submitting…' : 'Submit Request' }} <i class="fa-solid fa-paper-plane ms-2" aria-hidden="true"></i></button>
     </form>
   </div>
 </section>

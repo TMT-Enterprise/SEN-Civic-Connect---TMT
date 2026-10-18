@@ -17,7 +17,7 @@ public class OverdueFlagValidatorTests
             {
                 foreach (var alreadyFlagged in new[] { false, true })
                 {
-                    var expected = status != RequestStatus.Closed && !alreadyFlagged && secondsAfterDue > 0;
+                    var expected = status is not (RequestStatus.Resolved or RequestStatus.Closed) && !alreadyFlagged && secondsAfterDue > 0;
                     yield return [status, secondsAfterDue, alreadyFlagged, expected];
                 }
             }

@@ -13,8 +13,9 @@ public static class RequestsEndpoints
     public static IEndpointRouteBuilder MapRequestsEndpoints(
         this IEndpointRouteBuilder endpoints)
     {
+        var api = endpoints.MapGroup("/api/v1");
         // POST /requests — submit a new service request
-        endpoints.MapPost("/requests", async (
+        api.MapPost("/requests", async (
             HttpContext context,
             SubmitRequestCommand command,
             RequestsService service,
@@ -43,7 +44,7 @@ public static class RequestsEndpoints
                     cancellationToken);
 
                 return Results.Created(
-                    $"/requests/{result.RequestId}",
+                    $"/api/v1/requests/{result.RequestId}",
                     result);
             }
             catch (ArgumentException ex)
@@ -65,7 +66,7 @@ public static class RequestsEndpoints
         }).RequireAuthorization(policy => policy.RequireRole(Roles.Requester));
 
         // GET /requests — list requester's own requests
-        endpoints.MapGet("/requests", async (
+        api.MapGet("/requests", async (
             HttpContext context,
             RequestsService service,
             CancellationToken cancellationToken) =>
@@ -82,7 +83,7 @@ public static class RequestsEndpoints
             return Results.Ok(requests);
         }).RequireAuthorization(policy => policy.RequireRole(Roles.Requester));
 
-        endpoints.MapGet("/staff/requests", async (
+        api.MapGet("/staff/requests", async (
             HttpContext context,
             string? search,
             string? id,
@@ -132,7 +133,7 @@ public static class RequestsEndpoints
         .Produces(StatusCodes.Status401Unauthorized)
         .Produces(StatusCodes.Status403Forbidden);
 
-        endpoints.MapGet("/admin/requests", async (
+        api.MapGet("/admin/requests", async (
             HttpContext context,
             string? search,
             string? id,
@@ -182,7 +183,7 @@ public static class RequestsEndpoints
         .Produces(StatusCodes.Status403Forbidden);
 
         // GET /requests/{id} — get one request
-        endpoints.MapGet("/requests/{id:long}", async (
+        api.MapGet("/requests/{id:long}", async (
             HttpContext context,
             long id,
             RequestsService service,
@@ -202,6 +203,28 @@ public static class RequestsEndpoints
                 ? Results.NotFound()
                 : Results.Ok(request);
         }).RequireAuthorization(policy => policy.RequireRole(Roles.Requester));
+
+        api.MapGet("/management/requests", async (
+            string? search, string? id, string? status, string? dueDate, string? category, string? assignee,
+            long? categoryId, long? assignedEmployeeId, bool? unassigned, RequestsService service, CancellationToken ct) =>
+        {
+            if (!TryCreateFilters(search, id, status, dueDate, category, assignee, categoryId, assignedEmployeeId, unassigned ?? false, out var filters))
+                return Results.ValidationProblem(new Dictionary<string, string[]> { ["dueDate"] = ["Use an ISO date or date prefix (yyyy, yyyy-MM, or yyyy-MM-dd)."] });
+            return Results.Ok(await service.SearchAdminAsync(filters, ct));
+        }).RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
+
+        api.MapGet("/staff/requests/{id:long}", async (HttpContext context, long id, RequestsService service, CancellationToken ct) =>
+        {
+            if (!TryGetEmployeeId(context.User, out var employeeId)) return Results.Unauthorized();
+            var request = await service.GetForStaffAsync(id, employeeId, ct);
+            return request is null ? Results.NotFound() : Results.Ok(request);
+        }).RequireAuthorization(policy => policy.RequireRole(Roles.Staff));
+
+        api.MapGet("/admin/requests/{id:long}", async (long id, RequestsService service, CancellationToken ct) =>
+        {
+            var request = await service.GetForAdminAsync(id, ct);
+            return request is null ? Results.NotFound() : Results.Ok(request);
+        }).RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
 
         return endpoints;
     }

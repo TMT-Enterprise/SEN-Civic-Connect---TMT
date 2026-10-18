@@ -1,3 +1,5 @@
+import { RequestService } from '../../../../core/services/request.service';
+import { mockRequestService } from '../../../../../testing/mock-request-service';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DashboardPage } from './dashboard-page';
@@ -8,6 +10,7 @@ describe('DashboardPage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      providers: [{ provide: RequestService, useValue: mockRequestService },],
       imports: [DashboardPage],
     }).compileComponents();
 

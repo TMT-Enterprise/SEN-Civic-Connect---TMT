@@ -16,17 +16,9 @@
       />
     </div>
 
-    <button
-  type="button"
-  class="admin-mode"
-  aria-label="Admin mode active. Click to log out"
-  (click)="openLogout()">
-  <i class="fa-solid fa-user-shield" aria-hidden="true"></i>
-  <span>Admin Mode: <strong>Active</strong></span>
-</button>
+    <div class="admin-mode">
+      <i class="fa-solid fa-user-shield" aria-hidden="true"></i>
+      <span>Admin Mode: <strong>Active</strong></span>
+    </div>
   </div>
 </header>
-<app-logout-modal
-  [isOpen]="isLogoutOpen"
-  (closed)="closeLogout()">
-</app-logout-modal>

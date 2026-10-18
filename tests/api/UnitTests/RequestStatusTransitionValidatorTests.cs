@@ -20,7 +20,8 @@ public class RequestStatusTransitionValidatorTests
                         (RequestStatus.Submitted, RequestStatus.Assigned) => true,
                         (RequestStatus.Assigned, RequestStatus.Submitted) => true,
                         (RequestStatus.Assigned, RequestStatus.InProgress) => true,
-                        (RequestStatus.InProgress, RequestStatus.Closed) => true,
+                        (RequestStatus.InProgress, RequestStatus.Resolved) => true,
+                        (RequestStatus.Resolved, RequestStatus.Closed) => true,
                         _ => false
                     };
 
@@ -63,7 +64,7 @@ public class RequestStatusTransitionValidatorTests
         string? description)
     {
         var result = _validator.Validate(
-            RequestStatus.InProgress,
+            RequestStatus.Resolved,
             RequestStatus.Closed,
             description);
 
@@ -75,7 +76,7 @@ public class RequestStatusTransitionValidatorTests
     public void Validate_AllowsClosingWithCompletionDescription()
     {
         var result = _validator.Validate(
-            RequestStatus.InProgress,
+            RequestStatus.Resolved,
             RequestStatus.Closed,
             "Repair completed and verified.");
 

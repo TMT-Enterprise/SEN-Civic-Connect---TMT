@@ -46,7 +46,11 @@ public sealed class EmailNotifier(IOptions<EmailOptions> options) : INotifier
             using var client = new SmtpClient();
             client.Timeout = settings.TimeoutSeconds * 1000;
 
-            var security = settings.Port == 465 ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.StartTls;
+            var security = settings.Port == 465
+                ? SecureSocketOptions.SslOnConnect
+                : settings.Port is 25 or 1025
+                    ? SecureSocketOptions.None
+                    : SecureSocketOptions.StartTls;
             await client.ConnectAsync(settings.Host, settings.Port, security, cancellationToken);
 
             if (!string.IsNullOrEmpty(settings.Username))

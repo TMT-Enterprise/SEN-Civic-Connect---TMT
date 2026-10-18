@@ -15,15 +15,11 @@ public sealed class Requester
 
     public string Email { get; set; } = string.Empty;
 
-    public string? PhoneNumber { get; set; }
-
     public string PasswordHash { get; set; } = string.Empty;
 
     public bool IsActive { get; set; } = true;
 
     public DateTimeOffset CreatedAt { get; set; }
-
-    public DateTimeOffset? LastLoginAt { get; set; }
 }
 
 public sealed class Employee
@@ -41,6 +37,4 @@ public sealed class Employee
     public string PasswordHash { get; set; } = string.Empty;
 
     public bool IsActive { get; set; } = true;
-
-    public DateTimeOffset? LastLoginAt { get; set; }
 }

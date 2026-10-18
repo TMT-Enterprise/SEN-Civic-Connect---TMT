@@ -3,8 +3,7 @@ info:
   title: CivicConnect API
   version: 1.0.0
   description: API contract for CivicConnect
-
-  servers:
+servers:
   - url: http://localhost:5228
     description: Local development
 
@@ -228,7 +227,7 @@ components:
           nullable: true
         requestStatus:
           type: string
-          enum: [Submitted, Assigned, InProgress, Closed]
+          enum: [Submitted, Assigned, InProgress, Resolved, Closed]
 
     StatusChange:
       type: object
@@ -238,7 +237,7 @@ components:
           format: int64
         status:
           type: string
-          enum: [Submitted, Assigned, InProgress, Closed]
+          enum: [Submitted, Assigned, InProgress, Resolved, Closed]
 
     HistoryEntry:
       type: object
@@ -271,7 +270,7 @@ components:
           type: boolean
 
 paths:
-  /auth/register:
+  /api/v1/auth/register:
     post:
       summary: Register a new requester (FR-001)
       tags: [Auth]
@@ -297,7 +296,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /auth/login:
+  /api/v1/auth/login:
     post:
       summary: Login for all roles (FR-002)
       tags: [Auth]
@@ -321,7 +320,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /categories:
+  /api/v1/categories:
     get:
       summary: List active service categories (FR-003)
       tags: [Categories]
@@ -337,7 +336,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Category'
         '401':
-          description: Unauthenticated
+          description: Authenticated users
     post:
       summary: Add a new category (FR-017) - management only
       tags: [Categories]
@@ -357,7 +356,7 @@ paths:
         '201':
           description: Category created
         '401':
-          description: Unauthenticated
+          description: Authenticated users
         '403':
           description: Forbidden - management only
         '409':
@@ -365,7 +364,7 @@ paths:
         '422':
           description: Validation failed
 
-  /categories/{id}:
+  /api/v1/categories/{id}:
     put:
       summary: Update a category (FR-017) - management only
       tags: [Categories]
@@ -392,7 +391,7 @@ paths:
         '200':
           description: Category updated
         '401':
-          description: Unauthenticated
+          description: Authenticated users
         '403':
           description: Forbidden - management only
         '404':
@@ -414,7 +413,7 @@ paths:
         '204':
           description: Deleted
         '401':
-          description: Unauthenticated
+          description: Authenticated users
         '403':
           description: Forbidden - management only
         '404':
@@ -422,7 +421,7 @@ paths:
         '409':
           description: Cannot delete last category
 
-  /requests:
+  /api/v1/requests:
     post:
       summary: Submit a new service request (FR-003, FR-004)
       tags: [Requests]
@@ -442,7 +441,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ServiceRequest'
         '401':
-          description: Unauthenticated
+          description: Authenticated users
         '403':
           description: Forbidden - requester only
         '422':
@@ -466,11 +465,11 @@ paths:
                 items:
                   $ref: '#/components/schemas/ServiceRequest'
         '401':
-          description: Unauthenticated
+          description: Authenticated users
         '403':
           description: Forbidden - requester only
 
-  /requests/{id}:
+  /api/v1/requests/{id}:
     get:
       summary: Get a single request (FR-005, FR-007)
       tags: [Requests]
@@ -490,13 +489,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/ServiceRequest'
         '401':
-          description: Unauthenticated
+          description: Authenticated users
         '403':
           description: Forbidden
         '404':
           description: Not found
 
-  /requests/{id}/assign:
+  /api/v1/requests/{id}/assign:
     post:
       summary: Assign a request to staff (FR-008) - management only
       description: >
@@ -526,7 +525,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Assignment'
         '401':
-          description: Unauthenticated
+          description: Authenticated users
         '403':
           description: Forbidden - management only
         '404':
@@ -536,7 +535,7 @@ paths:
         '422':
           description: Due date less than 24 hours
 
-  /requests/{id}/decide:
+  /api/v1/requests/{id}/decide:
     post:
       summary: Accept or reject an assigned request (FR-010, FR-011) - staff only
       description: >
@@ -567,7 +566,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Assignment'
         '401':
-          description: Unauthenticated
+          description: Authenticated users
         '403':
           description: Forbidden - assigned staff only
         '404':
@@ -577,7 +576,7 @@ paths:
         '422':
           description: Rejection requires comment, or decision is not Accepted or Rejected
 
-  /requests/{id}/status:
+  /api/v1/requests/{id}/status:
     patch:
       summary: Update request status (FR-011, FR-013) - staff only
       description: >
@@ -607,7 +606,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/StatusChange'
         '401':
-          description: Unauthenticated
+          description: Authenticated users
         '403':
           description: Forbidden - assigned staff only
         '404':
@@ -617,7 +616,7 @@ paths:
         '422':
           description: Closing requires completion note, or status value not supported
 
-  /requests/{id}/history:
+  /api/v1/requests/{id}/history:
     get:
       summary: Read a request's status history (FR-013) - employees only
       description: History is insert-and-read only. There is no update or delete.
@@ -641,11 +640,11 @@ paths:
                 items:
                   $ref: '#/components/schemas/HistoryEntry'
         '401':
-          description: Unauthenticated
+          description: Authenticated users
         '403':
           description: Forbidden - employees only
   
-  /staff/requests:
+  /api/v1/staff/requests:
     get:
       summary: Staff queue - search and filter own requests (FR-009)
       description: >
@@ -700,13 +699,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/RequestSearchResponse'
         '401':
-          description: Unauthenticated
+          description: Authenticated users
         '403':
           description: Forbidden — staff only
         '400':
           description: Invalid date filter
 
-  /admin/requests:
+  /api/v1/admin/requests:
     get:
       summary: Admin view - all requests with filters (FR-008, FR-009)
       description: >
@@ -771,13 +770,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/RequestSearchResponse'
         '401':
-          description: Unauthenticated
+          description: Authenticated users
         '403':
           description: Forbidden - admin only
         '400':
           description: Invalid date filter
 
-  /management/dashboard:
+  /api/v1/management/dashboard:
     get:
       summary: Management dashboard stats (FR-014)
       tags: [Management]
@@ -800,11 +799,11 @@ paths:
                   averageResolutionTimeHours:
                     type: number
         '401':
-          description: Unauthenticated
+          description: Authenticated users
         '403':
           description: Forbidden - management only
 
-  /management/requests:
+  /api/v1/management/requests:
     get:
       summary: Management view - all requests with full lifecycle (FR-015, FR-016)
       tags: [Management]
@@ -841,6 +840,6 @@ paths:
         '200':
           description: Filtered list with lifecycle history
         '401':
-          description: Unauthenticated
+          description: Authenticated users
         '403':
           description: Forbidden - management only

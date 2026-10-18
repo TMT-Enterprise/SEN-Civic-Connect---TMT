@@ -1,3 +1,4 @@
+import { guestGuard, roleChildGuard, roleGuard } from './core/guards/role.guard';
 import { Routes } from '@angular/router';
 import { StatusComponent } from './components/status/status';
 import { Login } from './components/login/login';
@@ -27,32 +28,38 @@ export const routes: Routes = [
   },
   {
     path: 'login',
+    canActivate: [guestGuard],
     component: Login,
   },
   {
     path: 'register',
+    canActivate: [guestGuard],
     component: Register
   },
   {
     path: 'requester',
-      component: RequesterLayout,
-      children: [
-        {
-          path: 'home',
-          component: RequesterHome
-        },
-        {
-          path: 'new-request',
-          component: NewRequest
-        },
-        {
-          path: 'history',
-          component: RequestHistory
-        }
-      ]
+    canActivate: [roleGuard(['Requester'])],
+    canActivateChild: [roleChildGuard(['Requester'])],
+    component: RequesterLayout,
+    children: [
+      {
+        path: '',
+        component: RequesterHome
+      },
+      {
+        path: 'new-request',
+        component: NewRequest
+      },
+      {
+        path: 'history',
+        component: RequestHistory
+      }
+    ]
   },
   {
     path: 'staff',
+    canActivate: [roleGuard(['Staff'])],
+    canActivateChild: [roleChildGuard(['Staff'])],
     component: StaffLayout,
     children: [
       {
@@ -67,6 +74,8 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
+    canActivate: [roleGuard(['Admin'])],
+    canActivateChild: [roleChildGuard(['Admin'])],
     component: AdminLayout,
     children: [
       {
@@ -95,7 +104,7 @@ export const routes: Routes = [
 
   {
     path: '**',
-    redirectTo: 'admin/requests'
+    redirectTo: 'login'
   }
 ];
 

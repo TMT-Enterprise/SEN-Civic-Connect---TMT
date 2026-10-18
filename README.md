@@ -43,6 +43,19 @@ Focuses on comprehensive backend/frontend testing, CI/CD pipelines, containerisa
 See `docs/PED/PED-v3.0.md` for current status.
 
 
+## Local development setup
+
+Prerequisites: Node.js 24.x and npm 11.x, .NET 10 SDK, Docker with Compose, and a PostgreSQL database.
+
+1. Copy `.env.example` to `.env` and set database credentials plus a strong `Jwt__Secret` (at least 32 characters). Load it into the shell before running the migration command (`set -a; source .env; set +a` in Bash).
+2. Start the database with `docker compose up -d` from the repository root.
+3. Apply SQL migrations using `npm install` and then `node database/scripts/migrate.js` (set `CIVICCONNECT_DATABASE_URL` or `CIVICCONNECT_DB_PASSWORD` in your shell; the migration runner does not automatically consume the ASP.NET connection-string setting).
+4. Start the API with `dotnet run --project src/api/Api/CivicConnect.Api.csproj`. The API listens on `http://localhost:5228` in the checked-in launch profile.
+5. In another terminal run `cd src/web && npm ci && npm start`. Angular runs on `http://localhost:4200`; `/api` and `/health` are proxied to the API.
+6. Run backend tests with `dotnet test CivicConnect.slnx`; run frontend tests with `cd src/web && npm test`; run Cypress from `tests/e2e` after both services are running.
+
+Email is disabled by default. To exercise delivery locally, set `Email__Enabled=true`, configure SMTP host/from address, and start Mailpit with `docker compose up -d mailpit`, then set `Email__Enabled=true`, `Email__Host=localhost`, `Email__Port=1025`, and `Email__FromAddress=noreply@civicconnect.local` in the API process environment. Open `http://localhost:8025` to inspect messages. Keep `Email__Enabled=false` until the SMTP settings are configured. Do not enable real email delivery without valid SMTP configuration.
+
 ## Documentation
 
 All controlled project evidence lives under `docs/`, not in this README:

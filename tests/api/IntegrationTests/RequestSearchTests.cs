@@ -58,7 +58,7 @@ public sealed class RequestSearchTests : IDisposable
         await AssignAsync(requestId, staffId, dueAt);
 
         using var staff = ClientFor(staffId, Roles.Staff);
-        var url = $"/staff/requests?id={requestId.ToString()[^2..]}"
+        var url = $"/api/v1/staff/requests?id={requestId.ToString()[^2..]}"
             + "&status=ssig"
             + $"&dueDate={dueAt:yyyy-MM}"
             + "&category=it%20supp&assignee=PIETER";
@@ -73,7 +73,7 @@ public sealed class RequestSearchTests : IDisposable
             request => request.GetProperty("requestId").GetInt64() == requestId);
         Assert.Null(document.RootElement.GetProperty("message").GetString());
 
-        using var globalSearch = await staff.GetAsync("/staff/requests?search=PIET");
+        using var globalSearch = await staff.GetAsync("/api/v1/staff/requests?search=PIET");
         using var globalSearchDocument = JsonDocument.Parse(
             await globalSearch.Content.ReadAsStringAsync());
         Assert.Contains(
@@ -81,7 +81,7 @@ public sealed class RequestSearchTests : IDisposable
             request => request.GetProperty("requestId").GetInt64() == requestId);
 
         using var globalDateSearch = await staff.GetAsync(
-            $"/staff/requests?search={dueAt:yyyy-MM}");
+            $"/api/v1/staff/requests?search={dueAt:yyyy-MM}");
         using var globalDateSearchDocument = JsonDocument.Parse(
             await globalDateSearch.Content.ReadAsStringAsync());
         Assert.Contains(
@@ -104,7 +104,7 @@ public sealed class RequestSearchTests : IDisposable
         await AssignAsync(otherRequestId, otherStaffId, DateTimeOffset.UtcNow.AddDays(5));
 
         using var staff = ClientFor(staffId, Roles.Staff);
-        using var ownResponse = await staff.GetAsync("/staff/requests");
+        using var ownResponse = await staff.GetAsync("/api/v1/staff/requests");
         var ownContent = await ownResponse.Content.ReadAsStringAsync();
         Assert.True(ownResponse.StatusCode == HttpStatusCode.OK, ownContent);
         using var ownDocument = JsonDocument.Parse(ownContent);
@@ -118,18 +118,18 @@ public sealed class RequestSearchTests : IDisposable
                 staffId,
                 request.GetProperty("assignedEmployeeId").GetInt64()));
 
-        using var staffAdminView = await staff.GetAsync("/admin/requests");
+        using var staffAdminView = await staff.GetAsync("/api/v1/admin/requests");
         Assert.Equal(HttpStatusCode.Forbidden, staffAdminView.StatusCode);
 
         using var admin = ClientFor(adminId, Roles.Admin);
-        using var allResponse = await admin.GetAsync("/admin/requests");
+        using var allResponse = await admin.GetAsync("/api/v1/admin/requests");
         Assert.Equal(HttpStatusCode.OK, allResponse.StatusCode);
         using var allDocument = JsonDocument.Parse(await allResponse.Content.ReadAsStringAsync());
         var allResults = allDocument.RootElement.GetProperty("requests").EnumerateArray().ToArray();
         Assert.Contains(allResults, request => request.GetProperty("requestId").GetInt64() == unassignedRequestId);
         Assert.Contains(allResults, request => request.GetProperty("requestId").GetInt64() == otherRequestId);
 
-        using var unassignedResponse = await admin.GetAsync("/admin/requests?unassigned=true");
+        using var unassignedResponse = await admin.GetAsync("/api/v1/admin/requests?unassigned=true");
         using var unassignedDocument = JsonDocument.Parse(await unassignedResponse.Content.ReadAsStringAsync());
         var unassignedResults = unassignedDocument.RootElement.GetProperty("requests").EnumerateArray();
         Assert.Contains(
@@ -137,7 +137,7 @@ public sealed class RequestSearchTests : IDisposable
             request => request.GetProperty("requestId").GetInt64() == unassignedRequestId);
 
         using var assigneeResponse = await admin.GetAsync(
-            $"/admin/requests?assignedEmployeeId={staffId}");
+            $"/api/v1/admin/requests?assignedEmployeeId={staffId}");
         using var assigneeDocument = JsonDocument.Parse(await assigneeResponse.Content.ReadAsStringAsync());
         var assigneeResults = assigneeDocument.RootElement.GetProperty("requests").EnumerateArray();
         Assert.Contains(
@@ -147,7 +147,7 @@ public sealed class RequestSearchTests : IDisposable
             assigneeResults,
             request => request.GetProperty("requestId").GetInt64() == otherRequestId);
 
-        using var assigneeNameResponse = await admin.GetAsync("/admin/requests?assignee=PIET");
+        using var assigneeNameResponse = await admin.GetAsync("/api/v1/admin/requests?assignee=PIET");
         using var assigneeNameDocument = JsonDocument.Parse(
             await assigneeNameResponse.Content.ReadAsStringAsync());
         var assigneeNameResults = assigneeNameDocument.RootElement
@@ -169,21 +169,21 @@ public sealed class RequestSearchTests : IDisposable
         await AssignAsync(requestId, staffId, DateTimeOffset.UtcNow.AddDays(5));
 
         using var staff = ClientFor(staffId, Roles.Staff);
-        using var allResponse = await staff.GetAsync("/staff/requests");
+        using var allResponse = await staff.GetAsync("/api/v1/staff/requests");
         var allContent = await allResponse.Content.ReadAsStringAsync();
         Assert.True(allResponse.StatusCode == HttpStatusCode.OK, allContent);
         using var allDocument = JsonDocument.Parse(allContent);
         var allResults = allDocument.RootElement.GetProperty("requests").EnumerateArray().ToArray();
         Assert.Contains(allResults, request => request.GetProperty("requestId").GetInt64() == requestId);
 
-        using var noneResponse = await staff.GetAsync("/staff/requests?id=not-a-request-id");
+        using var noneResponse = await staff.GetAsync("/api/v1/staff/requests?id=not-a-request-id");
         using var noneDocument = JsonDocument.Parse(await noneResponse.Content.ReadAsStringAsync());
         Assert.Empty(noneDocument.RootElement.GetProperty("requests").EnumerateArray());
         Assert.Equal(
             "No requests matched your filters.",
             noneDocument.RootElement.GetProperty("message").GetString());
 
-        using var invalidDateResponse = await staff.GetAsync("/staff/requests?dueDate=not-a-date");
+        using var invalidDateResponse = await staff.GetAsync("/api/v1/staff/requests?dueDate=not-a-date");
         Assert.Equal(HttpStatusCode.BadRequest, invalidDateResponse.StatusCode);
     }
 
@@ -232,7 +232,7 @@ public sealed class RequestSearchTests : IDisposable
     {
         using var requester = ClientFor(1, Roles.Requester);
         using var response = await requester.PostAsJsonAsync(
-            "/requests",
+            "/api/v1/requests",
             new { categoryId, description = $"S2-08 search test {Guid.NewGuid()}" });
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
@@ -244,7 +244,7 @@ public sealed class RequestSearchTests : IDisposable
     {
         using var admin = ClientFor(await EmployeeIdAsync(AdminEmail), Roles.Admin);
         using var response = await admin.PostAsJsonAsync(
-            $"/requests/{requestId}/assign",
+            $"/api/v1/requests/{requestId}/assign",
             new { employeeId, dueAt });
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }

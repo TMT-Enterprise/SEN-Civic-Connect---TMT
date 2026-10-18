@@ -1,73 +1,73 @@
 <section class="analytics-page">
-  <div class="kpi-grid">
-    <article class="kpi-card">
-      <span>Avg. Response Time</span>
-      <h2>2.4 Hrs</h2>
-      <p class="positive">
-        <i class="fa-solid fa-arrow-down me-1"></i>
-        14% faster than target
-      </p>
-    </article>
+  @if (loading) {
+    <p>Loading analytics data…</p>
+  }
+  @if (errorMessage) {
+    <p class="text-danger" role="alert">{{ errorMessage }}</p>
+  }
 
-    <article class="kpi-card">
-      <span>Completion Rate</span>
-      <h2>91.8%</h2>
-      <p class="positive">
-        <i class="fa-solid fa-circle-check me-1"></i>
-        On track this month
-      </p>
-    </article>
-
-    <article class="kpi-card">
-      <span>Overdue Rate</span>
-      <h2>8.2%</h2>
-      <p class="negative">
-        <i class="fa-solid fa-triangle-exclamation me-1"></i>
-        Requires monitoring
-      </p>
-    </article>
-
-    <article class="kpi-card">
-      <span>Staff Active Workload</span>
-      <h2>12 Tasks</h2>
-      <p class="orange-detail">
-        <i class="fa-solid fa-users me-1"></i>
-        Distributed across 5 specialists
-      </p>
-    </article>
-  </div>
-
-  <div class="charts-grid">
-    <article class="chart-card">
-      <h3>Status Distribution</h3>
-      <div class="chart-placeholder">
-        <i class="fa-solid fa-chart-pie"></i>
-        <span>Chart preview</span>
+  @if (data) {
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <span>Total Requests</span>
+        <h2>{{ data.totalRequests }}</h2>
+        <p class="positive">{{ data.completionRate }}% resolution rate</p>
       </div>
-    </article>
-
-    <article class="chart-card">
-      <h3>Volume by Service Category</h3>
-      <div class="chart-placeholder">
-        <i class="fa-solid fa-chart-column"></i>
-        <span>Chart preview</span>
+      <div class="kpi-card">
+        <span>Active Requests</span>
+        <h2>{{ data.activeRequests }}</h2>
+        <p class="orange-detail">In progress or assigned</p>
       </div>
-    </article>
-
-    <article class="chart-card">
-      <h3>Staff Workload Distribution</h3>
-      <div class="chart-placeholder">
-        <i class="fa-solid fa-chart-bar"></i>
-        <span>Chart preview</span>
+      <div class="kpi-card">
+        <span>Completed Requests</span>
+        <h2>{{ data.completedRequests }}</h2>
+        <p class="positive">Successfully resolved</p>
       </div>
-    </article>
-
-    <article class="chart-card">
-      <h3>Weekly Request &amp; Overdue Trend</h3>
-      <div class="chart-placeholder">
-        <i class="fa-solid fa-chart-line"></i>
-        <span>Chart preview</span>
+      <div class="kpi-card">
+        <span>Overdue Requests</span>
+        <h2>{{ data.overdueRequests }}</h2>
+        <p class="negative">Past due date</p>
       </div>
-    </article>
-  </div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>Requests by Status</h3>
+        @if (data.byStatus?.length) {
+          <div class="p-3">
+            @for (item of data.byStatus; track item.status) {
+              <div class="d-flex justify-content-between py-2 border-bottom">
+                <span>{{ item.status }}</span>
+                <strong>{{ item.count }}</strong>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="chart-placeholder">
+            <i class="fa-solid fa-chart-pie" aria-hidden="true"></i>
+            <span>No status distribution data available</span>
+          </div>
+        }
+      </div>
+
+      <div class="chart-card">
+        <h3>Requests by Category</h3>
+        @if (data.byCategory?.length) {
+          <div class="p-3">
+            @for (item of data.byCategory; track item.category) {
+              <div class="d-flex justify-content-between py-2 border-bottom">
+                <span>{{ item.category }}</span>
+                <strong>{{ item.count }}</strong>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="chart-placeholder">
+            <i class="fa-solid fa-chart-column" aria-hidden="true"></i>
+            <span>No category distribution data available</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
 </section>

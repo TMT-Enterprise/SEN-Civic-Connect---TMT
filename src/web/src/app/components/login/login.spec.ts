@@ -1,73 +1,30 @@
-import { HttpErrorResponse, provideHttpClient } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Router, provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
-
-import { AuthService } from '../../core/auth';
 import { Login } from './login';
+import { AuthService } from '../../core/services/auth.service';
 
 describe('Login', () => {
-  let component: Login;
-  let fixture: ComponentFixture<Login>;
-  let auth: AuthService;
-
+  let component: Login; let fixture: ComponentFixture<Login>;
+  const authMock = {
+    login: vi.fn((email: string, password: string) => email === 'test@gmail.com' && password === 'test123'
+      ? of({ accessToken: 'token', tokenType: 'Bearer', expiresAt: '', role: 'Requester' as const })
+      : throwError(() => ({ status: 401, error: { detail: 'Invalid email or password' } })),
+    destinationFor: (role: string | null) => role === 'Admin' ? '/admin/requests' : role === 'Staff' ? '/staff' : '/requester'
+  };
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [Login],
-      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(Login);
-    component = fixture.componentInstance;
-    auth = TestBed.inject(AuthService);
-    await fixture.whenStable();
+    await TestBed.configureTestingModule({ imports: [Login], providers: [provideRouter([]), { provide: AuthService, useValue: authMock }] }).compileComponents();
+    fixture = TestBed.createComponent(Login); component = fixture.componentInstance; await fixture.whenStable();
   });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it.each([
-    ['Requester', '/requester'],
-    ['Staff', '/staff'],
-    ['Admin', '/admin'],
-  ])('signs in a %s and opens its dashboard', (role, destination) => {
-    vi.spyOn(auth, 'login').mockReturnValue(
-      of({ accessToken: 'signed-token', tokenType: 'Bearer', expiresAt: '', role }),
-    );
+  it('should create', () => expect(component).toBeTruthy());
+  it('navigates to the role dashboard after successful authentication', () => {
     const navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
-    component.loginObj.email = 'person@example.com';
-    component.loginObj.password = 'correct-password';
-
-    component.onLogin();
-
-    expect(auth.login).toHaveBeenCalledWith('person@example.com', 'correct-password');
-    expect(navigateSpy).toHaveBeenCalledWith(destination);
-    expect(component.errorMessage).toBe('');
+    component.loginObj.email = 'test@gmail.com'; component.loginObj.password = 'test123'; component.onLogin();
+    expect(navigateSpy).toHaveBeenCalledWith('/requester'); expect(component.errorMessage).toBe('');
   });
-
-  it('shows an error when the API rejects the credentials', () => {
-    vi.spyOn(auth, 'login').mockReturnValue(
-      throwError(() => new HttpErrorResponse({ status: 401 })),
-    );
+  it('shows an error when authentication fails', () => {
     const navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigateByUrl');
-
-    component.onLogin();
-
-    expect(navigateSpy).not.toHaveBeenCalled();
-    expect(component.errorMessage).toBe('Wrong email or password');
-  });
-
-  it('rejects an unsupported account role', () => {
-    vi.spyOn(auth, 'login').mockReturnValue(
-      of({ accessToken: 'signed-token', tokenType: 'Bearer', expiresAt: '', role: 'Other' }),
-    );
-    const navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigateByUrl');
-
-    component.onLogin();
-
-    expect(navigateSpy).not.toHaveBeenCalled();
-    expect(component.errorMessage).toBe('This account has an unsupported role.');
+    component.loginObj.email = 'wrong@gmail.com'; component.loginObj.password = 'nope'; component.onLogin();
+    expect(navigateSpy).not.toHaveBeenCalled(); expect(component.errorMessage).toBe('Invalid email or password');
   });
 });

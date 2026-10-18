@@ -8,45 +8,44 @@ public sealed class AccountRepository(AppDbContext db) : IAccountRepository
 {
     public async Task<AccountRecord?> FindByEmailAsync(string email, CancellationToken cancellationToken)
     {
-        // ToLower() translates to lower(email), which matches the uq_*_email_lower indexes.
-        var requester = await db.Requesters
-            .AsNoTracking()
-            .Where(r => r.Email.ToLower() == email)
-            .Select(r => new AccountRecord(
-                r.RequesterId, AccountTypes.Requester, r.Name, r.Email, r.PasswordHash, Roles.Requester, r.IsActive))
-            .FirstOrDefaultAsync(cancellationToken);
-
-        if (requester is not null)
-        {
-            return requester;
-        }
-
-        return await db.Employees
+        // 1. Check Employee table first (Admin or Staff)
+        var employee = await db.Employees
             .AsNoTracking()
             .Where(e => e.Email.ToLower() == email)
             .Select(e => new AccountRecord(
                 e.EmployeeId, AccountTypes.Employee, e.Name, e.Email, e.PasswordHash, e.Role.Name, e.IsActive))
             .FirstOrDefaultAsync(cancellationToken);
+
+        if (employee is not null)
+        {
+            return employee;
+        }
+
+        // 2. If not found in employee, check Requester table
+        return await db.Requesters
+            .AsNoTracking()
+            .Where(r => r.Email.ToLower() == email)
+            .Select(r => new AccountRecord(
+                r.RequesterId, AccountTypes.Requester, r.Name, r.Email, r.PasswordHash, Roles.Requester, r.IsActive))
+            .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<bool> EmailExistsAsync(string email, CancellationToken cancellationToken)
     {
-        return await db.Requesters.AnyAsync(r => r.Email.ToLower() == email, cancellationToken)
-            || await db.Employees.AnyAsync(e => e.Email.ToLower() == email, cancellationToken);
+        return await db.Employees.AnyAsync(e => e.Email.ToLower() == email, cancellationToken)
+            || await db.Requesters.AnyAsync(r => r.Email.ToLower() == email, cancellationToken);
     }
 
     public async Task<AccountRecord> CreateRequesterAsync(
         string name,
         string email,
         string passwordHash,
-        string? phoneNumber,
         CancellationToken cancellationToken)
     {
         var requester = new Requester
         {
             Name = name,
             Email = email,
-            PhoneNumber = phoneNumber,
             PasswordHash = passwordHash,
             IsActive = true,
             CreatedAt = DateTimeOffset.UtcNow
@@ -67,29 +66,5 @@ public sealed class AccountRepository(AppDbContext db) : IAccountRepository
         return new AccountRecord(
             requester.RequesterId, AccountTypes.Requester, requester.Name, requester.Email,
             requester.PasswordHash, Roles.Requester, requester.IsActive);
-    }
-
-    public async Task UpdateLastLoginAsync(AccountRecord account, CancellationToken cancellationToken)
-    {
-        var lastLoginAt = DateTimeOffset.UtcNow;
-        var updated = account.AccountType switch
-        {
-            AccountTypes.Requester => await db.Requesters
-                .Where(r => r.RequesterId == account.Id)
-                .ExecuteUpdateAsync(
-                    setters => setters.SetProperty(r => r.LastLoginAt, lastLoginAt),
-                    cancellationToken),
-            AccountTypes.Employee => await db.Employees
-                .Where(e => e.EmployeeId == account.Id)
-                .ExecuteUpdateAsync(
-                    setters => setters.SetProperty(e => e.LastLoginAt, lastLoginAt),
-                    cancellationToken),
-            _ => throw new InvalidOperationException($"Unsupported account type '{account.AccountType}'.")
-        };
-
-        if (updated != 1)
-        {
-            throw new InvalidOperationException("Could not record the successful login for the account.");
-        }
     }
 }

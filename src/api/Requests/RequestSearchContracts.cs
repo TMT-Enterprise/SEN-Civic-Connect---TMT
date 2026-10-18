@@ -29,7 +29,9 @@ public sealed record RequestSearchItemDto(
     DateTimeOffset SubmittedAt,
     DateTimeOffset? DueAt,
     DateTimeOffset UpdatedAt,
-    DateTimeOffset? ClosedAt);
+    DateTimeOffset? ClosedAt,
+    string CurrentStatus,
+    string? AssignmentDecision);
 
 /// <summary>Parses ISO date prefixes into UTC half-open timestamp ranges.</summary>
 public sealed record RequestSearchDateRange(

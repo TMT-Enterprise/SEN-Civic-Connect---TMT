@@ -1,112 +1,66 @@
 
-@if (isOpen && request) {
-  @let selectedRequest = request;
+<div class="modal-backdrop-custom">
+  <section
+    class="detail-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="detail-title">
 
-  <div class="modal-backdrop-custom">
+    <div class="detail-header">
+      <div>
+        <span class="detail-request-id">REQ-9012</span>
+        <span class="status-badge status-pending ms-2">
+          HIGH PRIORITY
+        </span>
 
-    <!-- Clicking the backdrop closes the modal -->
-    <button
-      type="button"
-      class="modal-backdrop-dismiss"
-      aria-label="Close request details"
-      (click)="close()">
-    </button>
-
-    <!-- Modal content: no click handler required -->
-    <section
-      class="detail-modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="detail-title">
-
-      <!-- Modal header -->
-      <div class="detail-header">
-        <div class="detail-heading-content">
-
-          <span class="detail-request-id">
-            {{ selectedRequest.id }}
-          </span>
-
-          <h2 id="detail-title">
-            {{ selectedRequest.category }}
-          </h2>
-
-          <span
-            class="detail-status"
-            [class.status-assigned]="selectedRequest.status === 'Assigned'"
-            [class.status-progress]="selectedRequest.status === 'In Progress'"
-            [class.status-resolved]="selectedRequest.status === 'Resolved'"
-            [class.status-closed]="selectedRequest.status === 'Closed'"
-            [class.status-overdue]="selectedRequest.status === 'Overdue'"
-            [class.status-rejected]="selectedRequest.status === 'Rejected'">
-            {{ statusLabel }}
-          </span>
-
-        </div>
-
-        <!-- Close button -->
-        <button
-          type="button"
-          class="btn btn-light btn-sm detail-close-button"
-          aria-label="Close request details"
-          (click)="close()">
-          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
-        </button>
+        <h2 id="detail-title">Plumbing Request</h2>
       </div>
 
-      <!-- Request information -->
-      <div class="detail-info-grid">
-        <div>
-          <span>Citizen Name</span>
-          <strong>{{ selectedRequest.citizen }}</strong>
-        </div>
+      <button
+        type="button"
+        class="btn btn-light btn-sm"
+        aria-label="Close details">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
 
-        <div>
-          <span>Contact Phone</span>
-          <strong>
-            {{ selectedRequest.contactPhone || 'Not provided' }}
-          </strong>
-        </div>
-
-        <div>
-          <span>Contact Email</span>
-          <strong>
-            {{ selectedRequest.contactEmail || 'Not provided' }}
-          </strong>
-        </div>
-
-        <div>
-          <span>Target Due Date</span>
-          <strong>{{ formattedDueDate }}</strong>
-        </div>
-
-        <div>
-          <span>Request Category</span>
-          <strong>{{ selectedRequest.category }}</strong>
-        </div>
-
-        <div>
-          <span>Current Status</span>
-          <strong>{{ statusLabel }}</strong>
-        </div>
+    <div class="detail-info-grid">
+      <div>
+        <span>Citizen Name</span>
+        <strong>Eleanor Vance</strong>
       </div>
 
-      <!-- Issue description -->
-      <div class="detail-description">
-        <h3>Issue Summary &amp; Description</h3>
-        <p>{{ selectedRequest.description }}</p>
+      <div>
+        <span>Contact Phone</span>
+        <strong>+1 (555) 019-2834</strong>
       </div>
 
-      <!-- Modal footer -->
-      <div class="detail-footer">
-        <button
-          type="button"
-          class="btn btn-light"
-          (click)="close()">
-          Close View
-        </button>
+      <div>
+        <span>Contact Email</span>
+        <strong>e.vance@citymail.com</strong>
       </div>
 
-    </section>
-  </div>
-}
+      <div>
+        <span>Target Due Date</span>
+        <strong>28 Oct 2026</strong>
+      </div>
+    </div>
+
+    <div class="detail-description">
+      <h3>Issue Summary &amp; Description</h3>
+      <p>
+        Severe water leak under basement sink causing
+        standing water.
+      </p>
+    </div>
+
+    <div class="detail-footer">
+      <button type="button" class="btn btn-light">
+        Close View
+      </button>
+    </div>
+
+  </section>
+</div>
+
+

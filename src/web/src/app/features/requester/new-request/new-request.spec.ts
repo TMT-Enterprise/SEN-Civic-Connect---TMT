@@ -1,3 +1,6 @@
+import { provideRouter } from '@angular/router';
+import { RequestService } from '../../../core/services/request.service';
+import { mockRequestService } from '../../../../testing/mock-request-service';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NewRequest } from './new-request';
@@ -8,6 +11,7 @@ describe('NewRequest', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      providers: [{ provide: RequestService, useValue: mockRequestService }, provideRouter([])],
       imports: [NewRequest],
     }).compileComponents();
 

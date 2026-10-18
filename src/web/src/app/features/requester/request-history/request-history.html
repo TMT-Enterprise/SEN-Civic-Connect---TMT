@@ -1,36 +1,30 @@
-
 <section class="history-page">
   <div class="history-heading">
     <div>
       <h2>Request History</h2>
-      <p>View and track your submitted service requests.</p>
+      <p>Track and view your past requests</p>
     </div>
+
+    <span class="history-count">{{ requests.length }} Total</span>
+  </div>
+
+  @if (loading) { <p>Loading request history…</p> }
+  @if (errorMessage) { <p class="text-danger" role="alert">{{ errorMessage }}</p> }
+  @if (!loading && !errorMessage && requests.length === 0) { <p>You have not submitted any requests yet.</p> }
+
+  <div class="history-filters" aria-label="Filter requests">
+    <button type="button" class="filter active">All</button>
+    <button type="button" class="filter">Pending</button>
+    <button type="button" class="filter">In Progress</button>
+    <button type="button" class="filter">Completed</button>
+    <button type="button" class="filter">Rejected</button>
   </div>
 
   <div class="history-list">
-    @for (request of requests; track request.id) {
-      <app-request-card
-        [request]="request"
-        (viewDetails)="openDetails($event)">
-      </app-request-card>
-    } @empty {
-      <div class="text-center py-5">
-        <i
-          class="fa-regular fa-folder-open fa-2x mb-3"
-          aria-hidden="true">
-        </i>
-
-        <h2 class="h6">No requests found</h2>
-        <p class="text-muted mb-0">
-          Your submitted requests will appear here.
-        </p>
-      </div>
-    }
+    <div class="request-card-grid">
+      @for (request of requests; track request.id) {
+        <app-request-card [request]="request"></app-request-card>
+      }
+    </div>
   </div>
 </section>
-
-<app-request-detail-modal
-  [request]="selectedRequest"
-  [isOpen]="isDetailsOpen"
-  (closed)="closeDetails()">
-</app-request-detail-modal>

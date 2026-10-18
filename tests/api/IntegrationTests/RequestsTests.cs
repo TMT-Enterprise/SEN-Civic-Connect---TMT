@@ -55,7 +55,7 @@ public class RequestsTests : IDisposable
     {
         var body = new { categoryId = 1, description = "Integration test request" };
 
-        var response = await _client.PostAsJsonAsync("/requests", body);
+        var response = await _client.PostAsJsonAsync("/api/v1/requests", body);
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
@@ -66,7 +66,7 @@ public class RequestsTests : IDisposable
         Assert.True(root.GetProperty("requestId").GetInt64() > 0);
         Assert.Equal("Submitted", root.GetProperty("status").GetString());
 
-        var secondResponse = await _client.PostAsJsonAsync("/requests", body);
+        var secondResponse = await _client.PostAsJsonAsync("/api/v1/requests", body);
         Assert.Equal(HttpStatusCode.Created, secondResponse.StatusCode);
         var secondContent = await secondResponse.Content.ReadAsStringAsync();
         using var secondDoc = JsonDocument.Parse(secondContent);
@@ -80,7 +80,7 @@ public class RequestsTests : IDisposable
     {
         var body = new { categoryId = 99999, description = "Invalid category test" };
 
-        var response = await _client.PostAsJsonAsync("/requests", body);
+        var response = await _client.PostAsJsonAsync("/api/v1/requests", body);
 
         Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
 
@@ -93,7 +93,7 @@ public class RequestsTests : IDisposable
     public async Task SubmitRequest_WithBlankDescription_Returns422FieldError()
     {
         var response = await _client.PostAsJsonAsync(
-            "/requests",
+            "/api/v1/requests",
             new { categoryId = 1, description = " " });
 
         Assert.Equal(HttpStatusCode.UnprocessableEntity, response.StatusCode);
@@ -106,7 +106,7 @@ public class RequestsTests : IDisposable
     [Fact(DisplayName = "FR-007: GET /requests returns only the requester's own requests")]
     public async Task GetRequests_ReturnsOnlyOwnRequests()
     {
-        var response = await _client.GetAsync("/requests");
+        var response = await _client.GetAsync("/api/v1/requests");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -126,7 +126,7 @@ public class RequestsTests : IDisposable
     [Fact(DisplayName = "FR-007: GET /requests/{id} with non-existent id returns 404 (isolation)")]
     public async Task GetRequestById_WithNonExistentId_Returns404()
     {
-        var response = await _client.GetAsync("/requests/999999");
+        var response = await _client.GetAsync("/api/v1/requests/999999");
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
@@ -136,7 +136,7 @@ public class RequestsTests : IDisposable
     {
         using var otherRequester = CreateRequesterClient(2);
         var postResponse = await otherRequester.PostAsJsonAsync(
-            "/requests",
+            "/api/v1/requests",
             new { categoryId = 1, description = "Isolation test request" });
         Assert.Equal(HttpStatusCode.Created, postResponse.StatusCode);
 
@@ -144,7 +144,7 @@ public class RequestsTests : IDisposable
         using var postDoc = JsonDocument.Parse(postContent);
         var requestId = postDoc.RootElement.GetProperty("requestId").GetInt64();
 
-        var response = await _client.GetAsync($"/requests/{requestId}");
+        var response = await _client.GetAsync($"/api/v1/requests/{requestId}");
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
@@ -154,9 +154,9 @@ public class RequestsTests : IDisposable
     {
         using var anonymousClient = _factory.CreateClient();
 
-        var listResponse = await anonymousClient.GetAsync("/requests");
+        var listResponse = await anonymousClient.GetAsync("/api/v1/requests");
         var submitResponse = await anonymousClient.PostAsJsonAsync(
-            "/requests",
+            "/api/v1/requests",
             new { categoryId = 1, description = "Unauthenticated request" });
 
         Assert.Equal(HttpStatusCode.Unauthorized, listResponse.StatusCode);
@@ -170,10 +170,10 @@ public class RequestsTests : IDisposable
     {
         using var nonRequester = CreateRequesterClient(1, role);
 
-        var listResponse = await nonRequester.GetAsync("/requests");
-        var detailResponse = await nonRequester.GetAsync("/requests/999999");
+        var listResponse = await nonRequester.GetAsync("/api/v1/requests");
+        var detailResponse = await nonRequester.GetAsync("/api/v1/requests/999999");
         var submitResponse = await nonRequester.PostAsJsonAsync(
-            "/requests",
+            "/api/v1/requests",
             new { categoryId = 1, description = "Non-requester attempt" });
 
         Assert.Equal(HttpStatusCode.Forbidden, listResponse.StatusCode);
@@ -186,13 +186,13 @@ public class RequestsTests : IDisposable
     {
         // First submit a request
         var body = new { categoryId = 1, description = "Status name test" };
-        var postResponse = await _client.PostAsJsonAsync("/requests", body);
+        var postResponse = await _client.PostAsJsonAsync("/api/v1/requests", body);
         var postContent = await postResponse.Content.ReadAsStringAsync();
         using var postDoc = JsonDocument.Parse(postContent);
         var requestId = postDoc.RootElement.GetProperty("requestId").GetInt64();
 
         // Then get it
-        var response = await _client.GetAsync($"/requests/{requestId}");
+        var response = await _client.GetAsync($"/api/v1/requests/{requestId}");
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
         var content = await response.Content.ReadAsStringAsync();
@@ -206,7 +206,7 @@ public class RequestsTests : IDisposable
     public async Task GetRequestById_WithExpiredDueDate_ReturnsOverdueStatus()
     {
         var postResponse = await _client.PostAsJsonAsync(
-            "/requests",
+            "/api/v1/requests",
             new { categoryId = 1, description = "Overdue status test" });
         var postContent = await postResponse.Content.ReadAsStringAsync();
         using var postDoc = JsonDocument.Parse(postContent);
@@ -221,7 +221,7 @@ public class RequestsTests : IDisposable
             await db.SaveChangesAsync();
         }
 
-        var response = await _client.GetAsync($"/requests/{requestId}");
+        var response = await _client.GetAsync($"/api/v1/requests/{requestId}");
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
         var content = await response.Content.ReadAsStringAsync();
