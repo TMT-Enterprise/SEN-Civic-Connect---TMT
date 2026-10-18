@@ -31,5 +31,8 @@ public interface IAccountRepository
         string name,
         string email,
         string passwordHash,
+        string? phoneNumber,
         CancellationToken cancellationToken);
+
+    Task UpdateLastLoginAsync(AccountRecord account, CancellationToken cancellationToken);
 }

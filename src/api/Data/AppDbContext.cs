@@ -82,9 +82,14 @@ public class AppDbContext : DbContext
 
             entity.Property(x => x.Name).HasColumnName("name");
             entity.Property(x => x.Email).HasColumnName("email");
+            entity.Property(x => x.PhoneNumber).HasColumnName("phone_number");
             entity.Property(x => x.PasswordHash).HasColumnName("password_hash");
             entity.Property(x => x.IsActive).HasColumnName("is_active");
             entity.Property(x => x.CreatedAt).HasColumnName("created_at");
+            entity.Property(x => x.LastLoginAt)
+                .HasColumnName("last_login_at")
+                .HasColumnType("timestamp with time zone")
+                .IsRequired(false);
         });
 
         modelBuilder.Entity<ServiceCategory>(entity =>
@@ -130,6 +135,10 @@ public class AppDbContext : DbContext
             entity.Property(x => x.Email).HasColumnName("email");
             entity.Property(x => x.PasswordHash).HasColumnName("password_hash");
             entity.Property(x => x.IsActive).HasColumnName("is_active");
+            entity.Property(x => x.LastLoginAt)
+                .HasColumnName("last_login_at")
+                .HasColumnType("timestamp with time zone")
+                .IsRequired(false);
 
             entity.HasOne(x => x.Role)
                 .WithMany()
