@@ -1,151 +1,148 @@
-.history-panel {
-  padding: 24px;
+.requests-panel {
+  overflow: hidden;
   border: 1px solid #e5e7eb;
   border-radius: 16px;
   background: white;
   box-shadow: 0 2px 5px rgb(0 0 0 / 3%);
 }
 
-.history-heading {
+.panel-heading {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 20px;
-  padding-bottom: 20px;
+  padding: 20px 24px;
   border-bottom: 1px solid #f3f4f6;
 }
 
-.history-heading h2 {
+.panel-heading h2 {
   margin: 0;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
 }
 
-.history-heading p {
-  margin: 6px 0 0;
+.panel-heading p {
+  margin: 5px 0 0;
   color: #71717a;
   font-size: 11px;
-  line-height: 1.6;
 }
 
-.history-list {
+.filter-tabs {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding-top: 18px;
-}
-
-.history-card {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 16px;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   background: #f9fafb;
 }
 
-.closed-card {
-  background: #f9fafb;
-}
-
-.overdue-card {
-  border-color: #fecaca;
-  background: #fef2f2;
-}
-
-.rejected-card {
-  border-color: #fecdd3;
-  background: #fff1f2;
-}
-
-.history-title-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-}
-
-.history-status {
-  padding: 4px 8px;
-  border: 1px solid transparent;
-  border-radius: 20px;
-  font-size: 9px;
-  font-weight: 800;
-}
-
-.history-status.closed {
-  background: #d1fae5;
-  color: #047857;
-}
-
-.history-status.overdue {
-  border-color: #fecaca;
-  background: #fee2e2;
-  color: #b91c1c;
-}
-
-.history-status.rejected {
-  border-color: #fecdd3;
-  background: #ffe4e6;
-  color: #be123c;
-}
-
-.history-description {
-  margin: 9px 0 5px;
+.filter-tab {
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
   color: #4b5563;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 10px;
+  white-space: nowrap;
 }
 
-.history-meta {
-  margin: 0;
+.filter-tab.active {
+  background: #ff6b00;
+  color: white;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+}
+
+.admin-table {
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.admin-table thead th {
+  padding: 13px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
   color: #9ca3af;
   font-size: 10px;
+  font-weight: 700;
 }
 
-.history-date {
-  display: flex;
-  flex-shrink: 0;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 7px;
+.admin-table tbody td {
+  padding: 14px 16px;
+  border-color: #f3f4f6;
+  color: #4a4a4a;
+}
+
+.admin-table tbody tr:hover {
+  background: #fff7ed;
+}
+
+.admin-table td strong,
+.admin-table td small {
+  display: block;
+}
+
+.request-id {
+  color: #1a1a1a;
+  font-family: monospace;
+  font-size: 11px;
+}
+
+.admin-table td small {
+  margin-top: 4px;
   color: #71717a;
   font-size: 10px;
-  text-align: right;
 }
 
-.history-date strong {
-  color: #1a1a1a;
+.status {
+  display: inline-block;
+  padding: 5px 8px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
 }
+
+.status.closed   { background: #d1fae5; color: #047857; border-color: #a7f3d0; }
+.status.overdue  { background: #fee2e2; color: #b91c1c; border-color: #fecaca; }
+.status.rejected { background: #ffe4e6; color: #be123c; border-color: #fecdd3; }
 
 .rejection-reason {
-  margin: 10px 0 0;
-  padding: 9px;
-  border: 1px solid #fee2e2;
-  border-radius: 8px;
-  background: white;
-  color: #dc2626;
+  max-width: 260px;
+  white-space: normal;
+  color: #dc2626 !important;
+}
+
+.view-button {
+  border: 1px solid #fed7aa;
+  background: #fff7ed;
+  color: #ea580c;
   font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-@media (max-width: 900px) {
-  .history-heading {
-    flex-direction: column;
-  }
+.view-button:hover {
+  border-color: #fdba74;
+  background: #ffedd5;
+  color: #c2410c;
 }
 
-@media (max-width: 600px) {
-  .history-panel {
-    padding: 16px;
-  }
+.history-empty {
+  padding: 28px 16px !important;
+  color: #9ca3af !important;
+  text-align: center;
+}
 
-  .history-card {
-    flex-direction: column;
-  }
-
-  .history-date {
+@media (max-width: 1200px) {
+  .panel-heading {
     align-items: flex-start;
-    text-align: left;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 700px) {
+  .panel-heading {
+    padding: 16px;
   }
 }

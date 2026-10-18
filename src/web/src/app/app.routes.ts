@@ -13,6 +13,7 @@ import { AdminLayout } from './layout/admin-layout/admin-layout';
 import { RequestsOverview } from './features/admin/requests-overview/requests-overview';
 import { Analytics } from './features/admin/analytics/analytics';
 import { StaffDirectory } from './features/admin/staff-directory/staff-directory';
+import { RequestsHistory } from './features/admin/requests-history/requests-history';
 
 export const routes: Routes = [
   {
@@ -79,7 +80,7 @@ export const routes: Routes = [
       },
       {
         path: 'history',
-        component: RequestHistory
+        component: RequestsHistory
       },
       {
         path: 'analytics',

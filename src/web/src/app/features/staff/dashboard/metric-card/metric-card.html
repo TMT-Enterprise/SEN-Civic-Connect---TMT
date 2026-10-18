@@ -1,27 +1,15 @@
+<article class="metric-card" [class]="'metric-card tone-' + tone()">
+  <span class="metric-label">{{ label() }}</span>
 
-<article class="metric-card card h-100">
-  <div class="card-body">
+  <div class="metric-value">
+    <strong>{{ value() }}</strong>
 
-    <span class="metric-label">{{ label() }}</span>
+    @if (detail()) {
+      <span class="metric-detail">{{ detail() }}</span>
+    }
 
-    <div class="metric-bottom">
-      <h3>{{ value() }}</h3>
-
-      @if (detail()) {
-        <span class="metric-detail">
-          {{ detail() }}
-        </span>
-      }
-
-      @if (icon()) {
-        <i
-          class="fa-solid metric-icon"
-          [class]=" 'fa-solid metric-icon ' + icon()"
-          aria-hidden="true">
-        </i>
-      }
-    </div>
-
+    @if (icon()) {
+      <i [class]="'fa-solid ' + icon()" aria-hidden="true"></i>
+    }
   </div>
 </article>
-

@@ -1,102 +1,198 @@
 .history-panel {
-  padding: 1.5rem;
-  border: 1px solid var(--cc-border);
-  border-radius: 1rem;
-  box-shadow: 0 1px 3px rgb(0 0 0 / 4%);
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 2px 5px rgb(0 0 0 / 3%);
 }
 
-.history-header {
+.history-heading {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 1rem;
-  padding-bottom: 1.25rem;
+  gap: 20px;
+  padding-bottom: 20px;
   border-bottom: 1px solid #f3f4f6;
 }
 
-.history-header h2 {
+.history-heading h2 {
   margin: 0;
-  font-size: 1rem;
+  font-size: 15px;
   font-weight: 700;
 }
 
-.history-header p {
-  margin: 0.4rem 0 0;
-  color: #6b7280;
-  font-size: 0.75rem;
+.history-heading p {
+  margin: 6px 0 0;
+  color: #71717a;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.filter-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #f9fafb;
+}
+
+.filter-tab {
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #4b5563;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.filter-tab.active {
+  background: #ff6b00;
+  color: white;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
 }
 
 .history-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  padding-top: 1rem;
+  gap: 12px;
+  padding-top: 18px;
 }
 
-.history-item {
+.history-empty {
+  margin: 0;
+  padding: 24px 0 8px;
+  color: #9ca3af;
+  font-size: 11px;
+  text-align: center;
+}
+
+.history-card {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;
-  padding: 1rem;
+  gap: 20px;
+  padding: 16px;
   border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
+  border-radius: 12px;
   background: #f9fafb;
 }
 
-.history-item.overdue-item {
+.overdue-card {
   border-color: #fecaca;
-  background: #fffafa;
+  background: #fef2f2;
 }
 
+.rejected-card {
+  border-color: #fecdd3;
+  background: #fff1f2;
+}
+
+.history-title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.request-id {
+  color: #1a1a1a;
+  font-family: monospace;
+  font-size: 11px;
+}
+
+.history-status {
+  padding: 4px 8px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.history-status.closed   { background: #d1fae5; color: #047857; }
+.history-status.overdue  { border-color: #fecaca; background: #fee2e2; color: #b91c1c; }
+.history-status.rejected { border-color: #fecdd3; background: #ffe4e6; color: #be123c; }
+
 .history-description {
-  margin: 0.75rem 0 0.35rem;
-  color: #374151;
-  font-size: 0.8rem;
+  margin: 9px 0 5px;
+  color: #4b5563;
+  font-size: 11px;
+  font-weight: 600;
 }
 
 .history-meta {
   margin: 0;
   color: #9ca3af;
-  font-size: 0.7rem;
+  font-size: 10px;
 }
 
-.history-dates {
+.history-side {
   display: flex;
   flex-shrink: 0;
   flex-direction: column;
-  gap: 0.4rem;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.history-date {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 7px;
+  color: #71717a;
+  font-size: 10px;
   text-align: right;
-  font-size: 0.7rem;
 }
 
-.history-dates span {
-  color: #6b7280;
+.history-date strong {
+  color: #1a1a1a;
 }
 
-.history-dates strong {
-  color: var(--cc-dark);
+.view-button {
+  border: 1px solid #fed7aa;
+  background: #fff7ed;
+  color: #ea580c;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-.status-closed {
-  background: #d1fae5;
-  color: #047857;
+.view-button:hover {
+  border-color: #fdba74;
+  background: #ffedd5;
+  color: #c2410c;
 }
 
-.status-overdue {
-  border: 1px solid #fecaca;
-  background: #fee2e2;
-  color: #b91c1c;
+.rejection-reason {
+  margin: 10px 0 0;
+  padding: 9px;
+  border: 1px solid #fee2e2;
+  border-radius: 8px;
+  background: white;
+  color: #dc2626;
+  font-size: 10px;
 }
 
-@media (max-width: 700px) {
-  .history-header,
-  .history-item {
-    align-items: stretch;
+@media (max-width: 900px) {
+  .history-heading {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 600px) {
+  .history-panel {
+    padding: 16px;
+  }
+
+  .history-card {
     flex-direction: column;
   }
 
-  .history-dates {
+  .history-side,
+  .history-date {
+    align-items: flex-start;
     text-align: left;
   }
 }

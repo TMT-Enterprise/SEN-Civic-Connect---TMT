@@ -1,0 +1,64 @@
+@if (isOpen() && request()) {
+  <div class="modal-layer">
+    <button
+      type="button"
+      class="modal-backdrop-custom"
+      aria-label="Close dialog"
+      (click)="close()">
+    </button>
+
+    <div
+      class="assign-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="assign-modal-title">
+
+      <div class="assign-modal-header">
+        <div>
+          <h2 id="assign-modal-title">Assign Staff</h2>
+          <p>
+            <span class="request-id">{{ request()!.id }}</span>
+            · {{ request()!.category }}
+          </p>
+        </div>
+
+        <button type="button" class="close-button" aria-label="Close" (click)="close()">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="assign-modal-body">
+        <label class="field-label" for="staff-select">Assign to</label>
+
+        <div class="select-wrapper">
+          <i class="fa-solid fa-user-gear" aria-hidden="true"></i>
+          <select
+            id="staff-select"
+            class="form-select staff-select"
+            [value]="selectedStaff()"
+            (change)="onSelect($event)">
+            <option value="">Select a staff member...</option>
+            @for (member of staff(); track member) {
+              <option [value]="member">{{ member }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div class="assign-modal-footer">
+        <button type="button" class="btn btn-sm cancel-button" (click)="close()">
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-sm confirm-button"
+          [disabled]="!selectedStaff()"
+          (click)="confirm()">
+          <i class="fa-solid fa-check me-1"></i>
+          Assign
+        </button>
+      </div>
+    </div>
+  </div>
+}

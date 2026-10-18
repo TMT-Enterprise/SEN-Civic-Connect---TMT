@@ -47,10 +47,7 @@
     <div class="panel-heading">
       <div>
         <h2>Active Service Requests</h2>
-        <p>
-          Click any row to open detailed request information and transition
-          lifecycle.
-        </p>
+        <p>Click any row to open detailed request information and transition lifecycle.</p>
       </div>
 
       <div class="filter-tabs" aria-label="Request status filters">
@@ -76,88 +73,66 @@
         </thead>
 
         <tbody>
-          <tr>
-            <td>
-              <strong class="request-id">REQ-9101</strong>
-              <small>Sarah Connor · 082 123 4567</small>
-            </td>
-            <td>
-              <strong>Electrical</strong>
-              <small class="priority-label">High Priority</small>
-            </td>
-            <td>
-              <span class="unassigned">Unassigned</span>
-            </td>
-            <td><span class="status submitted">Submitted</span></td>
-            <td>25 Oct 2026, 16:00</td>
-            <td class="text-end">
-              <button type="button" class="btn btn-sm assign-button">
-                <i class="fa-solid fa-user-gear me-1"></i>
-                Assign Staff
-              </button>
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <strong class="request-id">REQ-9012</strong>
-              <small>Eleanor Vance · 082 234 5678</small>
-            </td>
-            <td>
-              <strong>Plumbing</strong>
-              <small class="priority-label">High Priority</small>
-            </td>
-            <td>Marcus Vance</td>
-            <td><span class="status assigned">Assigned</span></td>
-            <td>28 Oct 2026, 14:00</td>
-            <td class="text-end">
-              <button type="button" class="btn btn-sm assign-button">
-                <i class="fa-solid fa-user-gear me-1"></i>
-                Reassign
-              </button>
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <strong class="request-id">REQ-8492</strong>
-              <small>Alex Morgan · 082 345 6789</small>
-            </td>
-            <td>
-              <strong>Plumbing</strong>
-              <small class="priority-label">Normal Priority</small>
-            </td>
-            <td>Marcus Vance</td>
-            <td><span class="status in-progress">In Progress</span></td>
-            <td>27 Oct 2026, 17:00</td>
-            <td class="text-end">
-              <button type="button" class="btn btn-sm assign-button">
-                <i class="fa-solid fa-user-gear me-1"></i>
-                Reassign
-              </button>
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              <strong class="request-id">REQ-8102</strong>
-              <small>Carlos Rivera · 082 456 7890</small>
-            </td>
-            <td>
-              <strong>Maintenance</strong>
-              <small class="priority-label">High Priority</small>
-            </td>
-            <td>James Wilson</td>
-            <td><span class="status resolved">Resolved</span></td>
-            <td>28 Oct 2026, 10:00</td>
-            <td class="text-end">
-              <button type="button" class="btn btn-sm assign-button">
-                View Details
-              </button>
-            </td>
-          </tr>
+          @for (row of rows; track row.request.id) {
+            <tr>
+              <td>
+                <strong class="request-id">{{ row.request.id }}</strong>
+                <small
+                  >{{ row.request.citizen }}
+                  @if (row.request.contactPhone) {
+                    · {{ row.request.contactPhone }}
+                  }
+                </small>
+              </td>
+              <td>
+                <strong>{{ row.request.category }}</strong>
+              </td>
+              <td>
+                @if (row.assignedTo) {
+                  {{ row.assignedTo }}
+                } @else {
+                  <span class="unassigned">Unassigned</span>
+                }
+              </td>
+              <td>
+                <span [class]="'status ' + statusClass(row)">{{ statusLabel(row) }}</span>
+              </td>
+              <td>{{ row.request.dueDate }}</td>
+              <td class="text-end">
+                @if (row.request.status === 'Resolved') {
+                  <button
+                    type="button"
+                    class="btn btn-sm assign-button"
+                    (click)="openDetails(row.request)"
+                  >
+                    View Details
+                  </button>
+                } @else if (!row.assignedTo) {
+                  <button type="button" class="btn btn-sm assign-button" (click)="openAssign(row)">
+                    <i class="fa-solid fa-user-gear me-1"></i>
+                    Assign Staff
+                  </button>
+                }
+              </td>
+            </tr>
+          }
         </tbody>
       </table>
     </div>
   </section>
 </section>
+<app-request-detail-modal
+  [request]="selectedRequest"
+  [isOpen]="isDetailsOpen"
+  (closed)="closeDetails()"
+>
+</app-request-detail-modal>
+
+<app-assign-staff-modal
+  [request]="assigningRow?.request ?? null"
+  [isOpen]="isAssignOpen"
+  [staff]="staffMembers"
+  (closed)="closeAssign()"
+  (assigned)="assignStaff($event)"
+>
+</app-assign-staff-modal>

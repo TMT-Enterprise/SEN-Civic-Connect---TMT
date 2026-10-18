@@ -12,4 +12,5 @@ export class MetricCard {
   value = input('0');
   detail = input('');
   icon = input('');
+  tone = input<'secondary' | 'info' | 'warning' | 'primary' | 'purple'>('secondary');
 }
