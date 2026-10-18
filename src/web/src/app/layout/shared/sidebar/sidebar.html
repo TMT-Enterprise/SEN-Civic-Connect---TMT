@@ -29,18 +29,26 @@
     </a>
   </nav>
 
-  <div class="staff-profile">
-    <div class="staff-avatar">SM</div>
+  <button
+  type="button"
+  class="staff-profile"
+  aria-label="Account menu. Click to log out"
+  (click)="openLogout()">
+  <div class="staff-avatar">SM</div>
 
-    <div class="staff-profile-copy">
-      <strong>Staff Member</strong>
-      <small>Field Specialist</small>
-    </div>
-
-    <i
-      class="fa-solid fa-circle-check staff-badge"
-      title="Active staff member"
-      aria-hidden="true"
-    ></i>
+  <div class="staff-profile-copy">
+    <strong>Staff Member</strong>
+    <small>Field Specialist</small>
   </div>
+
+  <i
+    class="fa-solid fa-circle-check staff-badge"
+    title="Active staff member"
+    aria-hidden="true"
+  ></i>
+</button>
 </aside>
+<app-logout-modal
+  [isOpen]="isLogoutOpen"
+  (closed)="closeLogout()">
+</app-logout-modal>

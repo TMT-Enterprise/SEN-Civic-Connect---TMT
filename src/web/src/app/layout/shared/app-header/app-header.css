@@ -1,8 +1,7 @@
-
 :host {
   display: block;
   flex: 0 0 auto;
-  z-index: 10;
+  z-index: 100;
 }
 
 .app-header {
@@ -42,4 +41,26 @@
   color: #6b7280;
   font-size: 0.75rem;
   font-weight: 500;
+}
+
+.header-icon-button {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  margin-left: auto;
+  display: grid;
+  place-items: center;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #f9fafb;
+  color: #4a4a4a;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.header-icon-button:hover {
+  border-color: #ff6b00;
+  background: #fff7ed;
+  color: #ea580c;
 }
