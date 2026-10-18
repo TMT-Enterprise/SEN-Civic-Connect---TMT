@@ -65,8 +65,9 @@
         <button
           type="submit"
           class="btn btn-orange w-100 py-2.5 rounded-3 fw-semibold small shadow-sm"
+          [disabled]="isSubmitting"
         >
-          Sign In
+          {{ isSubmitting ? 'Signing in...' : 'Sign In' }}
         </button>
       </form>
 
