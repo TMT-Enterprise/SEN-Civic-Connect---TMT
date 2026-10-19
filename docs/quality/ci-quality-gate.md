@@ -31,18 +31,13 @@ branches that are never merged.
 | Item | Method | Expected failing step | Evidence link |
 |---|---|---|---|
 | Green run | Normal PR into `development` | none | #90 |
-| Build error | Reference an undefined symbol in `src/api` | Backend, Build |  |
-| Format drift | Add stray indentation to a `.cs` file | Backend, Format check | <img width="1417" height="148" alt="image" src="https://github.com/user-attachments/assets/fdc67421-fe62-41c0-b2ed-95f1ec28d8ef" />
- |
-| Failing test | Invert an assertion in `tests/api` | Backend, Test | TBC |
-| Vulnerable NuGet package | Add a package version with a known advisory to a test project | Backend, Restore (NuGet audit warning promoted to error) or the scan step | TBC |
-| Frontend failure | Introduce a lint error | Frontend, Lint | <img width="1415" height="457" alt="image" src="https://github.com/user-attachments/assets/6a9e57fe-696f-44a0-ba47-a9bb98cac7c8" />
- |
-| Vulnerable npm package | Install a version with a high or critical advisory in `src/web` | Frontend, npm audit | TBC |
+| Build error | Reference an undefined symbol in `src/api` | Backend, Build | Evidence not tracked |
+| Format drift | Add stray indentation to a `.cs` file | Backend, Format check | <img width="1417" height="148" alt="image" src="https://github.com/user-attachments/assets/fdc67421-fe62-41c0-b2ed-95f1ec28d8ef" />|
+| Failing test | Invert an assertion in `tests/api` | Backend, Test | evidence not tracked |
+| Vulnerable NuGet package | Add a package version with a known advisory to a test project | Backend, Restore (NuGet audit warning promoted to error) or the scan step | Evidence not tracked |
+| Frontend failure | Introduce a lint error | Frontend, Lint | <img width="1415" height="457" alt="image" src="https://github.com/user-attachments/assets/6a9e57fe-696f-44a0-ba47-a9bb98cac7c8" /> |
+| Vulnerable npm package | Install a version with a high or critical advisory in `src/web` | Frontend, npm audit | Evidence not tracked |
 | Planted secret detected | Commit a dummy high-entropy key on a throwaway branch | Secrets scan | <img width="977" height="220" alt="image" src="https://github.com/user-attachments/assets/f9994437-a0fe-4dac-b612-9cdb07bc10d2" /> |
-| Blocked merge on `main` | PR from `main-update/ci-block-demo` into `main` with a failing test | Backend and CI gate; merge button disabled | #86 <img width="1420" height="198" alt="image" src="https://github.com/user-attachments/assets/8999f1cf-f014-40b4-9fdf-782b1d596868" />
- |
-| Check names match ruleset | Compare the ruleset's required list with the table above | n/a | TBC |
+| Blocked merge on `main` | PR from `main-update/ci-block-demo` into `main` with a failing test | Backend and CI gate; merge button disabled | #86 <img width="1420" height="198" alt="image" src="https://github.com/user-attachments/assets/8999f1cf-f014-40b4-9fdf-782b1d596868" />|
+| Check names match ruleset | Compare the ruleset's required list with the table above | n/a | <img width="956" height="233" alt="image" src="https://github.com/user-attachments/assets/24891365-67f0-4cda-b5af-9cb919f472d5" />|
 
-The planted-secret branch must be deleted as soon as the run is captured. The scan reads every
-branch it checks out, so a leftover branch would fail every later run.
