@@ -121,3 +121,65 @@ Sommerville, I. (2015). *Software engineering*. 10th ed. Boston: Pearson Educati
 Stryker, C. (2025). *What is human-in-the-Loop?* [online] Ibm.com. Available at: https://www.ibm.com/think/topics/human-in-the-loop [Accessed 3 Sept. 2026].
 
 Westfield, J. (2025). *8 Benefits of using AI in software testing*. [online] PractiTest. Available at: https://www.practitest.com/resource-center/blog/benefits-of-using-ai-in-software-testing/ [Accessed 2 Sept. 2026].
+
+Cai,, S. (2020). Specification and automated verification of atomic concurrent real-time transactions. *Software and Systems Modeling*, [online] 20, pp.557–589. doi:10.1007/s10270-020-00819-0.
+
+Lozano, A., et al. (2011) 'Checking enforcement of integrity constraints in database applications based on code patterns', *Journal of Systems and Software*, 84(12), pp. 2253–2266. doi:10.1016/j.jss.2011.06.044.
+
+Ketsman, B., Koch, C., Neven, F., & Vandevoort, B. (2023). Concurrency control for database theorists. *ACM SIGMOD Record*, *51*(4), 6–17. https://doi.org/10.1145/3582302.3582304
+
+Wang, J., Liu, Y., Li, P., Lin, Z., Sindakis, S. and Aggarwal, S. (2023). Overview of Data Quality: Examining the Dimensions, Antecedents, and Impacts of Data Quality. *Journal of the Knowledge Economy*, [online] 15. Available at: https://link.springer.com/article/10.1007/s13132-022-01096-6 [Accessed 14 Sept. 2026].
+
+Cawthra, J., Ekstrom, M., Lusty, L., Sexton, J., Sweetnam, J. and Townsend, A. (2020). *Data Integrity: Detecting and Responding to Ransomware and Other Destructive Events*. [online] www.nccoe.nist.gov. Available at: https://www.nccoe.nist.gov/publication/1800-26/VolA/index.html [Accessed 14 Sept. 2026].
+
+Blinowski, G., Ojdowska, A., & Przybyłek, A. (2022). Monolithic vs. Microservice Architecture: A Performance and Scalability Evaluation. *IEEE Access*, *10*(2169–3536), 20357–20374. [https://doi.org/10.1109/ACCESS.2022.3152803](https://doi.org/10.1109/ACCESS.2022.3152803)
+
+Antonio, J., Aguilar, A., Espinosa, R., & Tripp-Barba, C. (2021). The external and data loose coupling for the integration of software units: a systematic mapping study. *PeerJ*, *7*, e796–e796. [https://doi.org/10.7717/peerj-cs.796](https://doi.org/10.7717/peerj-cs.796)
+
+Shafiee, S., Wautelet, Y., Hvam, L., Sandrin, E., & Forza, C. (2020). Scrum versus Rational Unified Process in facing the main challenges of product configuration systems development. *Journal of Systems and Software*, *170*, 110732. [https://doi.org/10.1016/j.jss.2020.110732](https://doi.org/10.1016/j.jss.2020.110732)
+
+Tanveer, F., Iradat, F., Iqbal, W., & Ahmad, A. (2025). Towards Secure APIs: A Survey on RESTful API Vulnerability Detection. *Computers, Materials & Continua*, *84*(3), 4223–4257. [https://doi.org/10.32604/cmc.2025.067536](https://doi.org/10.32604/cmc.2025.067536)
+
+Ruiz Ceniceros, J. A., Aguilar-Calderón, J. A., Espinosa, R., & Tripp-Barba, C. (2021). The external and data loose coupling for the integration of software units: a systematic mapping study. In *PeerJ. Computer science* (Vol. 7, p. e796). PubMed Central. [https://doi.org/10.7717/peerj-cs.796](https://doi.org/10.7717/peerj-cs.796)
+
+Fowler, M. (2018) *Refactoring: Improving the Design of Existing Code*. 2nd edn. Boston: Addison-Wesley Professional.
+
+Gamma, E., Helm, R., Johnson, R. and Vlissides, J. (1994) *Design Patterns: Elements of Reusable Object-Oriented Software*. Reading, MA: Addison-Wesley.
+
+Martin, R.C. (2003) *Agile Software Development, Principles, Patterns, and Practices*. Upper Saddle River, NJ: Prentice Hall.
+
+Sommerville, I. (2015) *Software Engineering*. 10th edn. Boston: Pearson Education Limited.
+
+Karabey Aksakalli, I., Çelik, T., Can, A. B., & Teki̇nerdoğan, B. (2021). Deployment and communication patterns in microservice architectures: A systematic literature review. *Journal of Systems and Software*, *180*, 111014. [https://doi.org/10.1016/j.jss.2021.111014](https://doi.org/10.1016/j.jss.2021.111014)
+
+Fielding, R., Nottingham, M., & Reschke, J. (2022). *RFC9110*. IETF HTTP Working Group Specifications. [https://httpwg.org/specs/rfc9110.html](https://httpwg.org/specs/rfc9110.html)
+
+Atlassian (2019). *Git feature branch workflow | atlassian git tutorial*. [online] Atlassian. Available at: https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow [Accessed 14 Sept. 2026].
+
+Bhardwaj, K. (2020). *A visual guide to Version Control - SCM & VCS*. [online] Talent500 blog. Available at: https://talent500.com/blog/scm-vcs/ [Accessed 14 Sept. 2026].
+
+Black, J. (2022). *The three pillars of reproducible builds*. [online] Fossa.com. Available at: https://fossa.com/blog/three-pillars-reproducible-builds/ [Accessed 15 Sept. 2026].
+
+Caballar, R.D. and Stryker, C. (2026). *Pull request*. [online] Ibm.com. Available at: https://www.ibm.com/think/topics/pull-request [Accessed 14 Sept. 2026].
+
+Coursera Staff (2026). *What is version control? How it works*. [online] Coursera. Available at: https://www.coursera.org/articles/version-control [Accessed 14 Sept. 2026].
+
+GitHub (2026). *GitHub docs*. [online] GitHub Docs. Available at: https://docs.github.com/en [Accessed 14 Sept. 2026].
+
+GitLab (2026). *GitLab docs*. [online] Gitlab.com. Available at: https://docs.gitlab.com/ [Accessed 14 Sept. 2026].
+
+IEEE Computer Society (2008). *What is configuration management and why is it important?* [online] IEEE Computer Society. Available at: https://www.computer.org/resources/software-configuration-management#config-management [Accessed 14 Sept. 2026].
+
+Microsoft (2024). *Build GitHub repositories - azure pipelines*. [online] Microsoft.com. Available at: https://learn.microsoft.com/en-us/azure/devops/pipelines/repos/github?view=azure-devops&tabs=yaml [Accessed 15 Sept. 2026].
+
+npm (2025). *NPM-ci | NPM docs*. [online] Npmjs.com. Available at: https://docs.npmjs.com/cli/v10/commands/npm-ci [Accessed 15 Sept. 2026].
+
+Pittet, S. (2019). *Continuous integration vs. continuous delivery vs. continuous deployment*. [online] Atlassian. Available at: https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment [Accessed 15 Sept. 2026].
+
+Rose, S., Borchert, O., Mitchell, S. and Connelly, S. (2020). Zero trust architecture. *NIST Special Publication 800-207*, [online] 1(800–207). doi:10.6028/nist.sp.800-207.
+
+Saladino, G. (2024). *What is linting + when to use LINT tools | perforce software*. [online] Perforce Software. Available at: https://www.perforce.com/blog/qac/what-is-linting [Accessed 15 Sept. 2026].
+
+Soares, E., Sizilio, G., Santos, J., Alencar, D. and Kulesza, U. (2022). *The effects of continuous integration on software development: A systematic literature review*. [online] Available at: https://arxiv.org/pdf/2103.05451 [Accessed 15 Sept. 2026].
+
+Sood, S. (2025). *GitHub code reviews: Step-by-step guide (2026)*. [online] Codeant.ai. Available at: https://codeant.ai/blogs/the-best-way-to-do-code-reviews-in-github-(with-real-examples-and-tools) [Accessed 15 Sept. 2026].
