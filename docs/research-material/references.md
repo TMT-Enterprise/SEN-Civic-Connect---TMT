@@ -183,3 +183,51 @@ Saladino, G. (2024). *What is linting + when to use LINT tools | perforce softwa
 Soares, E., Sizilio, G., Santos, J., Alencar, D. and Kulesza, U. (2022). *The effects of continuous integration on software development: A systematic literature review*. [online] Available at: https://arxiv.org/pdf/2103.05451 [Accessed 15 Sept. 2026].
 
 Sood, S. (2025). *GitHub code reviews: Step-by-step guide (2026)*. [online] Codeant.ai. Available at: https://codeant.ai/blogs/the-best-way-to-do-code-reviews-in-github-(with-real-examples-and-tools) [Accessed 15 Sept. 2026].
+
+Expel team (2026). *What are the benefits and limitations of AI in cybersecurity?* [online] Expel. Available at: https://expel.com/cyberspeak/what-are-the-benefits-and-limitations-of-ai-in-cybersecurity/ [Accessed 22 Sept. 2026].
+
+IBM (2024). *What is secrets management?* [online] Ibm.com. Available at: https://www.ibm.com/think/topics/secrets-management [Accessed 22 Sept. 2026].
+
+Khanna, A. (2025). Authentication in Cybersecurity. *Securing an Enterprise*, [online] pp.75–94. doi:10.1007/979-8-8688-1029-9_4.
+
+McCarvill, A. (2023). *Why Input Validation Matters for Application Security*. [online] Bright Security. Available at: https://brightsec.com/blog/an-introduction-to-the-importance-of-input-validation-in-preventing-security-vulnerabilities/ [Accessed 22 Sept. 2026].
+
+Misiura, J. (2023). *Input validation and the problems with sanitisation*. [online] IT Brief UK. Available at: https://itbrief.co.uk/story/input-validation-and-the-problems-with-sanitisation [Accessed 22 Sept. 2026].
+
+Omotunde, H. and Ahmed, M. (2023). A comprehensive review of security measures in database systems: Assessing authentication, access control, and beyond. *Mesopotamian Journal of CyberSecurity*, [online] 3(1), p.Article 16. doi:https://doi.org/10.58496/MJCS/2023/016.
+
+Romeo, C. (2025). *What is STRIDE in threat modeling?* [online] Security Compass. Available at: https://www.securitycompass.com/blog/stride-in-threat-modeling/ [Accessed 19 Sept. 2026].
+
+Shostack, A. (2014). *Threat Modeling: Designing for Security*. [online] Google Books. Available at: https://books.google.com/books/about/Threat_Modeling.html?id=YiHcAgAAQBAJ [Accessed 19 Sept. 2026].
+
+University at Buffalo (2025). *Best practices: Handling sensitive data*. [online] Buffalo.edu. Available at: https://library.buffalo.edu/research/rds/education/sensitive-data.html [Accessed 22 Sept. 2026].
+
+Werksmans (2024). *POPIA: A guide to the protection of personal information act of South Africa*. [online] Werksmans Attorneys. Available at: https://werksmans.com/popia-a-guide-to-the-protection-of-personal-information-act-of-south-africa/ [Accessed 22 Sept. 2026].
+
+IEEE Standards Association. (n.d.). *IEEE Standards Association*. [online] Available at: https://standards.ieee.org/ieee/1012/5609/ [Accessed 23 Sept. 2026].
+
+Cervantes-Ojeda, J. and Gómez-Fuentes, M.C. (2022). QualiTeam: A Support Tool When Learning Software Quality and Testing Concepts. *Journal of Software Engineering and Applications*, [online] 15(01), pp.1–17. doi:10.4236/jsea.2022.151001.
+
+Foidl, H. and Felderer, M. (2016). Integrating software quality models into risk-based testing. *Software Quality Journal*, 26(2), pp.809–847. doi:10.1007/s11219-016-9345-3.
+
+NIST (2023). *Risk - Glossary | CSRC*. [online] csrc.nist.gov. Available at: https://csrc.nist.gov/glossary/term/risk [Accessed 23 Sept. 2026].
+
+Jin, G., Song, L., Shi, X., Scherpelz, J. and Lu, S. (2012). Understanding and detecting real-world performance bugs. *Programming Language Design and Implementation*. doi:10.1145/2254064.2254075.
+
+for, O. (2023). *ISO/IEC 25010:2023*. [online] ISO. Available at: https://www.iso.org/standard/78176.html?utm_source=chatgpt.com [Accessed 23 Sept. 2026].
+
+Patel, A.R. and Tyagi, S. (2022). The State of Test Automation in DevOps: A Systematic Literature Review. *Proceedings of the 2022 Fourteenth International Conference on Contemporary Computing*. doi:10.1145/3549206.3549321.
+
+Wiklund, K., Eldh, S., Sundmark, D. and Lundqvist, K. (2017). Impediments for software test automation: A systematic literature review. *Software Testing, Verification and Reliability*, [online] 27(8), p.e1639. doi:10.1002/stvr.1639.
+
+Amazon Web Services (2024) Reliability Pillar: AWS Well-Architected Framework. Available at: [https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html](https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html?utm_source=gemini) (Accessed: 17 September 2026).
+
+Beyer, B., Jones, C., Petoff, J. and Murphy, N.R. (eds.) (2016) Site Reliability Engineering: How Google Runs Production Systems. Sebastopol, CA: O'Reilly Media.
+
+Humble, J. and Farley, D. (2010) Continuous Delivery: Reliable Software Releases through Build, Test, and Deployment Automation. Upper Saddle River, NJ: Addison-Wesley.
+
+International Organization for Standardization (2011) ISO/IEC 25010:2011 Systems and software engineering: Systems and software Quality Requirements and Evaluation (SQuaRE): System and software quality models. Geneva: ISO/IEC.
+
+National Institute of Standards and Technology (2020) Security and privacy controls for information systems and organizations. NIST Special Publication 800-53, Revision 5. Gaithersburg, MD: U.S. Department of Commerce. Available at: [https://doi.org/10.6028/NIST.SP.800-53r5](https://doi.org/10.6028/NIST.SP.800-53r5?utm_source=gemini) (Accessed: 18 September 2026).
+
+Wiggins, A. (2011) The Twelve-Factor App. Available at: [https://12factor.net/](https://12factor.net/?utm_source=gemini) (Accessed: 18 September 2026).
