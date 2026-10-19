@@ -1,7 +1,7 @@
 # CivicConnect
 
 **Community Service Request Management Platform**  
-SEN381 Integrated Software Engineering Project — 2026
+SEN381 Integrated Software Engineering Project; 2026
 
 ## Overview
 
