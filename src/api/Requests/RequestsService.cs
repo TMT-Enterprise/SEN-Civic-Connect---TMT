@@ -52,18 +52,103 @@ public class RequestsService
             request.SubmittedAt);
     }
 
+    public async Task<Result<WithdrawRequestResult>> WithdrawAsync(
+        long requesterId,
+        long requestId,
+        CancellationToken cancellationToken = default)
+    {
+        await using var transaction = await _db.Database.BeginTransactionAsync(cancellationToken);
+
+        var request = await _db.ServiceRequests
+            .FromSqlInterpolated(
+                $"SELECT * FROM service_request WHERE request_id = {requestId} FOR UPDATE")
+            .SingleOrDefaultAsync(cancellationToken);
+
+        if (request is null || request.RequesterId != requesterId)
+        {
+            return Result<WithdrawRequestResult>.Fail(
+                Outcome.NotFound,
+                "Request not found.");
+        }
+
+        var currentStatus = await _db.RequestStatuses
+            .SingleAsync(status => status.StatusId == request.CurrentStatusId, cancellationToken);
+        if (currentStatus.Name != "Submitted")
+        {
+            return Result<WithdrawRequestResult>.Fail(
+                Outcome.Conflict,
+                "Only submitted requests can be withdrawn.");
+        }
+
+        var withdrawnStatus = await _db.RequestStatuses
+            .SingleOrDefaultAsync(status => status.Name == "Withdrawn", cancellationToken)
+            ?? throw new InvalidOperationException(
+                "Withdrawn status is missing. Apply the request withdrawal database migration.");
+
+        var now = _timeProvider.GetUtcNow();
+        request.CurrentStatusId = withdrawnStatus.StatusId;
+        request.UpdatedAt = now;
+        _db.RequestStatusHistory.Add(new RequestStatusHistory
+        {
+            RequestId = requestId,
+            RequesterId = requesterId,
+            StatusId = withdrawnStatus.StatusId,
+            ChangedAt = now
+        });
+
+        await _db.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        return Result<WithdrawRequestResult>.Ok(
+            new WithdrawRequestResult(requestId, withdrawnStatus.Name));
+    }
+
     public async Task<List<ServiceRequestDto>> GetRequesterHistoryAsync(
         long requesterId,
         CancellationToken cancellationToken = default)
     {
-        var requests = await _db.ServiceRequests
-            .Include(r => r.CurrentStatus)
-            .Where(r => r.RequesterId == requesterId)
-            .OrderByDescending(r => r.SubmittedAt)
+        var requests = await (
+            from request in _db.ServiceRequests
+            join category in _db.ServiceCategories
+                on request.CategoryId equals category.CategoryId
+            join status in _db.RequestStatuses
+                on request.CurrentStatusId equals status.StatusId
+            where request.RequesterId == requesterId
+            orderby request.SubmittedAt descending
+            select new
+            {
+                Request = request,
+                Category = category.Type,
+                Status = status.Name
+            })
             .ToListAsync(cancellationToken);
 
         var now = _timeProvider.GetUtcNow();
-        return requests.Select(r => ToDto(r, now)).ToList();
+
+        return requests.Select(item =>
+        {
+            var request = item.Request;
+
+            var status = request.DueAt.HasValue
+                && request.DueAt.Value < now
+                && item.Status != "Closed"
+                && item.Status != "Resolved"
+                && item.Status != "Withdrawn"
+                    ? "Overdue"
+                    : item.Status;
+
+            return new ServiceRequestDto(
+                request.RequestId,
+                request.RequesterId,
+                request.CategoryId,
+                item.Category,
+                status,
+                request.Description,
+                request.SubmittedAt,
+                request.DueAt,
+                request.UpdatedAt,
+                request.ClosedAt);
+        }).ToList();
     }
 
     public async Task<ServiceRequestDto?> GetByIdAsync(
@@ -71,13 +156,22 @@ public class RequestsService
         long requesterId,
         CancellationToken cancellationToken = default)
     {
-        var request = await _db.ServiceRequests
-            .Include(r => r.CurrentStatus)
-            .FirstOrDefaultAsync(
-                r => r.RequestId == requestId && r.RequesterId == requesterId,
-                cancellationToken);
+        var result = await (
+            from request in _db.ServiceRequests
+            join category in _db.ServiceCategories
+                on request.CategoryId equals category.CategoryId
+            where request.RequestId == requestId
+                && request.RequesterId == requesterId
+            select new
+            {
+                Request = request,
+                Category = category.Type
+            })
+            .FirstOrDefaultAsync(cancellationToken);
 
-        return request is null ? null : ToDto(request, _timeProvider.GetUtcNow());
+        return result is null
+            ? null
+            : ToDto(result.Request, _timeProvider.GetUtcNow(), result.Category);
     }
 
     public Task<RequestSearchResponse> SearchStaffAsync(
@@ -117,7 +211,8 @@ public class RequestsService
                     && _db.RequestStatuses.Any(s =>
                         s.StatusId == r.CurrentStatusId
                         && s.Name != "Closed"
-                        && s.Name != "Resolved")
+                        && s.Name != "Resolved"
+                        && s.Name != "Withdrawn")
                     ? EF.Functions.ILike("Overdue", pattern, "\\")
                     : _db.RequestStatuses.Any(s =>
                         s.StatusId == r.CurrentStatusId
@@ -175,7 +270,8 @@ public class RequestsService
                     && _db.RequestStatuses.Any(s =>
                         s.StatusId == r.CurrentStatusId
                         && s.Name != "Closed"
-                        && s.Name != "Resolved")
+                        && s.Name != "Resolved"
+                        && s.Name != "Withdrawn")
                     ? EF.Functions.ILike("Overdue", pattern, "\\")
                     : _db.RequestStatuses.Any(s =>
                         s.StatusId == r.CurrentStatusId
@@ -253,18 +349,23 @@ public class RequestsService
     private static bool IsOverdue(RequestSearchRow request, DateTimeOffset now) =>
         request.DueAt.HasValue
         && request.DueAt.Value < now
-        && request.Status is not ("Closed" or "Resolved");
+        && request.Status is not ("Closed" or "Resolved" or "Withdrawn");
 
     private static string ToLikePattern(string value) =>
         $"%{value.Trim().Replace("\\", "\\\\").Replace("%", "\\%").Replace("_", "\\_")}%";
 
-    private static ServiceRequestDto ToDto(ServiceRequest r, DateTimeOffset now)
+    private static ServiceRequestDto ToDto(
+        ServiceRequest r,
+        DateTimeOffset now,
+        string category)
     {
         var status = DeriveStatus(r, now);
+
         return new ServiceRequestDto(
             r.RequestId,
             r.RequesterId,
             r.CategoryId,
+            category,
             status,
             r.Description,
             r.SubmittedAt,
@@ -279,7 +380,8 @@ public class RequestsService
         if (r.DueAt.HasValue
             && r.DueAt.Value < now
             && r.CurrentStatus?.Name != "Closed"
-            && r.CurrentStatus?.Name != "Resolved")
+            && r.CurrentStatus?.Name != "Resolved"
+            && r.CurrentStatus?.Name != "Withdrawn")
         {
             return "Overdue";
         }

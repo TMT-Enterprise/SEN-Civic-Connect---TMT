@@ -1,4 +1,3 @@
-
 <section class="history-page">
   <div class="history-heading">
     <div>
@@ -7,30 +6,40 @@
     </div>
   </div>
 
-  <div class="history-list">
-    @for (request of requests; track request.id) {
-      <app-request-card
-        [request]="request"
-        (viewDetails)="openDetails($event)">
-      </app-request-card>
-    } @empty {
-      <div class="text-center py-5">
-        <i
-          class="fa-regular fa-folder-open fa-2x mb-3"
-          aria-hidden="true">
-        </i>
+  @if (withdrawalMessage()) {
+    <p role="status">{{ withdrawalMessage() }}</p>
+  }
+  @if (withdrawalError()) {
+    <p role="alert">{{ withdrawalError() }}</p>
+  }
 
-        <h2 class="h6">No requests found</h2>
-        <p class="text-muted mb-0">
-          Your submitted requests will appear here.
-        </p>
-      </div>
-    }
-  </div>
+  @if (isLoading()) {
+    <p role="status">Loading your requests...</p>
+  } @else if (errorMessage()) {
+    <div role="alert">
+      <p>{{ errorMessage() }}</p>
+      <button type="button" (click)="loadRequests()">Try Again</button>
+    </div>
+  } @else if (requests().length === 0) {
+    <div class="text-center py-5">
+      <i class="fa-regular fa-folder-open fa-2x mb-3" aria-hidden="true"></i>
+      <h2 class="h6">No requests found</h2>
+      <p class="text-muted mb-0">Your submitted requests will appear here.</p>
+    </div>
+  } @else {
+    <div class="request-card-grid">
+      @for (request of requests(); track request.id) {
+        <app-request-card
+          [request]="request"
+          [allowWithdraw]="true"
+          (viewDetails)="openDetails($event)"
+          (withdraw)="withdrawRequest($event)" />
+      }
+    </div>
+  }
 </section>
 
 <app-request-detail-modal
-  [request]="selectedRequest"
-  [isOpen]="isDetailsOpen"
-  (closed)="closeDetails()">
-</app-request-detail-modal>
+  [request]="selectedRequest()"
+  [isOpen]="selectedRequest() !== null"
+  (closed)="closeDetails()" />

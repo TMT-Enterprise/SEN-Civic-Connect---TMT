@@ -17,7 +17,8 @@ VALUES
     ('Assigned'),
     ('In Progress'),
     ('Resolved'),
-    ('Closed')
+    ('Closed'),
+    ('Withdrawn')
 ON CONFLICT (name) DO NOTHING;
 
 

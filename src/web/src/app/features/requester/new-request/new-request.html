@@ -1,3 +1,4 @@
+
 <section class="new-request-page">
   <div class="form-card">
     <div class="form-heading">
@@ -7,77 +8,74 @@
       </p>
     </div>
 
-    <form>
-      <div class="mb-3">
-        <label for="fullName" class="form-label">
-          Full Name <span>*</span>
-        </label>
-        <input
-          id="fullName"
-          type="text"
-          class="form-control"
-          placeholder="John Doe"
-          required
-        />
+    @if (successMessage()) {
+      <div class="success-message" role="status">
+        <h3>Request submitted</h3>
+        <p>{{ successMessage() }}</p>
+        <button
+          type="button"
+          class="btn submit-button w-100"
+          (click)="goToRequests()">
+          View My Requests
+        </button>
       </div>
+    } @else {
+      @if (errorMessage()) {
+        <p class="error-message" role="alert">
+          {{ errorMessage() }}
+        </p>
+      }
 
-      <div class="mb-3">
-        <label for="phoneNumber" class="form-label">
-          Phone Number <span>*</span>
-        </label>
-        <input
-          id="phoneNumber"
-          type="tel"
-          class="form-control"
-          placeholder="e.g. 082 123 4567"
-          required
-        />
-      </div>
+      <form (ngSubmit)="submitRequest()">
+        <div class="mb-3">
+          <label for="requestType" class="form-label">
+            Request Category <span>*</span>
+          </label>
 
-      <div class="mb-3">
-        <label for="emailAddress" class="form-label">
-          Email Address <span>*</span>
-        </label>
-        <input
-          id="emailAddress"
-          type="email"
-          class="form-control"
-          placeholder="john@example.com"
-          required
-        />
-      </div>
+          <select
+            id="requestType"
+            name="categoryId"
+            class="form-select"
+            [(ngModel)]="categoryId"
+            required>
+            <option [ngValue]="null" disabled>
+              Select category...
+            </option>
+            @for (category of categories; track category.id) {
+              <option [ngValue]="category.id">
+                {{ category.name }}
+              </option>
+            }
+          </select>
+        </div>
 
-      <div class="mb-3">
-        <label for="requestType" class="form-label">
-          Request Category <span>*</span>
-        </label>
-        <select id="requestType" class="form-select" required>
-          <option value="" selected disabled>Select category...</option>
-          <option value="maintenance">Maintenance</option>
-          <option value="plumbing">Plumbing</option>
-          <option value="electrical">Electrical</option>
-          <option value="it-support">IT Support</option>
-          <option value="general-inquiry">General Inquiry</option>
-        </select>
-      </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">
+            Issue Description <span>*</span>
+          </label>
 
-      <div class="mb-3">
-        <label for="description" class="form-label">
-          Issue Description <span>*</span>
-        </label>
-        <textarea
-          id="description"
-          class="form-control"
-          rows="4"
-          placeholder="Describe the problem or service needed..."
-          required
-        ></textarea>
-      </div>
+          <textarea
+            id="description"
+            name="description"
+            class="form-control"
+            rows="4"
+            placeholder="Describe the problem or service needed..."
+            [(ngModel)]="description"
+            required
+            maxlength="2000"></textarea>
+        </div>
 
-      <button type="submit" class="btn submit-button w-100">
-        Submit Request
-        <i class="fa-solid fa-paper-plane ms-2" aria-hidden="true"></i>
-      </button>
-    </form>
+        <button
+          type="submit"
+          class="btn submit-button w-100"
+          [disabled]="isSubmitting()">
+          @if (isSubmitting()) {
+            Submitting...
+          } @else {
+            Submit Request
+          }
+        </button>
+      </form>
+    }
   </div>
 </section>

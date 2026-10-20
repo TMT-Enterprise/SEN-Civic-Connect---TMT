@@ -8,3 +8,7 @@ public record SubmitRequestResult(
     long RequestId,
     string Status,
     DateTimeOffset SubmittedAt);
+
+public record WithdrawRequestResult(
+    long RequestId,
+    string Status);

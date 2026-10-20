@@ -37,6 +37,7 @@
             [class.status-progress]="selectedRequest.status === 'In Progress'"
             [class.status-resolved]="selectedRequest.status === 'Resolved'"
             [class.status-closed]="selectedRequest.status === 'Closed'"
+            [class.status-withdrawn]="selectedRequest.status === 'Withdrawn'"
             [class.status-overdue]="selectedRequest.status === 'Overdue'"
             [class.status-rejected]="selectedRequest.status === 'Rejected'">
             {{ statusLabel }}

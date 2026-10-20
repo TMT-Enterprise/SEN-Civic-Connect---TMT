@@ -65,6 +65,7 @@ describe('Register', () => {
       tokenType: 'Bearer',
       expiresAt: '2026-10-18T03:00:00Z',
       role: 'Requester',
+      name: 'Ada Lovelace',
     });
 
     expect(localStorage.getItem('civic-connect.access-token')).toBe('signed-token');

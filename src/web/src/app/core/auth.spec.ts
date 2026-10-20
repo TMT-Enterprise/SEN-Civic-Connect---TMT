@@ -49,6 +49,7 @@ describe('AuthService', () => {
       tokenType: 'Bearer',
       expiresAt: '2026-10-18T03:00:00Z',
       role: 'Staff',
+      name: 'Test User',
     });
 
     expect(receivedRole).toBe('Staff');

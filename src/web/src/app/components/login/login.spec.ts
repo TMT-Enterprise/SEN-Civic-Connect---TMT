@@ -34,7 +34,7 @@ describe('Login', () => {
     ['Admin', '/admin'],
   ])('signs in a %s and opens its dashboard', (role, destination) => {
     vi.spyOn(auth, 'login').mockReturnValue(
-      of({ accessToken: 'signed-token', tokenType: 'Bearer', expiresAt: '', role }),
+      of({ accessToken: 'signed-token', tokenType: 'Bearer', expiresAt: '', role, name: 'Test User' }),
     );
     const navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
     component.loginObj.email = 'person@example.com';
@@ -61,7 +61,7 @@ describe('Login', () => {
 
   it('rejects an unsupported account role', () => {
     vi.spyOn(auth, 'login').mockReturnValue(
-      of({ accessToken: 'signed-token', tokenType: 'Bearer', expiresAt: '', role: 'Other' }),
+      of({ accessToken: 'signed-token', tokenType: 'Bearer', expiresAt: '', role: 'Other', name: 'Test User' }),
     );
     const navigateSpy = vi.spyOn(TestBed.inject(Router), 'navigateByUrl');
 

@@ -31,4 +31,36 @@ describe('RequestCard', () => {
     fixture.detectChanges();
     expect(component).toBeTruthy();
   });
+
+  it('offers withdrawal only when enabled for a submitted request', () => {
+    component.request = {
+      id: 'REQ-001',
+      requestId: 1,
+      citizen: 'Test User',
+      category: 'IT support',
+      description: 'Cannot connect to the network.',
+      priority: null,
+      status: 'Submitted',
+      dueDate: 'Not scheduled',
+    };
+    component.allowWithdraw = true;
+    let didEmitWithdrawal = false;
+    component.withdraw.subscribe(() => {
+      didEmitWithdrawal = true;
+    });
+    fixture.detectChanges();
+
+    const withdrawButton = fixture.nativeElement.querySelector(
+      'button.withdraw-request',
+    );
+    expect(withdrawButton).not.toBeNull();
+    withdrawButton.click();
+    expect(didEmitWithdrawal).toBe(true);
+
+    component.request = { ...component.request, status: 'Assigned' };
+    fixture.detectChanges();
+    expect(
+      fixture.nativeElement.querySelector('button.withdraw-request'),
+    ).toBeNull();
+  });
 });

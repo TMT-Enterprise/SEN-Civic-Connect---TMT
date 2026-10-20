@@ -82,6 +82,40 @@ public static class RequestsEndpoints
             return Results.Ok(requests);
         }).RequireAuthorization(policy => policy.RequireRole(Roles.Requester));
 
+        // DELETE /requests/{id} withdraws a request without deleting its audit history.
+        endpoints.MapDelete("/requests/{id:long}", async (
+            HttpContext context,
+            long id,
+            RequestsService service,
+            CancellationToken cancellationToken) =>
+        {
+            if (!TryGetRequesterId(context.User, out var requesterId))
+            {
+                return Results.Unauthorized();
+            }
+
+            var result = await service.WithdrawAsync(
+                requesterId,
+                id,
+                cancellationToken);
+
+            return result.Outcome switch
+            {
+                Outcome.Ok => Results.NoContent(),
+                Outcome.NotFound => Results.NotFound(new { error = result.Error }),
+                Outcome.Conflict => Results.Conflict(new { error = result.Error }),
+                _ => Results.UnprocessableEntity(new { error = result.Error })
+            };
+        })
+        .RequireAuthorization(policy => policy.RequireRole(Roles.Requester))
+        .WithName("WithdrawRequesterRequest")
+        .WithSummary("Withdraw a submitted request owned by the authenticated requester")
+        .Produces(StatusCodes.Status204NoContent)
+        .Produces(StatusCodes.Status401Unauthorized)
+        .Produces(StatusCodes.Status403Forbidden)
+        .Produces(StatusCodes.Status404NotFound)
+        .Produces(StatusCodes.Status409Conflict);
+
         endpoints.MapGet("/staff/requests", async (
             HttpContext context,
             string? search,

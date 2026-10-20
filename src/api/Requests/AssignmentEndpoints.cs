@@ -13,6 +13,12 @@ public static class AssignmentEndpoints
     public static IEndpointRouteBuilder MapAssignmentEndpoints(
         this IEndpointRouteBuilder endpoints)
     {
+        endpoints.MapGet("/admin/assignable-employees", async (
+            AssignmentService service,
+            CancellationToken ct) =>
+            Results.Ok(await service.GetAssignableEmployeesAsync(ct)))
+            .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
+
         // POST /requests/{id}/assign (FR-008): management only
         endpoints.MapPost("/requests/{id:long}/assign", async (
             HttpContext context,

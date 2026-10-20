@@ -3,6 +3,7 @@ using CivicConnect.Data.Entities;
 namespace CivicConnect.Requests;
 
 public sealed record AssignRequestDto(long EmployeeId, DateTimeOffset DueAt);
+public sealed record AssignableEmployeeDto(long EmployeeId, string Name);
 public sealed record DecideRequestDto(string? Decision, string? RejectionComment);
 public sealed record UpdateStatusDto(string? Status, string? CompletionNote);
 
@@ -22,6 +23,7 @@ public sealed record HistoryEntryDto(
     long HistoryId,
     long RequestId,
     long? EmployeeId,
+    long? RequesterId,
     string Status,
     DateTimeOffset ChangedAt);
 
